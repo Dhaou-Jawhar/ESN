@@ -1,0 +1,266 @@
+<div class="login-page">
+    <!-- Background video -->
+    <video autoplay muted loop id="background-video">
+        <source src="assets/layout/videos/{{layoutService.config().colorScheme === 'light' ? 'login-light' : 'login-dark'}}.mp4" type="video/mp4">
+    </video>
+
+    <p-toast></p-toast>
+
+    <div class="circles-container">
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <div class="login-container flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+        <div class="flex flex-column align-items-center justify-content-center">
+            <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'NessLogo' : 'ness-dark'}}.png" alt="NessTechno logo" class="logo mb-5 w-16rem flex-shrink-0">
+            <div class="w-full log-card py-8 px-5 sm:px-8">
+                <form class="form" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+                    <div class="form-group">
+                        <label for="email1" class="block text-900 text-xl font-medium mb-2">Email</label>
+                        <input id="email1" type="text" placeholder="Email address" pInputText required ngModel name="email" class="w-full md:w-30rem mb-5" style="padding:1rem">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="block text-900 font-medium text-xl mb-2">Password</label>
+                        <p-password required ngModel name="password" id="password" placeholder="Password" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                    </div>
+
+                    <button pButton pRipple type="submit" label="Sign In" class="w-full p-3 text-xl sign-in-btn" [routerLink]="['/']"></button>
+                </form>
+                <div class="flex align-items-center justify-content-between gap-1 mt-4">
+                    <div class="flex align-items-center">
+                        <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-3"></p-checkbox>
+                        <label for="rememberme1">Remember me</label>
+                    </div>
+                    <a class="link-custom font-medium no-underline ml-2 text-right cursor-pointer" (click)="displayModal=true" style="color: var(--primary-color)">Forgot password?</a>
+                </div>
+            </div>
+            <div class="register-link mt-4">
+                <p>Don't have an account? <a href="">Register here!</a></p>
+            </div>
+        </div>
+
+
+        <!-- Dialogue pour la réinitialisation du mot de passe -->
+        <p-dialog header="Réinitialiser le mot de passe" [(visible)]="displayModal" [modal]="true" [style]="{width: '30vw'}" class="centered-dialog" style="text-align:center">
+            <div class="p-fluid">
+                <div class="p-field">
+                    <label for="mail" class="block text-900 text-xl font-medium mb-2" style="text-align:center">Votre e-mail</label>
+                    <input id="mail" type="text" placeholder="Email address" pInputText required [(ngModel)]="mail" name="mail" class="w-full md:w-30rem mb-5" style="padding:1rem">
+                </div>
+                <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                    <button pButton type="button" (click)="onCancel()" label="Annuler" class="p-button-secondary p-button-outlined"></button>
+                    <button pButton type="button" (click)="resetPassword()" label="Valider" class="p-button-primary"></button>
+                </div>
+            </div>
+        </p-dialog>
+
+
+        <!-- Deuxième Modal en PrimeNG -->
+        <p-dialog header="Modifier votre mot de passe" [(visible)]="successModalVisible" [modal]="true" [style]="{width: '40vw'}" class="centered-dialog" style="text-align:center">
+            <div class="w-full log-card py-8 px-5 sm:px-8" style="border-radius:53px">
+                <form (ngSubmit)="submitSecondModalForm()" #form="ngForm">
+
+                    <!-- Code reçu par e-mail -->
+                    <label for="mailToken" class="block text-900 text-xl font-medium mb-2">Code reçu par e-mail</label>
+                    <input id="mailToken" type="text" placeholder="Code reçu par e-mail" pInputText required [(ngModel)]="mailToken" name="mailToken" class="w-full md:w-30rem mb-5" style="padding:1rem">
+                    <div *ngIf="form.controls['mailToken']?.errors?.['required'] && (form.controls['mailToken']?.dirty || form.controls['mailToken']?.touched)" class="p-error">
+                        Code reçu par e-mail est obligatoire.
+                    </div>
+
+                    <!-- Nouveau mot de passe avec feedback désactivé -->
+                    <label for="pass" class="block text-900 font-medium text-xl mb-2">Nouveau mot de passe</label>
+                    <p-password required [(ngModel)]="pass" name="pass" id="pass" minlength="8"  placeholder="Nouveau mot de passe" [toggleMask]="true" feedback="false" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                    <div *ngIf="form.controls['pass']?.errors?.['required'] && (form.controls['pass']?.dirty || form.controls['pass']?.touched)" class="p-error">
+                        Nouveau mot de passe est obligatoire.
+                    </div>
+                    <div *ngIf="form.controls['pass']?.errors?.['minlength'] && (form.controls['pass']?.dirty || form.controls['pass']?.touched)" class="p-error">
+                        Nouveau mot de passe doit contenir au moins 8 caractères.
+                    </div>
+
+                    <!-- Confirmation du mot de passe avec feedback désactivé -->
+                    <label for="confirmPass" class="block text-900 font-medium text-xl mb-2">Confirmer le mot de passe</label>
+                    <p-password required minlength="8"  [(ngModel)]="confirmPass" name="confirmPass" id="confirmPass" placeholder="Confirmer le mot de passe" [toggleMask]="true" feedback="false" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                    <div *ngIf="form.controls['confirmPass']?.errors?.['required'] && (form.controls['confirmPass']?.dirty || form.controls['confirmPass']?.touched)" class="p-error">
+                        Confirmation du mot de passe est obligatoire.
+                    </div>
+                    <div *ngIf="confirmPass !== pass && (form.controls['confirmPass']?.dirty || form.controls['confirmPass']?.touched)" class="p-error">
+                        Les mots de passe ne correspondent pas.
+                    </div>
+
+                    <!-- Boutons de formulaire -->
+                    <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                        <button pButton type="button" (click)="successModalVisible = false" label="Fermer" class="p-button-secondary p-mr-2"></button>
+                        <button pButton type="submit" label="Valider" class="p-button-primary" [disabled]="form.invalid || confirmPass !== pass"></button>
+                    </div>
+                </form>
+            </div>
+        </p-dialog>
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p-dialog
+    header="Première Connexion"
+    [(visible)]="showFirstAttemptDialog"
+    [modal]="true"
+    [closable]="false"
+    [dismissableMask]="false"
+    [style]="{'width': '80vw', 'max-width': '900px'}"
+>
+    <form #firstAttemptForm="ngForm" (ngSubmit)="onSubmitUpdate(firstAttemptForm)" novalidate>
+        <div class="p-grid p-fluid p-justify-center">
+
+            <!-- Première ligne : Nom et Prénom -->
+            <div class="p-col-12 p-md-6">
+                <label for="nom">Nom</label>
+                <input
+                    id="nom"
+                    type="text"
+                    pInputText
+                    name="nom"
+                    ngModel
+                    required
+                    [pattern]="'^[a-zA-Z]+$'"
+                    class="p-inputtext-lg"
+                />
+                <div *ngIf="firstAttemptForm.controls['nom']?.invalid && firstAttemptForm.controls['nom']?.touched" class="error-message center-error">
+                    Le nom doit contenir uniquement des lettres.
+                </div>
+            </div>
+
+            <div class="p-col-12 p-md-6">
+                <label for="prenom">Prénom</label>
+                <input
+                    id="prenom"
+                    type="text"
+                    pInputText
+                    name="prenom"
+                    ngModel
+                    required
+                    [pattern]="'^[a-zA-Z]+$'"
+                    class="p-inputtext-lg"
+                />
+                <div *ngIf="firstAttemptForm.controls['prenom']?.invalid && firstAttemptForm.controls['prenom']?.touched" class="error-message center-error">
+                    Le prénom doit contenir uniquement des lettres.
+                </div>
+            </div>
+
+            <!-- Email Secondaire -->
+            <div class="p-col-12">
+                <label for="emailSecondaire">Email Secondaire</label>
+                <input
+                    id="emailSecondaire"
+                    type="email"
+                    pInputText
+                    name="emailSecondaire"
+                    ngModel
+                    required
+                    email
+                    #emailSecondaire="ngModel"
+                    class="p-inputtext-lg"
+                />
+                <!-- Message d'erreur format email -->
+                <div *ngIf="emailSecondaire.invalid && emailSecondaire.touched" class="error-message center-error">
+                    L'email doit être valide et ne peut pas être vide.
+                </div>
+            </div>
+
+            <!-- Nouveau Mot de Passe -->
+            <div class="p-col-12 p-md-6">
+                <label for="password1">Nouveau mot de passe</label>
+                <input
+                    id="password1"
+                    type="password"
+                    pInputText
+                    name="password1"
+                    ngModel
+                    required
+                    [pattern]="'^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$'"
+                    #password1="ngModel"
+                    (input)="validatePasswords()"
+                    class="p-inputtext-lg"
+                />
+                <div *ngIf="password1.invalid && password1.touched" class="error-message center-error">
+                    Le mot de passe doit contenir une majuscule, une minuscule, un chiffre et au moins 8 caractères.
+                </div>
+            </div>
+
+            <!-- Confirmation Mot de Passe -->
+            <div class="p-col-12 p-md-6">
+                <label for="password2">Confirmation mot de passe</label>
+                <input
+                    id="password2"
+                    type="password"
+                    pInputText
+                    name="password2"
+                    ngModel
+                    required
+                    #password2="ngModel"
+                    (input)="validatePasswords()"
+                    class="p-inputtext-lg"
+                />
+                <!-- Message d'erreur confirmation -->
+                <div *ngIf="passwordMismatch && password2.touched" class="error-message center-error">
+                    Les mots de passe ne correspondent pas.
+                </div>
+            </div>
+
+            <!-- Photo de profil -->
+            <div class="p-col-12">
+                <label for="photo">Photo de profil</label>
+                <p-fileUpload
+                    id="imageProfil"
+                    mode="advanced"
+                    [multiple]="false"
+                    accept="image/*"
+                    [maxFileSize]="1000000000000000000000000000000000000000000000000000"
+                    (onSelect)="onFileSelect($event)"
+                    [showCancelButton]="false"
+                    chooseLabel="Sélectionner une photo"
+                ></p-fileUpload>
+                <div *ngIf="!uploadedPhoto && formSubmitted" class="error-message center-error">
+                    La photo de profil est obligatoire.
+                </div>
+            </div>
+
+            <!-- Bouton Enregistrer Centré -->
+            <div class="p-col-12 center-content">
+                <button
+                    type="submit"
+                    pButton
+                    label="Enregistrer"
+                    icon="pi pi-save"
+                    class="p-button-lg p-mt-3"
+                    [disabled]="firstAttemptForm.invalid || passwordMismatch || !uploadedPhoto"
+                ></button>
+            </div>
+
+        </div>
+    </form>
+</p-dialog>

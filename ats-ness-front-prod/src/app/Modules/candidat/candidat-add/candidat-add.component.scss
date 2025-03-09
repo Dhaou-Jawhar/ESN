@@ -1,0 +1,758 @@
+///* Global Styles */
+//html,
+//body {
+//    height: 100%;
+//    margin: 0;
+//    display: flex;
+//    justify-content: center;
+//    align-items: center;
+//    background-color: var(--surface-a); /* Use PrimeNG theme variable for background */
+//    font-family: var(--font-family); /* Use PrimeNG theme font family */
+//}
+//
+///* Centering the container */
+//.center-container {
+//    display: flex;
+//    justify-content: center;
+//    align-items: center;
+//    width: 100%;
+//    height: 100%; /* Full screen height */
+//    box-sizing: border-box;
+//    padding: 0.5px; /* Optional padding for spacing around the card */
+//}
+//
+///* PrimeNG Card Styles */
+//.p-card {
+//    max-width: 1200px; /* Increased width for a wider card */
+//    width: 100%;
+//    padding: 0.5em; /* Slightly increased padding for better spacing */
+//    background: var(--surface-card); /* Use PrimeNG theme variable for card background */
+//    box-shadow: var(--card-shadow); /* Use PrimeNG's card shadow */
+//    border-radius: var(--border-radius); /* Use PrimeNG's border radius */
+//}
+//
+///* Scrollable Steps */
+//.steps-wrapper {
+//    overflow-x: auto;
+//    white-space: nowrap;
+//    margin-bottom: 1.5em; /* Space between steps and form */
+//}
+//
+//.scrollable-steps {
+//    display: inline-block;
+//    min-width: 100%; /* Ensure steps fill the width */
+//    padding-bottom: 0.5em; /* Space below the steps */
+//    border-bottom: 2px solid var(--primary-color); /* Visual indicator for steps */
+//}
+//
+///* Form styles */
+//form {
+//    margin-top:30px;
+//    width: 100%;
+//    display: flex;
+//    flex-direction: column;
+//    align-items: center; /* Center the inputs */
+//}
+//
+//.p-field {
+//    width: 100%;
+//    max-width: 400px; /* Slightly increased input field width for better proportion with the wider card */
+//    margin: 0 auto 1.5em auto; /* Center the form fields with spacing */
+//}
+//
+//.p-field label {
+//    margin-bottom: 0.5em;
+//    display: block;
+//    text-align: center; /* Center the labels */
+//    color: var(--text-color); /* Use PrimeNG theme color for text */
+//}
+//
+//.p-button {
+//    width: 120px;
+//    margin-top: 1.5em;
+//
+//}
+//
+//.p-d-flex.p-jc-between .p-button {
+//    width: 48%;
+//}
+//
+///* Adjusting space between flag and country name */
+//.p-d-flex.p-ai-center img {
+//    margin-right: 8px; /* Adjust the margin to create space between the flag and text */
+//}
+//
+///* Form content adjustments */
+//.form-content {
+//    max-height: 70vh;
+//    overflow-y: auto;
+//    padding-right: 15px; /* Avoid content clipping by adding padding to the right */
+//}
+//
+///* Scrollbar styling for form content */
+//.form-content::-webkit-scrollbar {
+//    width: 8px;
+//}
+//
+//.form-content::-webkit-scrollbar-thumb {
+//    background-color: var(--primary-color);
+//    border-radius: 10px;
+//}
+//
+///* Responsive adjustments */
+//@media (max-width: 768px) {
+//    .p-card {
+//        padding: 2em;
+//        max-width: 90%;
+//    }
+//
+//    .p-button {
+//        width: 100%;
+//        margin-top: 1em;
+//    }
+//
+//    .p-d-flex.p-jc-between .p-button {
+//        width: 100%;
+//        margin-bottom: 0.5em;
+//    }
+//}
+//
+//
+//
+///////////////////////// SPINNER ////////////////////
+//
+//
+//
+//.custom-loader {
+//    display: flex;
+//    justify-content: flex-end; /* Aligner à droite */
+//    align-items: flex-start;   /* Aligner en haut */
+//    height: 100vh;
+//    position: fixed; /* Positionnement fixé pour rester visible en haut à droite même lors du défilement */
+//    top: 9.5rem;  /* Collé en haut */
+//    right: 14rem; /* Collé à droite */
+//    z-index: 9999;
+//    padding: 20px; /* Pour ajouter un peu d'espace depuis le bord de la fenêtre */
+//    background-color: transparent; /* Arrière-plan transparent */
+//}
+//
+//
+//.spinner-container {
+//    position: relative;
+//    display: inline-block;
+//}
+//
+//.spinner {
+//    border: 4px solid rgba(171, 13, 238, 0.1);
+//    border-left-color: purple;
+//    border-radius: 50%;
+//    width: 5rem;
+//    height: 5rem;
+//    animation: spin 1s linear infinite;
+//    position: relative;
+//    background: conic-gradient(rgba(171, 13, 238, 0.1) 0%, rgba(171, 13, 238, 0.5) calc(var(--progress) * 1%), transparent calc(var(--progress) * 1% + 1%));
+//    box-shadow: 0px 0px 15px rgba(171, 13, 238, 0.5); /* Effet de halo */
+//}
+//
+//.progress-text {
+//    position: absolute;
+//    top: 50%;
+//    left: 50%;
+//    transform: translate(-50%, -50%);
+//    color: purple;
+//    font-size: 1.2em;
+//    font-weight: bold;
+//}
+//
+//@keyframes spin {
+//    0% { transform: rotate(0deg); }
+//    100% { transform: rotate(360deg); }
+//}
+
+
+/* Global Styles */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--surface-a); /* Utilise la variable de thème PrimeNG pour le fond */
+    font-family: var(--font-family); /* Utilise la police de thème PrimeNG */
+}
+
+/* Centering the container */
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; /* Hauteur totale de l'écran */
+    box-sizing: border-box;
+    padding: 0.5px; /* Espacement autour de la carte */
+}
+
+
+/* Title Centering */
+.center-title {
+    text-align: center; /* Centre le texte horizontalement */
+    width: 100%; /* Assure que la largeur est à 100% */
+    margin: 0; /* Enlève les marges par défaut */
+    position: relative; /* Nécessaire pour utiliser le transform */
+    top: 50%; /* Déplace le titre au milieu verticalement */
+    transform: translateY(-50%); /* Ajuste la position pour centrer exactement */
+}
+
+/* PrimeNG Card Styles */
+.p-card {
+    // max-width: 1600px; /* Largeur maximale pour une carte plus large */
+    width: 100%;
+    padding: 0.5em; /* Padding léger pour un meilleur espacement */
+    margin: 1rem; /* Ajoute de l'espace autour de chaque carte */
+    // position: relative; /* Nécessaire pour l'animation */
+}
+
+/* Scrollable Steps */
+.steps-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 1.5em; /* Espace entre les étapes et le formulaire */
+}
+
+.scrollable-steps {
+    display: inline-block;
+    min-width: 100%; /* Assure que les étapes remplissent la largeur */
+    padding-bottom: 0.5em; /* Espace en dessous des étapes */
+    border-bottom: 2px solid var(--primary-color); /* Indicateur visuel pour les étapes */
+}
+
+/* Form styles */
+form {
+    margin-top: 1px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre les entrées */
+}
+
+/* Form Field Styles */
+.p-field {
+    width: 100%;
+    max-width: 300px; /* Largeur légèrement augmentée pour un meilleur rapport avec la carte plus large */
+    margin: 0 auto 1.5em auto; /* Centre les champs de formulaire avec espacement */
+}
+
+.p-field label {
+    margin-bottom: 0.5em;
+    display: block;
+    text-align: center; /* Centre les labels */
+    color: var(--text-color); /* Utilise la couleur de thème PrimeNG pour le texte */
+}
+
+/* Button Styles */
+.p-button {
+    width: 120px;
+    margin-top: 1.5em;
+}
+
+/* Flex button layout */
+.p-d-flex.p-jc-between .p-button {
+    width: 48%;
+}
+
+/* Adjusting space between flag and country name */
+.p-d-flex.p-ai-center img {
+    margin-right: 8px; /* Ajuste la marge pour créer un espace entre le drapeau et le texte */
+}
+
+/* Form content adjustments */
+.form-content {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 15px; /* Évite le clipping de contenu en ajoutant du padding à droite */
+}
+
+/* Scrollbar styling for form content */
+.form-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-content::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .p-card {
+        padding: 2em;
+        max-width: 90%;
+    }
+
+    .p-button {
+        width: 100%;
+        margin-top: 1em;
+    }
+
+    .p-d-flex.p-jc-between .p-button {
+        width: 100%;
+        margin-bottom: 0.5em;
+    }
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping of cards to new rows if needed */
+    justify-content: space-around; /* Aligns the cards horizontally with space around them */
+    // padding: 20px; /* Adds padding around the form */
+}
+/* Styles généraux pour toutes les cartes */
+.card1, .card2, .card3, .card4, .card5 {
+    box-sizing: border-box; /* Inclut le padding et la marge dans la largeur totale */
+}
+
+/* Styles spécifiques à chaque carte */
+.card1 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 22rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card2 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 66.2rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card3 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 66.18rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card4 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 33rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card5 {
+    padding: 0.3rem; /* Padding inside each card */
+    width: calc(100% - 2rem); /* Occupation de l'espace disponible */
+    max-width: 31.42rem; /* Garder la largeur maximale que tu souhaites */
+    text-align: center;
+    margin: 0 auto; /* Centrer la carte */
+}
+
+/* Media Queries pour les mobiles */
+@media (max-width: 768px) {
+    .card1, .card2, .card3, .card4, .card5 {
+        width: 100%; /* Toutes les cartes occupent 100% de la largeur */
+        margin: 1rem 0; /* Ajoute un espacement vertical */
+    }
+
+    .card2, .card3 {
+        max-width: none; /* Enlever les limites de largeur pour les appareils mobiles */
+    }
+}
+
+/* Grid Styles */
+.p-grid {
+    display: flex;
+    flex-wrap: wrap; /* Gère le débordement des colonnes */
+}
+
+.p-col-12 {
+    flex: 0 0 100%; /* Prend toute la largeur par défaut */
+}
+
+.p-md-6 {
+    flex: 0 0 50%; /* Prend 50% de la largeur sur les écrans moyens et plus grands */
+}
+
+/* Card Title Styles */
+.p-card h6 {
+    text-align: center; /* Centre le texte des titres */
+    margin: 0; /* Enlève les marges par défaut */
+}
+
+/* Title Styles for all cards */
+.card-title {
+    text-align: center; /* Centre le texte du titre */
+    margin: 0; /* Enlève les marges par défaut */
+    padding: 0.5rem 0; /* Ajoute du padding vertical */
+    font-weight: bold; /* Titre en gras */
+    font-size: 1.2em; /* Taille de la police du titre */
+    border-radius: 8px 8px 0 0; /* Coins arrondis en haut */
+}
+
+/* Field adjustments */
+.p-field {
+    margin-top: 1rem; /* Espacement supérieur pour les champs */
+}
+
+.p-ml-8{
+    padding-left: 50px;
+}
+
+/* Title border styling */
+.card-title {
+    border-bottom: 2px solid #b91abe; /* Couleur de la bordure du titre */
+    padding-bottom: 8px; /* Padding en dessous du titre */
+    margin-bottom: 12px; /* Marge en dessous du titre */
+}
+
+
+/* Skills section styling */
+.skills-section {
+    .p-tabview-panels {
+        padding: 1.5rem;
+    }
+
+    .p-chip {
+        margin: 0.25rem;
+    }
+}
+
+
+h5 {
+    position: sticky;    /* Rend le texte collant */
+    top: 0;              /* Positionne l'élément collant */
+    padding: 10px 0;    /* Espace autour du texte */
+    width: 100%;        /* Prend toute la largeur pour une meilleure apparence */
+    text-align: center;  /* Centre le texte */
+}
+
+
+
+.formation-entry {
+    border-radius: 8px;
+    padding-left : 1rem;
+    padding-right : 1rem;
+    padding-bottom: 1rem;
+    position: relative;
+
+    h6 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .p-button-danger {
+        position: absolute;
+        top: -25rem;
+        right: 0.5rem;
+    }
+}
+
+
+
+.p-field-formation {
+    margin-bottom: 1rem;
+}
+
+.p-button-secondary{
+    width: 30%;
+    top: 0.05rem;
+    right: 0.2rem;
+}
+.p-hide{
+    width: 80%;
+    margin-bottom: 1rem;
+    margin-top: 0rem;
+}
+
+.card-formation {
+    background: var(--surface-card);
+    width: 32rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+.card-formation1 {
+    background: var(--surface-card);
+    width: 25rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+
+.card-formation2 {
+    background: var(--surface-card);
+    width: 20rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+.card-langue {
+    background: var(--surface-card);
+    width: 25rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+
+///////////////////RATING/////////
+
+///////////////////RATING/////////
+
+.rating {
+    width: 100%;
+    text-align: center;
+}
+.rate {
+    display: flex;
+    flex-direction: row-reverse; /* Inverser l'ordre des étoiles */
+    justify-content: left; /* Centrer les étoiles horizontalement */
+}
+
+.note_review {
+    text-align: center;
+}
+.rate:not(:checked) > input {
+    position: absolute;
+    top: -9999px;
+}
+.rate:not(:checked) > label {
+    width: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 2rem;
+    color: #ccc;
+    margin-top: -0.5rem;
+    display: inline-block; /* Assure que les étoiles soient en ligne */
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
+.animated-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.glow-text {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #8e44ad; /* Violet un peu plus clair */
+    text-shadow: 0 0 8px rgba(142, 68, 173, 0.6),
+    0 0 16px rgba(142, 68, 173, 0.4),
+    0 0 24px rgba(142, 68, 173, 0.2); /* Effet lumineux atténué */
+    animation: glowPulse 2.5s infinite alternate ease-in-out;
+    letter-spacing: 0.05em;
+}
+
+@keyframes glowPulse {
+    0% {
+        text-shadow: 0 0 8px rgba(142, 68, 173, 0.6),
+        0 0 16px rgba(142, 68, 173, 0.4),
+        0 0 24px rgba(142, 68, 173, 0.2);
+        transform: scale(1);
+    }
+    100% {
+        text-shadow: 0 0 16px rgba(187, 143, 206, 0.7),
+        0 0 32px rgba(187, 143, 206, 0.5),
+        0 0 48px rgba(187, 143, 206, 0.3);
+        transform: scale(1.03);
+    }
+}
+
+///////////////////////// SPINNER ////////////////////
+
+
+
+.custom-loader {
+    display: flex;
+    justify-content: flex-end; /* Aligner à droite */
+    align-items: flex-start;   /* Aligner en haut */
+    height: 100vh;
+    position: fixed; /* Positionnement fixé pour rester visible en haut à droite même lors du défilement */
+    top: 9.5rem;  /* Collé en haut */
+    right: 14rem; /* Collé à droite */
+    z-index: 9999;
+    padding: 20px; /* Pour ajouter un peu d'espace depuis le bord de la fenêtre */
+    background-color: transparent; /* Arrière-plan transparent */
+}
+
+
+.spinner-container {
+    position: relative;
+    display: inline-block;
+}
+
+.spinner {
+    border: 4px solid rgba(171, 13, 238, 0.1);
+    border-left-color: purple;
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    animation: spin 1s linear infinite;
+    position: relative;
+    background: conic-gradient(rgba(171, 13, 238, 0.1) 0%, rgba(171, 13, 238, 0.5) calc(var(--progress) * 1%), transparent calc(var(--progress) * 1% + 1%));
+    box-shadow: 0px 0px 15px rgba(171, 13, 238, 0.5); /* Effet de halo */
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: purple;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+
+
+// Add these styles to your component's SCSS file
+
+.upload-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+
+    .upload-btn {
+        transition: transform 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.upload-dialog {
+    ::ng-deep .p-dialog-header {
+        background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        color: white;
+
+        .p-dialog-title {
+            font-weight: 600;
+        }
+
+        .p-dialog-header-icon {
+            color: white;
+        }
+    }
+}
+
+.upload-container {
+    padding: 1rem;
+
+    .upload-dropzone {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        cursor: pointer;
+
+        &.drag-over {
+            border-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #2196F3;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            color: #495057;
+            margin: 1rem 0;
+        }
+
+        p {
+            color: #6c757d;
+            margin: 0.5rem 0;
+        }
+    }
+}
+
+.upload-list {
+    margin-top: 2rem;
+
+    h4 {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+
+    .upload-status {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+
+        &.pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        &.uploading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        &.complete {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        &.error {
+            background: #fdecea;
+            color: #d32f2f;
+        }
+    }
+}
+
+// Animation for new files
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.p-table tr {
+    animation: slideIn 0.3s ease;
+}

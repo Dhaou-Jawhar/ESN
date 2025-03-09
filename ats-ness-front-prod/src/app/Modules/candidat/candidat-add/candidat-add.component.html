@@ -1,0 +1,89 @@
+<p-toast></p-toast>
+
+<div *ngIf="loading" class="custom-loader">
+    <div class="spinner-container">
+        <div class="spinner" [style]="{'--progress': loadingPercentage + '%'}"></div>
+        <div class="progress-text">{{ loadingPercentage }}%</div>
+    </div>
+</div>
+<div *ngIf="loading" class="custom-loader">
+    <div class="spinner-container">
+        <div class="spinner" [style]="{'--progress': loadingPercentage + '%'}"></div>
+        <div class="progress-text">{{ loadingPercentage }}%</div>
+    </div>
+</div>
+
+<div class="p-field p-fluid" style="max-width: 50.0rem;">
+    <label for="cvFile">Profile CV</label>
+    <p-fileUpload id="cvFile" name="cvFile" [customUpload]="true" chooseLabel="Choose CV" uploadLabel="Upload"
+                  cancelLabel="Cancel" (uploadHandler)="onFileUpload($event, 'cvFile')" [disabled]="isUploading['cvFile']"
+                  [ngStyle]="{ 'width': 'auto' }" accept=".pdf">
+    </p-fileUpload>
+</div>
+
+
+<!-- Add this button above the table container -->
+<!-- <div class="upload-button-container p-mb-3">
+    <button pButton pRipple type="button" icon="pi pi-upload" label="Upload Files"
+        class="p-button-raised p-button-primary upload-btn" (click)="showUploadDialog()">
+    </button>
+</div> -->
+
+<!-- Upload Dialog -->
+<!-- <p-dialog [(visible)]="displayUploadDialog" [modal]="true" [draggable]="false" [resizable]="false"
+    styleClass="upload-dialog" [dismissableMask]="true" [showHeader]="true" header="Upload Files"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+
+    <div class="upload-container">
+        <div class="upload-dropzone" [ngClass]="{'drag-over': isDragging}" (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+
+            <i class="pi pi-cloud-upload upload-icon"></i>
+            <h3>Drag and Drop Files Here</h3>
+            <p>or</p>
+            <p-fileUpload #fileUpload mode="basic" chooseLabel="Browse Files" [auto]="true" [maxFileSize]="10000000"
+                (uploadHandler)="onUpload($event)" [customUpload]="true" styleClass="upload-button"
+                [showCancelButton]="false">
+            </p-fileUpload>
+        </div>
+
+        <div class="upload-list" *ngIf="uploadedFiles.length > 0">
+            <h4>Uploaded Files</h4>
+            <p-table [value]="uploadedFiles" styleClass="p-mt-3">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>Size</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-file>
+                    <tr>
+                        <td>{{file.name}}</td>
+                        <td>{{formatFileSize(file.size)}}</td>
+                        <td>
+                            <span class="upload-status" [ngClass]="file.status">
+                                {{file.status}}
+                            </span>
+                        </td>
+                        <td>
+                            <button pButton pRipple type="button" icon="pi pi-trash"
+                                class="p-button-rounded p-button-danger p-button-text" (click)="removeFile(file)">
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple type="button" label="Cancel" class="p-button-text" (click)="hideUploadDialog()">
+        </button>
+        <button pButton pRipple type="button" label="Upload All" class="p-button-primary"
+            [disabled]="!hasFilesToUpload()" (click)="onFileUpload($event, 'cvFile')">
+        </button>
+    </ng-template>
+</p-dialog>
+-->

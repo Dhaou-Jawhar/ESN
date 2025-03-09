@@ -1,0 +1,192 @@
+:host ::ng-deep {
+    .p-datatable {
+        border: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+
+        .p-datatable-header,
+        .p-datatable-caption,
+        .p-datatable-thead > tr > th {
+            background: var(--surface-a);
+            color: var(--text-color);
+            padding: 1rem;
+            border: none;
+            font-weight: 600;
+
+            &:not(:last-child) {
+                border-right: 1px solid var(--surface-200);
+            }
+        }
+
+        .p-datatable-tbody > tr {
+            transition: background-color 0.2s;
+
+            > td {
+                background: var(--surface-card);
+                padding: 1rem;
+                color: var(--text-color);
+                border: none;
+                border-bottom: 1px solid var(--surface-200);
+            }
+
+            &:hover {
+                background: var(--surface-hover);
+            }
+
+            &.p-highlight {
+                background: var(--primary-50);
+            }
+        }
+
+        // Remove grid lines
+        &.p-datatable-gridlines {
+            .p-datatable-thead > tr > th,
+            .p-datatable-tbody > tr > td,
+            .p-datatable-tfoot > tr > td {
+                border: none;
+            }
+        }
+
+        // Subtle striped rows
+        &.p-datatable-striped {
+            .p-datatable-tbody > tr:nth-child(even) {
+                background: var(--surface-100);
+            }
+        }
+    }
+
+    // Refined company logo styling
+    .company-logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        background: var(--surface-100);
+        padding: 0.25rem;
+        border-radius: 8px;
+        transition: transform 0.2s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+    }
+
+    // Enhanced organigramme card styling
+    .organigramme-card {
+        background: var(--surface-card);
+        border-radius: 12px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        border: 1px solid var(--surface-200);
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+            padding-top: 75%;
+            overflow: hidden;
+            border-radius: 8px;
+            background: var(--surface-100);
+
+            .organigramme-image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                transition: transform 0.3s;
+            }
+
+            .image-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(2px);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                transition: opacity 0.3s;
+
+                .p-button-text {
+                    color: white;
+                    backdrop-filter: blur(0);
+
+                    &:hover {
+                        background: rgba(255, 255, 255, 0.2);
+                    }
+                }
+            }
+
+            &:hover {
+                .image-overlay {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    // Improved search input styling
+    .p-input-icon-left {
+        .p-inputtext {
+            background: var(--surface-100);
+            border: 1px solid var(--surface-200);
+            border-radius: 8px;
+            transition: all 0.2s;
+
+            &:hover {
+                border-color: var(--primary-200);
+            }
+
+            &:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 2px var(--primary-100);
+            }
+        }
+    }
+
+    // Enhanced button styling
+    .p-button {
+        border-radius: 8px;
+        transition: all 0.2s;
+
+        &.p-button-outlined {
+            &:hover {
+                background: var(--surface-100);
+            }
+        }
+
+        &.p-button-primary {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+
+            &:hover {
+                background: var(--primary-600);
+                border-color: var(--primary-600);
+            }
+        }
+    }
+
+    // Responsive improvements
+    @media screen and (max-width: 768px) {
+        .p-datatable {
+            .p-datatable-thead > tr > th,
+            .p-datatable-tbody > tr > td {
+                padding: 0.75rem;
+            }
+        }
+
+        .organigramme-card {
+            .image-container {
+                padding-top: 100%;
+            }
+        }
+    }
+}

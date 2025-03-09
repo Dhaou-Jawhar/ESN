@@ -1,0 +1,10 @@
+{
+    "/api": {
+        "target": "https://ness-ats-api-parser-dev.azurewebsites.net",
+        "secure": false,
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/api": ""
+        }
+    }
+}

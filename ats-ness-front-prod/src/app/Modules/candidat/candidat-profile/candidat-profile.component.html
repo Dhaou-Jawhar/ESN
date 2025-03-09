@@ -1,0 +1,58 @@
+<div class="portfolio-container">
+    <p-menubar [model]="menuItems"></p-menubar>
+
+    <div class="profile-section">
+        <p-avatar [image]="candidat?.pictureUrl" styleClass="profile-avatar" size="xlarge" shape="circle"></p-avatar>
+        <h1 class="typing-container">
+            <span class="typing-animation">{{candidat?.utilisateur?.prenom}} {{candidat?.utilisateur?.nom}}</span>
+        </h1>
+        <p>{{candidat?.titre}}</p>
+    </div>
+
+    <div class="p-grid">
+        <div class="p-col-12 p-md-4">
+            <p-card header="About me" styleClass="about-section">
+                <p>{{candidat?.utilisateur?.bio || "Hello! I'm " + candidat?.utilisateur?.prenom + " " + candidat?.utilisateur?.nom + " , "+ candidat?.titre}}</p>
+                <p-divider></p-divider>
+                <h3>Personal Details</h3>
+                <p><i class="pi pi-phone"></i> {{candidat?.telephone}}</p>
+                <p><i class="pi pi-envelope"></i> {{candidat?.email}}</p>
+                <p><i class="pi pi-map-marker"></i> {{candidat?.adresse}}, {{candidat?.ville}}, {{candidat?.codePostal}}</p>
+            </p-card>
+        </div>
+
+        <div class="p-col-12 p-md-8">
+            <p-card header="Skills" styleClass="skills-section">
+                <p-tabView>
+                    <p-tabPanel header="Web Frontend" *ngIf="webFrontSkills.length > 0">
+                        <p-chip *ngFor="let skill of webFrontSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="Web Backend" *ngIf="webBackSkills.length > 0">
+                        <p-chip *ngFor="let skill of webBackSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="API" *ngIf="apiSkills.length > 0">
+                        <p-chip *ngFor="let skill of apiSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="DevOps" *ngIf="devOpsSkills.length > 0">
+                        <p-chip *ngFor="let skill of devOpsSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="Mobile" *ngIf="mobileSkills.length > 0">
+                        <p-chip *ngFor="let skill of mobileSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="Blockchain" *ngIf="blockchainSkills.length > 0">
+                        <p-chip *ngFor="let skill of blockchainSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="AI" *ngIf="iaSkills.length > 0">
+                        <p-chip *ngFor="let skill of iaSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="IoT" *ngIf="iotSkills.length > 0">
+                        <p-chip *ngFor="let skill of iotSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                    <p-tabPanel header="LowCode/NoCode" *ngIf="lowCodeSkills.length > 0">
+                        <p-chip *ngFor="let skill of lowCodeSkills" [label]="skill" styleClass="m-1"></p-chip>
+                    </p-tabPanel>
+                </p-tabView>
+            </p-card>
+        </div>
+    </div>
+</div>

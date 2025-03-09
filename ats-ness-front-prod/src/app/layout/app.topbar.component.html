@@ -1,0 +1,129 @@
+<p-toast></p-toast>
+
+<div class="layout-topbar" style="height: 65px; display: flex; align-items: center; justify-content: space-between;">
+    <!-- Logo and Menu Button on the Left -->
+    <div style="display: flex; align-items: center;">
+        <!-- Logo -->
+        <a class="layout-topbar-logo" routerLink="">
+            <img src="assets/layout/images/{{layoutService.config().colorScheme === 'light' ? 'ness-gif-light' : 'ness-gif-dark'}}.gif" alt="logo" style="width: 140px; height: auto;">
+        </a>
+
+        <!-- Menu Button Next to Logo -->
+        <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()" style="margin-left: 1rem;">
+            <i class="pi pi-bars"></i>
+        </button>
+    </div>
+
+    <!-- Right-Side Buttons -->
+    <div style="display: flex; align-items: center; gap: 1rem;">
+        <!-- Topbar Menu Button -->
+        <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" (click)="layoutService.showProfileSidebar()">
+            <i class="pi pi-ellipsis-v"></i>
+        </button>
+
+        <!-- Topbar Menu -->
+        <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}" style="display: flex; align-items: center; gap: 1rem;">
+            <button
+                *ngIf="isAdmin"
+                class="p-link layout-topbar-button"
+                pTooltip="Ajouter un Administrateur"
+                tooltipPosition="bottom"
+                (click)="showDialog()"
+            >
+                <i class="pi pi-user-plus"></i>
+                <span>Ajouter Admin</span>
+            </button>
+
+            <button class="p-link layout-topbar-button">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button>
+
+            <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
+                <i class="pi pi-cog"></i>
+                <span>Settings</span>
+            </button>
+
+            <!-- Theme Switch -->
+            <div class="col-3" style="padding-right: 0.5rem;" *ngIf="colorScheme === 'light'">
+                <button class="p-link w-2rem h-2rem" (click)="changeTheme('bootstrap4-dark-purple', 'dark')" title="Switch to Dark Mode">
+                    <i class="pi pi-moon" style="font-size: 1.5rem;"></i>
+                </button>
+            </div>
+
+            <div class="col-3" *ngIf="colorScheme === 'dark'">
+                <button class="p-link w-2rem h-2rem" (click)="changeTheme('bootstrap4-light-purple', 'light')" title="Switch to Light Mode">
+                    <i class="pi pi-sun" style="font-size: 1.5rem;"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Picture and Logout -->
+        <div class="p-link layout-topbar-profile" style="margin-left: 1%;">
+            <img [src]="profilePictureUrl" alt="Profile Picture" style="width: 40px; height: 40px; border-radius: 50%;" (click)="op.toggle($event)">
+        </div>
+
+        <p-overlayPanel #op>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li (click)="logout()" style="padding: 0.5rem 1rem; cursor: pointer;">
+                    <i class="pi pi-sign-out"></i> Logout
+                </li>
+            </ul>
+        </p-overlayPanel>
+    </div>
+</div>
+
+
+
+
+<!-- p-dialog pour ajouter un administrateur -->
+<p-dialog
+    header="Ajouter un Administrateur"
+    [(visible)]="displayDialog"
+    [closable]="false"
+    [modal]="true"
+    [responsive]="true"
+    [style]="{ width: '30%' }"
+>
+    <div class="p-fluid">
+        <div class="p-field">
+            <!-- Label pour Email -->
+            <label for="email"><strong>Email du nouvel administrateur</strong></label>
+            <br>
+            <input
+                id="email"
+                type="email"
+                pInputText
+                [(ngModel)]="newAdminEmail"
+                placeholder="Entrez un email"
+                (input)="validateEmail()"
+                class="p-inputtext p-component"
+            />
+        </div>
+        <!-- Message d'erreur pour email invalide -->
+        <div *ngIf="emailError" class="p-error">
+            Veuillez saisir un email valide.
+        </div>
+    </div>
+
+    <!-- Footer avec les boutons -->
+    <ng-template pTemplate="footer">
+        <button
+            type="button"
+            pButton
+            icon="pi pi-check"
+            label="Créer"
+            [disabled]="!isEmailValid || !newAdminEmail"
+            (click)="addModerator()"
+            class="p-button-primary"
+        ></button>
+        <button
+            type="button"
+            pButton
+            icon="pi pi-times"
+            label="Annuler"
+            (click)="closeDialog()"
+            class="p-button-secondary"
+        ></button>
+    </ng-template>
+</p-dialog>

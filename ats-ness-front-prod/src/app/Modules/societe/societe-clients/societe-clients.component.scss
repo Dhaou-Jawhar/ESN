@@ -1,0 +1,305 @@
+:host ::ng-deep {
+    .societe-form {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+
+        .p-card {
+            background: var(--surface-card);
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px var(--surface-ground);
+
+            .p-card-body {
+                padding: 1.5rem;
+            }
+        }
+
+        .form-header {
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 1rem;
+
+            h2 {
+                color: var(--text-color);
+            }
+        }
+
+        .custom-tabview {
+            .p-tabview-nav {
+                justify-content: center;
+                border: none;
+                background: var(--surface-card);
+
+                li {
+                    .p-tabview-nav-link {
+                        background: transparent;
+                        border: none;
+                        border-radius: 0;
+                        padding: 1rem 1.5rem;
+                        font-weight: 600;
+                        color: var(--text-color-secondary);
+                        transition: all 0.2s;
+
+                        &:not(.p-disabled):focus {
+                            box-shadow: none;
+                        }
+
+                        &:hover {
+                            color: var(--primary-color);
+                            background: transparent;
+                        }
+                    }
+
+                    &.p-highlight .p-tabview-nav-link {
+                        color: var(--primary-color);
+                        border-bottom: 2px solid var(--primary-color);
+                    }
+                }
+            }
+
+            .p-tabview-panels {
+                background: var(--surface-card);
+                color: var(--text-color);
+            }
+        }
+
+        .p-inputtext,
+        .p-inputnumber-input {
+            padding-left: 2.5rem;
+            background: var(--surface-card);
+            border-color: var(--surface-border);
+            color: var(--text-color);
+
+            &:enabled:hover {
+                border-color: var(--primary-color);
+            }
+
+            &:enabled:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 1px var(--primary-color);
+            }
+        }
+
+        .p-input-icon-left {
+            i {
+                left: 0.75rem;
+                color: var(--text-color-secondary);
+            }
+        }
+
+        .p-fileupload {
+            .p-button {
+                width: auto;
+            }
+
+            .p-fileupload-content {
+                background: var(--surface-card);
+                border-color: var(--surface-border);
+                color: var(--text-color);
+            }
+        }
+
+        label {
+            color: var(--text-color);
+        }
+
+        .field {
+            margin-bottom: 1.5rem;
+        }
+
+        // File upload areas with dashed borders
+        .border-dashed {
+            border-color: var(--surface-border) !important;
+            background: var(--surface-ground);
+        }
+
+        // Image containers
+        .border-1 {
+            border-color: var(--surface-border) !important;
+        }
+
+        // Empty state text
+        .text-600 {
+            color: var(--text-color-secondary);
+        }
+
+        // Icons in empty states
+        .text-primary-200 {
+            color: var(--primary-color);
+            opacity: 0.6;
+        }
+    }
+}
+
+/* Custom sidebar styling */
+.p-sidebar {
+    z-index: 1000 !important;
+}
+/* Évitez que le p-sidebar couvre tout l'écran */
+.custom-sidebar {
+    width: 20vw; /* Assurez-vous que cette largeur est respectée */
+}
+:host ::ng-deep .custom-sidebar {
+    /* Ensure minimum width for usability */
+    min-width: 700px;
+    max-width: 100vw;
+}
+
+:host ::ng-deep .custom-sidebar .p-sidebar-content {
+    padding: 0;
+}
+
+:host ::ng-deep .p-inputnumber {
+    width: 100%;
+}
+
+/* Improve spacing in smaller width */
+:host ::ng-deep .p-panel .p-panel-content {
+    padding: 1rem;
+}
+
+:host ::ng-deep .p-fieldset .p-fieldset-content {
+    padding: 1rem;
+}
+
+/* Ensure dropdown menus don't get cut off */
+:host ::ng-deep .p-dropdown-panel {
+    width: auto;
+    min-width: 100%;
+}
+
+/* Make checkboxes more compact */
+:host ::ng-deep .p-checkbox {
+    margin-right: 0.5rem;
+}
+
+
+
+
+
+.global-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 12000; /* Assurez-vous que cette valeur est supérieure au sidebar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Couche semi-transparente */
+    z-index: 12001; /* Couche de l'overlay */
+}
+
+.spinner-container {
+    position: relative;
+    z-index: 12002; /* Spinner au-dessus de l'overlay */
+    text-align: center;
+}
+.custom-spinner .p-progress-spinner {
+    border-color: #8A2BE2; /* Couleur violette claire */
+}
+
+.spinner-container p {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: white;
+    z-index: 1;
+}
+
+
+
+
+
+
+.custom-dialog .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007ad9;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.section h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #007ad9;
+    display: inline-block;
+    padding-bottom: 0.2rem;
+}
+.qr-code-container {
+    text-align: center; /* Centre le contenu horizontalement */
+    margin-top: 10px; /* Ajoute un espace entre le titre et l'image */
+}
+
+.qr-image {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ajoute une ombre légère */
+}
+
+.grid .col-6 {
+    padding: 1rem;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+p {
+    margin: 0.5rem 0;
+}
+
+p strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.center-content-besoin {
+    display: flex; /* Active flexbox */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    text-align: center; /* Centre le texte dans le conteneur */
+    margin: 0; /* Supprime les marges */
+    padding: 0; /* Supprime les espacements */
+}
+
+.title-besoin {
+    font-size: 2.5rem; /* Ajuste la taille du texte */
+    font-weight: bold; /* Rend le texte plus visible */
+    color: #333; /* Couleur personnalisée */
+}
+
+
+.max-level-message {
+    text-align: center; /* Centre le texte à l'intérieur */
+}
+
+

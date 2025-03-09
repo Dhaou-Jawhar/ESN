@@ -1,0 +1,390 @@
+<div class="action-container">
+    <label class="action-label">Action Pour :</label>
+
+    <div class="action-options">
+        <p-radioButton
+            name="action"
+            value="Candidat/Ressource"
+            [(ngModel)]="selectedAction"
+            label="Candidat/Ressource"
+        ></p-radioButton>
+
+        <p-radioButton
+            name="action"
+            value="Client/Prospection"
+            [(ngModel)]="selectedAction"
+            label="Client/Prospection"
+        ></p-radioButton>
+
+        <p-radioButton
+            name="action"
+            value="Ambassadeur"
+            [(ngModel)]="selectedAction"
+            label="Ambassadeur"
+        ></p-radioButton>
+    </div>
+</div>
+<br>
+<br>
+
+<div *ngIf="selectedAction === 'Client/Prospection'">
+
+<form (ngSubmit)="onSubmitAction()" #actionForm="ngForm" class="p-fluid">
+    <!-- Section Title -->
+    <div class="text-xl font-bold mb-4 text-center border-round shadow-3 p-3 bg-primary-50">
+        <i class="pi pi-info-circle mr-2"></i>Détails de l'action
+    </div>
+
+
+
+    <!-- Client/Prospection Concerné -->
+    <div class="p-field mb-4">
+        <label for="client" class="font-bold text-lg">
+            <i class="pi pi-user mr-2"></i>Client/Prospection Concerné*
+        </label>
+        <p-autoComplete
+            [(ngModel)]="selectedClient"
+            [suggestions]="filteredClients"
+            (completeMethod)="filterClients($event)"
+            field="fullDisplay"
+            placeholder="Rechercher un client"
+            name="client"
+            [forceSelection]="true"
+            required>
+        </p-autoComplete>
+
+    </div>
+
+
+
+    <!-- Type Field -->
+    <div class="p-field mb-4">
+        <label for="types" class="font-bold text-lg">
+            <i class="pi pi-list mr-2"></i>Type*
+        </label>
+        <div class="p-inputgroup">
+             <span class="p-inputgroup-addon">
+                <i class="pi pi-angle-double-right"></i>
+             </span>
+            <p-dropdown
+                id="types"
+                [(ngModel)]="action.type"
+                name="etat"
+                [options]="clientTypes"
+                placeholder="Sélectionnez un type"
+                styleClass="w-full"
+                [autoZIndex]="true"
+                [scrollHeight]="'300px'"
+                required>
+            </p-dropdown>
+
+        </div>
+    </div>
+
+
+    <div class="p-field-checkbox mb-4">
+        <p-checkbox id="relance" [(ngModel)]="action.relance"
+                    name="relance" [binary]="true" class="mr-2">
+        </p-checkbox>
+        <label for="prochainRdvPlanifie" class="font-bold text-lg">
+            <i [ngClass]="action.relance ? 'pi pi-check-circle text-success mr-2' : 'pi pi-times-circle text-danger mr-2'"></i>Relance ?
+        </label>
+    </div>
+
+    <!-- Prochain RDV Planifié Field -->
+    <div class="p-field-checkbox mb-4">
+        <p-checkbox id="prochainRdvPlanifie" [(ngModel)]="action.prochainRdvPlanifie"
+                    name="prochainRdvPlanifie" [binary]="true" class="mr-2">
+        </p-checkbox>
+        <label for="prochainRdvPlanifie" class="font-bold text-lg">
+            <i [ngClass]="action.prochainRdvPlanifie ? 'pi pi-check-circle text-success mr-2' : 'pi pi-times-circle text-danger mr-2'"></i> Prochain RDV/Echange planifié ?
+        </label>
+    </div>
+
+    <!-- Date RDV Planifié Field (Conditional) -->
+    <div class="p-field mb-4" *ngIf="action.prochainRdvPlanifie">
+        <label for="RDVplanif" class="font-bold text-lg">
+            <i class="pi pi-calendar mr-2"></i>Date RDV planifié*
+        </label>
+        <div class="p-inputgroup">
+            <span class="p-inputgroup-addon">
+                <i class="pi pi-clock"></i>
+            </span>
+            <p-calendar id="RDVplanif" [(ngModel)]="action.dateProchainRdvPlanifie"
+                        name="RDVplanif" [showTime]="true" [showIcon]="true"
+                        styleClass="w-full" required>
+            </p-calendar>
+        </div>
+    </div>
+
+    <div class="p-field mb-4" >
+        <label for="commentaire" class="font-bold text-lg">
+            <i class="pi pi-calendar mr-2"></i>Commentaires
+        </label>
+        <div class="p-inputgroup">
+                            <textarea pInputTextarea rows="10"
+                                      [(ngModel)]="action.commentaires" [ngModelOptions]="{standalone: true}"></textarea>
+        </div>
+    </div>
+    <!-- Footer Buttons -->
+    <div class="flex justify-content-end gap-3 mt-4">
+        <p-button label="Ajouter" icon="pi pi-check" [disabled]="!actionForm.valid"
+                  type="submit" styleClass="p-button-primary p-button-lg">
+        </p-button>
+    </div>
+</form>
+</div>
+
+
+
+
+
+<div *ngIf="selectedAction === 'Candidat/Ressource'">
+
+    <form (ngSubmit)="onSubmitActionCandidat()" #actionForm1="ngForm" class="p-fluid">
+        <!-- Section Title -->
+        <div class="text-xl font-bold mb-4 text-center border-round shadow-3 p-3 bg-primary-50">
+            <i class="pi pi-info-circle mr-2"></i>Détails de l'action
+        </div>
+
+
+
+        <!-- Client/Prospection Concerné -->
+        <div class="p-field mb-4">
+            <label for="candidat" class="font-bold text-lg">
+                <i class="pi pi-user mr-2"></i>Candidat/Ressource Concerné*
+            </label>
+            <p-autoComplete
+                [(ngModel)]="selectedCandidat"
+                [suggestions]="filteredCandidats"
+                (completeMethod)="filterCandidats($event)"
+                field="fullDisplay"
+                placeholder="Rechercher un client"
+                name="client"
+                [forceSelection]="true"
+                required>
+            </p-autoComplete>
+
+        </div>
+
+
+
+        <!-- Type Field -->
+        <div class="p-field mb-4">
+            <label for="types" class="font-bold text-lg">
+                <i class="pi pi-list mr-2"></i>Type*
+            </label>
+            <div class="p-inputgroup">
+             <span class="p-inputgroup-addon">
+                <i class="pi pi-angle-double-right"></i>
+             </span>
+                <p-dropdown
+                    id="types1"
+                    [(ngModel)]="action.type"
+                    name="etat"
+                    [options]="candidattTypes"
+                    placeholder="Sélectionnez un type"
+                    styleClass="w-full"
+                    [autoZIndex]="true"
+                    [scrollHeight]="'300px'"
+                    required>
+                </p-dropdown>
+
+            </div>
+        </div>
+
+
+        <div class="p-field-checkbox mb-4">
+            <p-checkbox id="relance1" [(ngModel)]="action.relance"
+                        name="relance1" [binary]="true" class="mr-2">
+            </p-checkbox>
+            <label for="prochainRdvPlanifie1" class="font-bold text-lg">
+                <i [ngClass]="action.relance ? 'pi pi-check-circle text-success mr-2' : 'pi pi-times-circle text-danger mr-2'"></i>Relance ?
+            </label>
+        </div>
+
+        <div class="p-field-checkbox mb-4" *ngIf="['Appel', 'E-mail', 'Appel + Mail', 'Echange téléphonique', 'RDV'].includes(action.type)">
+            <p-checkbox id="prochainRdvPlanifie1" [(ngModel)]="action.prochainRdvPlanifie"
+                        name="prochainRdvPlanifie1" [binary]="true" class="mr-2">
+            </p-checkbox>
+            <label for="prochainRdvPlanifie1" class="font-bold text-lg">
+                <i [ngClass]="action.prochainRdvPlanifie ? 'pi pi-check-circle text-success mr-2' : 'pi pi-times-circle text-danger mr-2'"></i> Prochain RDV/Echange planifié ?
+            </label>
+        </div>
+
+
+        <!-- Date RDV Planifié Field (Conditional) -->
+        <div class="p-field mb-4" *ngIf="action.prochainRdvPlanifie">
+            <label for="RDVplanif1" class="font-bold text-lg">
+                <i class="pi pi-calendar mr-2"></i>Date RDV planifié*
+            </label>
+            <div class="p-inputgroup">
+            <span class="p-inputgroup-addon">
+                <i class="pi pi-clock"></i>
+            </span>
+                <p-calendar id="RDVplanif1" [(ngModel)]="action.dateProchainRdvPlanifie"
+                            name="RDVplanif1" [showTime]="true" [showIcon]="true"
+                            styleClass="w-full" required>
+                </p-calendar>
+            </div>
+        </div>
+
+
+        <div class="p-field mb-4" *ngIf="['Positionnement présenti', 'Positionnement', 'Entretien partenaire', 'Entretien client'].includes(action.type)">
+            <label for="besoin" class="font-bold text-lg">
+                <i class="pi pi-list mr-2"></i>Besoin*
+            </label>
+            <div class="p-inputgroup">
+        <span class="p-inputgroup-addon">
+            <i class="pi pi-angle-double-right"></i>
+        </span>
+                <p-dropdown
+                    #dropdownRef
+                    id="besoin"
+                    [(ngModel)]="action.besoin"
+                    [ngModelOptions]="{ standalone: true }"
+                    [options]="filteredBesoins"
+                    [filter]="true"
+                    [filterBy]="'label'"
+                    [showClear]="true"
+                    optionLabel="label"
+                    [virtualScroll]="true"
+                    [virtualScrollItemSize]="43"
+                    (onFilter)="filterBesoins($event)"
+                    placeholder="Sélectionnez un besoin"
+                    class="w-full"
+                    [autoZIndex]="true"
+                    [scrollHeight]="'300px'"
+                    required>
+                    <ng-template let-item pTemplate="item">
+                        <div class="flex align-items-center justify-content-between">
+                            <span>{{ item.label }}</span>
+                            <button
+                                type="button"
+                                pButton
+                                icon="pi pi-eye"
+                                class="p-button-text p-button-sm"
+                                (click)="onEyeClick($event, item.id)"
+                                (mousedown)="preventDropdownClose($event)">
+                            </button>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
+        </div>
+
+        <div class="p-field mb-4" >
+            <label for="comment" class="font-bold text-lg">
+                <i class="pi pi-calendar mr-2"></i>Commentaires
+            </label>
+            <div class="p-inputgroup">
+                            <textarea pInputTextarea rows="10"
+                                      [(ngModel)]="action.commentaires" [ngModelOptions]="{standalone: true}"></textarea>
+            </div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex justify-content-end gap-3 mt-4">
+            <p-button label="Ajouter" icon="pi pi-check" [disabled]="!actionForm1.valid"
+                      type="submit" styleClass="p-button-primary p-button-lg">
+            </p-button>
+        </div>
+    </form>
+
+
+
+
+<!-- Besoin View Dialog -->
+<p-dialog [(visible)]="displayBesoinDetailsDialog"
+          [modal]="true"
+          [style]="{ width: '55vw' }"
+          [closable]="true"
+          (onHide)="onDialogClose(dropdownRef)"
+          styleClass="p-fluid custom-dialog">
+
+    <ng-container *ngIf="selectedBesoin; else loading">
+        <!-- Header principal -->
+        <div class="grid center-content-besoin">
+            <div class="col-12">
+                <h2 class="title-besoin">{{ selectedBesoin?.titre }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Informations principales -->
+        <div class="grid section">
+            <div class="col-6">
+                <h3>Informations Générales</h3>
+                <p><strong>Référence:</strong> {{ selectedBesoin?.reference }}</p>
+                <p><strong>État:</strong> {{ selectedBesoin?.etat }}</p>
+                <p><strong>Créé le:</strong> {{ selectedBesoin?.dateDeCreation | date: 'dd MMM yyyy, HH:mm:ss' }}</p>
+                <p><strong>Dernière mise à jour:</strong> {{ selectedBesoin?.dateDerniereMiseAJour | date: 'dd MMM yyyy, HH:mm:ss'}}</p>
+                <p><strong>Plateforme:</strong> {{ selectedBesoin?.plateforme || 'Non défini' }}</p>
+                <p><strong>Démarrage ASAP:</strong> {{ selectedBesoin?.demarrageASAP ? 'Oui' : 'Non' }}</p>
+                <p><strong>Date de démarrage:</strong> {{ selectedBesoin?.dateDeDemarrage | date: 'dd MMM yyyy, HH:mm:ss' }}</p>
+                <p><strong>Besoin en avance de phase:</strong> {{ selectedBesoin?.besoinEnAvanceDePhase ? 'Oui' : 'Non' }}</p>
+                <p><strong>Récurrent:</strong> {{ selectedBesoin?.reccurent ? 'Oui' : 'Non' }}</p>
+            </div>
+            <div class="col-6">
+                <h3>QR Code</h3>
+                <div class="qr-code-container">
+                    <ng-container *ngIf="selectedBesoin?.qrCodeImage; else noQrCode">
+                        <img [src]="selectedBesoin?.qrCodeImage?.imagenUrl" alt="QR Code" class="qr-image" />
+                    </ng-container>
+                    <ng-template #noQrCode>
+                        <p>Aucun QR Code disponible.</p>
+                    </ng-template>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Profil du besoin -->
+        <div class="grid section">
+            <div class="col-12">
+                <h3>Profil Recherché</h3>
+            </div>
+            <div class="col-6">
+                <p><strong>Difficultés:</strong> {{ selectedBesoin?.profilBesoins?.difficultes }}</p>
+                <p><strong>Séniorité:</strong> {{ selectedBesoin?.profilBesoins?.seniorite }}</p>
+                <p><strong>Années d'expérience:</strong> {{ selectedBesoin?.profilBesoins?.anneesExperienceTotales }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>TJM (min - max):</strong> {{ selectedBesoin?.profilBesoins?.tjmMin }} - {{ selectedBesoin?.profilBesoins?.tjmMax }} €</p>
+                <p><strong>TJM souhaité:</strong> {{ selectedBesoin?.profilBesoins?.tjmSouhaite }} €</p>
+                <p><strong>Avantages:</strong> {{ selectedBesoin?.profilBesoins?.avantages || 'Non défini' }}</p>
+            </div>
+        </div>
+
+        <!-- Référentiel -->
+        <div class="grid section">
+            <div class="col-12">
+                <h3>Référentiel</h3>
+            </div>
+            <div class="col-6">
+                <p><strong>Segments:</strong> {{ getSegmentsLabels()?.join(', ') }}</p>
+                <p><strong>Sous-segments:</strong> {{ getSousSegmentsLabels()?.join(', ') }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>Profil:</strong> {{ getProfilLabels()?.join(', ') }}</p>
+                <p><strong>Technologies:</strong> {{ getTechnologiesLabels()?.join(', ') }}</p>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <!-- Message de chargement -->
+    <ng-template #loading>
+        <div class="loading">
+            <p>Chargement des détails du besoin...</p>
+        </div>
+    </ng-template>
+    <br>
+    <p-button label="OK" icon="pi pi-check" (click)="displayBesoinDetailsDialog = false"
+              styleClass="p-button-primary p-button-outlined">
+    </p-button>
+
+
+</p-dialog>
+</div>
+

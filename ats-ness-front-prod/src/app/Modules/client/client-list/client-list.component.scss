@@ -1,0 +1,225 @@
+/* Centrer le texte dans la cellule */
+.centered-cell {
+    text-align: center; /* Centre le contenu horizontalement */
+    vertical-align: middle; /* Centre le contenu verticalement */
+}
+
+/* Style pour les titres Primaire et Secondaire */
+.label {
+    font-weight: bold; /* Met en gras */
+    display: inline-block;
+    margin-right: 5px; /* Espace entre le titre et la valeur */
+}
+
+
+/* Centrer le Dialog dans la page */
+.ref .ui-dialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Centrer le header */
+.dialog-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+.dialog-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Conteneur des informations */
+.organigramme-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Boîte d'informations */
+.organigramme-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    width: 80%;
+    text-align: center; /* Centrer le contenu */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.organigramme-info ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.organigramme-info li {
+    margin: 10px 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Centrer les titres en strong */
+.organigramme-info strong {
+    display: block; /* Pour occuper toute la largeur */
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #555;
+    text-align: center; /* Centrer le texte */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .organigramme-info {
+        width: 95%;
+    }
+
+    .dialog-header h2 {
+        font-size: 1.5rem;
+    }
+}
+
+
+
+/* Conteneur principal */
+.referentiel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Boîte d'informations Référentiel */
+.referentiel-info {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    width: 80%;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Liste des profils */
+.referentiel-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.referentiel-list li {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 1rem;
+    color: #333;
+    text-align: left;
+}
+
+/* Élément Profil */
+.profil-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #e7f3e9;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Titres et autres contenus centrés */
+.referentiel-info strong {
+    display: block;
+    font-weight: bold;
+    font-size: 1.2rem;
+   // color: #555;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .referentiel-info {
+        width: 95%;
+    }
+
+    .dialog-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .profil-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+
+.contact-container {
+    display: flex;
+    flex-direction: column; /* Aligne les lignes en colonne */
+    gap: 8px; /* Espace entre les lignes */
+}
+
+.contact-row {
+    display: flex;
+    align-items: center; /* Aligne verticalement le texte et l'icône */
+}
+
+.label {
+    font-weight: bold; /* Met le texte en gras */
+    margin-right: 0.5rem; /* Espace entre le texte et l'icône */
+}
+
+
+.email-container {
+    display: flex;
+    flex-direction: column; /* Organise les lignes verticalement */
+    gap: 8px; /* Ajoute un espace entre chaque ligne */
+}
+
+.email-row {
+    display: flex;
+    align-items: center; /* Aligne verticalement le texte et l'icône */
+}
+
+
+
+//a {
+//    text-decoration: none; /* Supprime le soulignement des liens */
+//    color: inherit; /* Utilise la couleur par défaut */
+//}
+
+.email-row i {
+    display: inline-block; /* Garantit que l'icône reste alignée avec le texte */
+    vertical-align: middle; /* Ajuste la position verticale de l'icône */
+}
+
+.email-link {
+    display: flex; /* Aligne les enfants en une seule ligne */
+    align-items: center; /* Centre verticalement les enfants */
+    text-decoration: none; /* Supprime le soulignement du lien */
+    color: inherit; /* Utilise la couleur par défaut */
+}
+
+.label-mail {
+    font-weight: bold; /* Accentue le texte */
+    margin-right: 0.5rem; /* Ajoute un espace entre le texte et l'icône */
+}
+
+.email-link i {
+    font-size: 1.2rem; /* Taille de l'icône */
+    vertical-align: middle; /* Garantit l'alignement avec le texte */
+}
+

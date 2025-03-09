@@ -1,0 +1,195 @@
+<p-toast></p-toast>
+<div class="global-overlay" *ngIf="isLoading">
+    <div class="overlay"></div>
+    <div class="spinner-container">
+        <p-progressSpinner class="custom-spinner"
+                           [style]="{'width': '80px', 'height': '80px'}"
+                           strokeWidth="3.5"
+                           animationDuration="0.5s">
+        </p-progressSpinner>
+        <p>{{ progress | number:'1.0-0' }}%</p>
+    </div>
+</div>
+
+<div class="form-container">
+    <p-card styleClass="form-card">
+        <div class="form-header">
+            <h1>Créer une Société</h1>
+            <p class="subtitle">Remplissez les informations pour créer une nouvelle société</p>
+        </div>
+
+        <form [formGroup]="societeForm" (ngSubmit)="onSubmit()">
+            <div class="grid">
+                <!-- Left Column -->
+                <div class="col-12 md:col-6 left-section">
+                    <div class="section-header">
+                        <i class="pi pi-building"></i>
+                        <span>Informations sur l'entreprise</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nom">Nom de la société</label>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-building"></i>
+                            <input
+                                id="nom"
+                                type="text"
+                                pInputText
+                                formControlName="nom"
+                                placeholder="Entrez le nom de la société"
+                            />
+                        </span>
+                        <small class="p-error" *ngIf="societeForm.get('nom')?.invalid && societeForm.get('nom')?.touched">
+                            Le nom de la société est requis
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="societeMere">Société Mère</label>
+                        <p-autoComplete
+                            [suggestions]="filteredSocieteMereOptions"
+                            (completeMethod)="filterSocieteMere($event)"
+                            placeholder="Sélectionnez ou entrez une société mère"
+                            [forceSelection]="false"
+                            formControlName="societeMere"
+                            styleClass="w-full">
+                        </p-autoComplete>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="secteur">Secteur</label>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-briefcase"></i>
+                            <input
+                                id="secteur"
+                                type="text"
+                                pInputText
+                                formControlName="secteur"
+                                placeholder="Secteur d'activité"
+                            />
+                        </span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="adresse">Adresse</label>
+                        <textarea
+                            id="adresse"
+                            pInputTextarea
+                            formControlName="adresse"
+                            [rows]="3"
+                            placeholder="Entrez l'adresse complète"
+                            class="w-full">
+                        </textarea>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-12 md:col-6 right-section">
+                    <div class="section-header">
+                        <i class="pi pi-wallet"></i>
+                        <span>Informations Financières</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capitalSocial">Capital Social</label>
+                        <p-inputNumber
+                            id="capitalSocial"
+                            formControlName="capitalSocial"
+                            mode="currency"
+                            currency="EUR"
+                            locale="fr-FR"
+                            placeholder="Montant du capital social"
+                            styleClass="w-full">
+                        </p-inputNumber>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rcs">Numéro RCS</label>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-id-card"></i>
+                            <input
+                                id="rcs"
+                                type="text"
+                                pInputText
+                                formControlName="rcs"
+                                placeholder="Numéro d'immatriculation"
+                            />
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="villeRcs">Ville RCS</label>
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-map-marker"></i>
+                            <input
+                                id="villeRcs"
+                                type="text"
+                                pInputText
+                                formControlName="villeRcs"
+                                placeholder="Ville d'immatriculation"
+                            />
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Documents Section -->
+                <div class="col-12 documents-section">
+                    <div class="section-header">
+                        <i class="pi pi-file"></i>
+                        <span>Documents & Médias</span>
+                    </div>
+
+                    <div class="grid">
+                        <div class="col-12 md:col-6">
+                            <div class="upload-card">
+                                <label>Organigrammes</label>
+                                <p-fileUpload
+                                    mode="advanced"
+                                    [multiple]="true"
+                                    accept="image/*,.pdf"
+                                    [maxFileSize]="1000000"
+                                    (onSelect)="onFileSelect($event, 'organigrammes')"
+                                    [showCancelButton]="false"
+                                    chooseLabel="Sélectionner des fichiers"
+                                    styleClass="modern-upload">
+                                </p-fileUpload>
+                            </div>
+                        </div>
+
+                        <div class="col-12 md:col-6">
+                            <div class="upload-card">
+                                <label>Logo de la société</label>
+                                <p-fileUpload
+                                    mode="advanced"
+                                    [multiple]="false"
+                                    accept="image/*"
+                                    [maxFileSize]="1000000"
+                                    (onSelect)="onFileSelect($event, 'logo')"
+                                    [showCancelButton]="false"
+                                    chooseLabel="Sélectionner un logo"
+                                    styleClass="modern-upload">
+                                </p-fileUpload>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <div class="submit-section">
+                        <button
+                            type="submit"
+                            pButton
+                            label="Créer la Société"
+                            icon="pi pi-check"
+                            [disabled]="societeForm.invalid"
+                            class="p-button-lg">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-card>
+</div>

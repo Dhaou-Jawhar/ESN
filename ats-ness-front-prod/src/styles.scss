@@ -1,0 +1,32 @@
+/* You can add global styles to this file, and also import other style files */
+
+$gutter: 1rem; //for primeflex grid system
+@import "assets/layout/styles/layout/layout.scss";
+
+/* PrimeNG */
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+
+/* Demos */
+@import "assets/demo/styles/flags/flags.css";
+@import "assets/demo/styles/badges.scss";
+@import "assets/demo/styles/code.scss";
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.custom-button200 {
+    background-color: #db7093; /* Couleur rose-violet clair */
+    border-color: #db7093;
+    color: white;
+}
+
+.custom-button200:hover {
+    background-color: #c86483; /* Couleur un peu plus sombre lors du survol */
+    border-color: #c86483;
+}
+
+
+.p-toast-detail {
+    white-space: pre-wrap !important;
+}

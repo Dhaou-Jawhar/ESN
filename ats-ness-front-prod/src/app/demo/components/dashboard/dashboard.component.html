@@ -1,0 +1,255 @@
+<!-- dashboard.component.html -->
+<div class="grid">
+    <!-- Main Statistics Cards -->
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Base de Candidats</span>
+                    <div class="text-900 font-medium text-xl">{{statistics.candidates}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-users text-blue-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-500">Candidats totaux enregistrés</div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Ressources Actives</span>
+                    <div class="text-900 font-medium text-xl">{{statistics.resources}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-green-100 border-round" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-check-circle text-green-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-500">Ressources disponibles</div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Contacts & Clients</span>
+                    <div class="text-900 font-medium text-xl">{{statistics.contacts}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-purple-100 border-round" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-briefcase text-purple-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-500">Contacts professionnels</div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Besoins Totaux</span>
+                    <div class="text-900 font-medium text-xl">{{statistics.totalNeeds}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-pink-100 border-round" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-chart-bar text-pink-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-500">Depuis le début de l'année</div>
+        </div>
+    </div>
+
+
+    <!-- Additional Statistics -->
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Clients Actifs</span>
+                    <div class="text-900 font-medium text-xl">{{statistics.activeClients}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-star text-orange-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-500">Collaborations en cours</div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6 xl:col-4">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Sociétés Partenaires</span>
+                    <div class="text-900 font-medium text-xl">{{statistics.partnerCompanies}}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" style="width: 2.5rem; height: 2.5rem">
+                    <i class="pi pi-building text-cyan-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="text-500">Entreprises partenaires</div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
+    <!-- Priority Needs Section -->
+        <div class="card" style="padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <h5 style="margin-bottom: 1rem;">Répartition des Besoins par Priorité</h5>
+            <div>
+                <div *ngFor="let need of priorityNeeds" style="margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="color: #212529; font-weight: 500;">{{need.priority}}</span>
+                        <span style="color: #6c757d;">{{need.count}} besoins</span>
+                    </div>
+                    <div style="background: #e0e0e0; height: 8px; border-radius: 4px; overflow: hidden;">
+                        <div
+                            [style.background]="need.priority === 'Priorité 1' ? '#4A148C' :
+                                               need.priority === 'Priorité 2' ? '#7B1FA2' :
+                                               need.priority === 'Priorité 3' ? '#BA68C8' :
+                                               need.priority === 'Stand By' ? '#FFA726' :
+                                               '#f44336'"
+                            [style.width]="need.percentage + '%'"
+                            style="height: 100%;"></div>
+                    </div>
+                    <span style="color: #9e9e9e; margin-top: 0.5rem; display: block;">{{need.percentage}}% du total</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pie Charts Section -->
+        <div class="col-13">
+            <div class="card">
+                <h5>Distribution des Candidats</h5>
+                <p-chart type="pie"
+                         [data]="candidateDistribution"
+                         [options]="pieChartOptions"
+                         height="250"></p-chart>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Chart Section -->
+    <div class="col-8 lg:col-6">
+        <div class="card">
+            <h5>Évolution des Besoins 2024</h5>
+            <div class="flex flex-column md:flex-row justify-content-between mb-3">
+                <div class="text-900">
+                    <span class="font-medium">Total depuis janvier: </span>
+                    <span class="text-primary font-medium">{{monthlyNeeds.cumulative.may}} besoins</span>
+                </div>
+                <div class="text-900">
+                    <span class="font-medium">Mois en cours: </span>
+                    <span class="text-primary font-medium">{{monthlyNeeds.may}} besoins</span>
+                </div>
+            </div>
+            <p-chart type="bar" [data]="chartData" [options]="chartOptions" height="350"></p-chart>
+        </div>
+    </div>
+
+    <div class="grid">
+        <!-- Line Charts Section -->
+        <div class="col-12 xl:col-6">
+            <div class="card">
+                <h5>Évolution du Nombre de Candidats</h5>
+                <p-chart type="line"
+                         [data]="{
+                        labels: timeSeriesData.labels,
+                        datasets: [{
+                            label: timeSeriesData.totalCandidates.label,
+                            data: timeSeriesData.totalCandidates.data,
+                            borderColor: timeSeriesData.totalCandidates.borderColor,
+                            fill: false
+                        }]
+                     }"
+                         [options]="lineChartOptions"
+                         height="300"></p-chart>
+            </div>
+        </div>
+
+        <div class="col-12 xl:col-6">
+            <div class="card">
+                <h5>Candidats en Vivier</h5>
+                <p-chart type="line"
+                         [data]="{
+                        labels: timeSeriesData.labels,
+                        datasets: [{
+                            label: timeSeriesData.vivierCandidates.label,
+                            data: timeSeriesData.vivierCandidates.data,
+                            borderColor: timeSeriesData.vivierCandidates.borderColor,
+                            fill: false
+                        }]
+                     }"
+                         [options]="lineChartOptions"
+                         height="300"></p-chart>
+            </div>
+        </div>
+        <!-- Needs Charts -->
+        <div class="col-12 xl:col-6">
+            <div class="card">
+                <h5>Évolution des Besoins</h5>
+                <p-chart type="line"
+                         [data]="{
+                        labels: timeSeriesData.labels,
+                        datasets: [{
+                            label: timeSeriesData.totalNeeds.label,
+                            data: timeSeriesData.totalNeeds.data,
+                            borderColor: timeSeriesData.totalNeeds.borderColor,
+                            fill: false
+                        }]
+                     }"
+                         [options]="lineChartOptions"
+                         height="300"></p-chart>
+            </div>
+        </div>
+
+        <div class="col-12 xl:col-6">
+            <div class="card">
+                <h5>Nouveaux Besoins (Dernière semaine)</h5>
+                <p-chart type="line"
+                         [data]="{
+                        labels: timeSeriesData.labels,
+                        datasets: [{
+                            label: timeSeriesData.newNeeds.label,
+                            data: timeSeriesData.newNeeds.data,
+                            borderColor: timeSeriesData.newNeeds.borderColor,
+                            fill: false
+                        }]
+                     }"
+                         [options]="lineChartOptions"
+                         height="300"></p-chart>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <h5>Besoins par Priorité</h5>
+                <p-chart type="line"
+                         [data]="needsByPriority"
+                         [options]="lineChartOptions"
+                         height="300"></p-chart>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities -->
+    <div class="col-12">
+        <div class="card">
+            <h5>Activités Récentes</h5>
+            <div class="flex flex-column">
+                <div *ngFor="let activity of recentActivities" class="flex align-items-center py-2 border-bottom-1 surface-border">
+                    <div [class]="'w-3rem h-3rem flex align-items-center justify-content-center bg-' + activity.color + '-100 border-circle mr-3'">
+                        <i [class]="activity.icon + ' text-xl text-' + activity.color + '-500'"></i>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="text-900 font-medium mb-1">{{activity.name}}</span>
+                        <span class="text-600">{{activity.action}}</span>
+                        <small class="text-500">{{activity.date | date:'short'}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

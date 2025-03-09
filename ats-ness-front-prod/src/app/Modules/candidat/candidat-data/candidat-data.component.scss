@@ -1,0 +1,718 @@
+.cadre {
+    padding: 1.5rem;
+
+    h1 {
+        margin-bottom: 1rem;
+    }
+}
+
+.centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center the text */
+}
+
+/* Grid Layout */
+.p-grid {
+    display: flex;
+    flex-direction: column; /* Stack the table and charts vertically */
+
+    .p-col-12 {
+        padding: 0;
+        width: 100%;
+    }
+
+    /* Table Full Width at the Top */
+    .table-container {
+        width: 100%;
+        margin-bottom: 1.5rem; /* Add some space between the table and the charts */
+    }
+
+    /* Chart Area */
+    .chart-container {
+        display: flex;
+        justify-content: space-between; /* Spread charts evenly across */
+        flex-wrap: wrap;
+        gap: 1rem; /* Add spacing between charts */
+        align-items: stretch; /* Ensure all chart cards have the same height */
+    }
+
+    /* Chart Cards */
+    .chart-card {
+        flex: 1; /* Allow cards to evenly take up space */
+        min-width: 30%; /* Make sure cards take up around 1/3 of the space */
+        margin-right: 0; /* Remove extra margin */
+        max-width: 32%; /* Ensure the cards don't exceed 32% to fit within the container */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        @media (max-width: 768px) {
+            width: 100%; /* Full width on smaller screens */
+            margin-bottom: 1.5rem;
+        }
+    }
+}
+
+/* Card Styles */
+.card {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem; /* Ensure spacing between cards on smaller screens */
+    height: 100%; /* Ensure the card takes up the available height */
+
+    &.full-height {
+        height: 100%;
+    }
+
+    h5 {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Table Section */
+/* Style for Calendar, Input, and Dropdown */
+.p-calendar,
+.p-inputtext,
+.p-dropdown {
+    width: 100%;
+}
+
+/* Style for Fields */
+.p-field {
+    display: flex;
+    flex-direction: column; /* Stack label above input */
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    width: 100%; /* Ensure full width for the inputs */
+
+    label {
+        margin-bottom: 0.5rem; /* Add space between label and input */
+    }
+
+    & + .p-field {
+        margin-left: 0;
+        margin-top: 1rem; /* Add spacing between fields */
+    }
+}
+
+/* Adjust the flex and layout for smaller screens */
+@media (max-width: 768px) {
+    .p-field {
+        width: 100%; /* Ensure full width on smaller screens */
+    }
+}
+
+/* Margin and Flex Utility Classes */
+.p-mb-3 {
+    margin-bottom: 1rem !important;
+}
+.p-mt-5{
+    margin-top: 35px !important;
+}
+.p-mr-7 {
+    margin-right: 70px;
+}
+.p-d-flex {
+    display: flex !important;
+}
+
+.p-ai-center {
+    align-items: center !important;
+}
+
+.p-mr-2 {
+    margin-right: 20px !important;
+}
+
+.p-mr-3 {
+    margin-right: 4.5rem !important;
+}
+
+/* Remove Gutter */
+.p-nogutter {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+.p-dialog .p-dialog-header {
+    background-color: #007ad9;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.p-dialog .p-dialog-content {
+    padding: 1rem;
+}
+
+.p-dialog p {
+    margin: 0.5rem 0;
+}
+
+.profile-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Makes the image a circle */
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    display: inline-block;
+    text-align: center; /* Ensures text is centered */
+    margin: 0 auto; /* Centers the content */
+}
+
+.profile-info p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+///////////////////RATING/////////
+
+
+
+
+/* TJM Range Slider Styles */
+.p-slider {
+    width: 200px;
+    margin-top: 10px;
+}
+
+/* Technology Dropdown Styles */
+.p-dropdown {
+    width: 200px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .p-field {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+
+    .p-slider, .p-dropdown {
+        width: 100%;
+    }
+}
+
+
+.custom-button {
+    display: flex; /* Pour centrer le contenu */
+    align-items: center; /* Centre les icônes et le texte */
+    padding: 0.5rem 1rem; /* Espacement pour le bouton */
+    border: none; /* Supprime la bordure par défaut */
+    background: transparent; /* Fond transparent pour un style de lien */
+    color: inherit; /* Prend la couleur du texte du parent */
+    cursor: pointer; /* Change le curseur en pointeur */
+    position: relative; /* Nécessaire pour l'animation */
+    transition: color 0.3s ease; /* Transition de couleur */
+}
+
+/* Ajoutez cette règle pour l'espacement entre les boutons */
+.custom-button + .custom-button {
+    margin-left: 0.5rem; /* Espace entre les boutons */
+}
+
+/* Icône à l'intérieur du bouton */
+.custom-button .icon {
+    font-size: 1.5rem; /* Taille de l'icône */
+    margin-right: 0.5rem; /* Espacement entre l'icône et le texte */
+    opacity: 0; /* Icône invisible par défaut */
+    position: absolute; /* Positionne l'icône */
+    left: 10px; /* Ajustez selon vos besoins */
+    transition: opacity 0.3s ease; /* Transition pour l'icône */
+}
+
+/* Survol du bouton */
+.custom-button:hover {
+    color: #007ad9; /* Change la couleur au survol */
+}
+
+/* Afficher l'icône au survol */
+.custom-button:hover .icon {
+    opacity: 1; /* Rendre l'icône visible au survol */
+}
+
+
+
+.text-flicker-in-glow {
+    -webkit-animation: text-flicker-in-glow 4s linear both;
+    animation: text-flicker-in-glow 4s linear both;
+}
+
+@-webkit-keyframes text-flicker-in-glow {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    10.1% {
+        opacity: 1;
+        text-shadow: none;
+    }
+    10.2% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    20% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    20.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
+    }
+    20.6% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    30% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    30.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    30.5% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    30.6% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    45% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    45.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    55% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    55.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    57% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    57.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35);
+    }
+    60% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35);
+    }
+    60.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    65% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    65.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    75% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    75.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    77% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    77.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.4), 0 0 110px rgba(255, 255, 255, 0.2), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    85% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.4), 0 0 110px rgba(255, 255, 255, 0.2), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    85.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    86% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    86.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.45), 0 0 110px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.45), 0 0 110px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+}
+@keyframes text-flicker-in-glow {
+    0% {
+        opacity: 0;
+    }
+    10% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    10.1% {
+        opacity: 1;
+        text-shadow: none;
+    }
+    10.2% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    20% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    20.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
+    }
+    20.6% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    30% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    30.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    30.5% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    30.6% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    45% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    45.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    50% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    55% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.45), 0 0 60px rgba(255, 255, 255, 0.25);
+    }
+    55.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    57% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    57.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35);
+    }
+    60% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35);
+    }
+    60.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    65% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    65.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    75% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.35), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    75.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    77% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    77.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.4), 0 0 110px rgba(255, 255, 255, 0.2), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    85% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.55), 0 0 60px rgba(255, 255, 255, 0.4), 0 0 110px rgba(255, 255, 255, 0.2), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    85.1% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    86% {
+        opacity: 0;
+        text-shadow: none;
+    }
+    86.1% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.45), 0 0 110px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+    100% {
+        opacity: 1;
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.45), 0 0 110px rgba(255, 255, 255, 0.25), 0 0 100px rgba(255, 255, 255, 0.1);
+    }
+}
+
+.global-filter {
+    margin-bottom: 1rem;
+}
+
+.global-filter input {
+    width: 100%;
+}
+
+
+
+.filter-container {
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-item label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: #ffffff;
+}
+
+.filter-item p-inputText,
+.filter-item p-dropdown,
+.filter-item p-calendar,
+.filter-item p-slider,
+.filter-item p-multiSelect {
+    width: 100%;
+}
+
+.tjm-range-display {
+    text-align: center;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* PrimeNG component styles */
+:host ::ng-deep {
+    .p-dropdown, .p-multiselect, .p-calendar {
+        width: 100%;
+    }
+
+    .p-inputtext {
+        width: 100%;
+    }
+
+    .p-slider {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .p-calendar .p-datepicker {
+        min-width: 100%;
+    }
+}
+
+/* Optional: Add some hover effects to inputs */
+.filter-item p-inputText:hover,
+.filter-item p-dropdown:hover,
+.filter-item p-calendar:hover,
+.filter-item p-multiSelect:hover {
+    border-color: #2196F3;
+}
+
+/* Global filter style */
+.global-filter {
+    margin-bottom: 1rem;
+}
+
+.global-filter .p-inputtext {
+    width: 100%;
+}
+
+
+// Add these styles to your component's SCSS file
+
+.upload-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin: 1rem 0;
+
+    .upload-btn {
+        transition: transform 0.2s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.upload-dialog {
+    ::ng-deep .p-dialog-header {
+        background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+        color: white;
+
+        .p-dialog-title {
+            font-weight: 600;
+        }
+
+        .p-dialog-header-icon {
+            color: white;
+        }
+    }
+}
+
+.upload-container {
+    padding: 1rem;
+
+    .upload-dropzone {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+        cursor: pointer;
+
+        &.drag-over {
+            border-color: #2196F3;
+            background: rgba(33, 150, 243, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #2196F3;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            color: #495057;
+            margin: 1rem 0;
+        }
+
+        p {
+            color: #6c757d;
+            margin: 0.5rem 0;
+        }
+    }
+}
+
+.upload-list {
+    margin-top: 2rem;
+
+    h4 {
+        color: #495057;
+        margin-bottom: 1rem;
+    }
+
+    .upload-status {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+
+        &.pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        &.uploading {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        &.complete {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        &.error {
+            background: #fdecea;
+            color: #d32f2f;
+        }
+    }
+}
+
+// Animation for new files
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.p-table tr {
+    animation: slideIn 0.3s ease;
+}

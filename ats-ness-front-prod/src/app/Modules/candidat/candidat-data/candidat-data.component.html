@@ -1,0 +1,261 @@
+<p-toast></p-toast>
+<div class="cadre p-p-3">
+    <!-- Centered Title -->
+    <div class="centered-container">
+        <div class="p-col-12" style="padding: 0">
+            <h1 class="text-flicker-in-glow">Candidat Dashboard</h1>
+        </div>
+    </div>
+    <div class="global-filter p-mb-4">
+        <span class="p-input-icon-left" style="width: 100%">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Search by name, title, or date..."
+                   (keyup)="onGlobalFilter($event)" class="p-inputtext p-component" style="width: 100%" />
+        </span>
+    </div>
+
+    <!-- Main Content: Table on Top -->
+    <div class="p-grid p-nogutter">
+        <!-- Table Full Width -->
+        <div class="p-col-12 table-container">
+            <div class="card p-p-3 full-height">
+
+
+                <div class="filter-container">
+                    <div class="filter-grid ">
+                        <!-- Row 1 -->
+                        <div class="filter-item">
+                            <label for="responsable">Responsable:</label>
+                            <input id="responsable" type="text" pInputText placeholder="Enter Responsable"
+                                   [(ngModel)]="responsable">
+                        </div>
+                        <div class="filter-item">
+                            <label for="title">Titre:</label>
+                            <input id="title" type="text" pInputText placeholder="Enter title" [(ngModel)]="title">
+                        </div>
+                        <div class="filter-item">
+                            <label for="state">Etat:</label>
+                            <p-dropdown id="state" [options]="states" [(ngModel)]="selectedState"
+                                        placeholder="Select Etat" [showClear]="true"></p-dropdown>
+                        </div>
+                        <div class="filter-item">
+                            <label for="statusCandidat">Status:</label>
+                            <p-dropdown id="statusCandidat" [options]="statuscandidat"
+                                        [(ngModel)]="selectedStatusCandidat" placeholder="Select Etat"
+                                        [showClear]="true"></p-dropdown>
+                        </div>
+
+
+                        <!-- Row 2 -->
+                        <div class="filter-item">
+                            <label for="date-range">Date de dernière mise à jour:</label>
+                            <p-calendar id="date-range" [(ngModel)]="dateRange" selectionMode="range"
+                                        dateFormat="dd/mm/yy" placeholder="Pick date range" [showIcon]="true"
+                                        (onSelect)="onDateRangeChange()">
+                            </p-calendar>
+                        </div>
+                        <div class="filter-item">
+                            <label for="tjm-range">TJM Range:</label>
+                            <p-slider [(ngModel)]="rangeValues" [range]="true" [min]="0" [max]="1000"
+                                      (onSlideEnd)="onTjmRangeChange()"></p-slider>
+                            <div class="tjm-range-display">
+                                {{ rangeValues[0] }} - {{ rangeValues[1] }} €
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label for="tech-type">Technology Type:</label>
+                            <p-dropdown id="tech-type" [options]="technologyTypes" [(ngModel)]="selectedTechType"
+                                        (onChange)="onTechTypeChange()" placeholder="Select Type"
+                                        [showClear]="true"></p-dropdown>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="filter-item">
+                            <label for="specific-tech">Specific Technologies:</label>
+                            <p-multiSelect id="specific-tech" [options]="specificTechnologies"
+                                           [(ngModel)]="selectedSpecificTech" (onChange)="onSpecificTechChange()"
+                                           placeholder="Select Technology" [disabled]="!selectedTechType" [showClear]="true">
+                            </p-multiSelect>
+                        </div>
+                        <div class="filter-item">
+                            <!-- Placeholder for future filter if needed -->
+                        </div>
+                        <div class="filter-item">
+                            <!-- Placeholder for future filter if needed -->
+                        </div>
+                    </div>
+                </div>
+                <!-- Add this button above the table container -->
+                <div class="upload-button-container p-d-flex p-jc-end p-mb-3">
+                    <app-cv-upload></app-cv-upload>
+                </div>
+                <!-- Candidate Table -->
+                <p-table [value]="filteredCandidates()" [paginator]="true" [rows]="5" responsiveLayout="scroll"
+                         sortMode="multiple">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="lastUpdate">
+                                Mise à jour
+                                <p-sortIcon field="lastUpdate"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="fullName">
+                                Prénom + NOM
+                                <p-sortIcon field="fullName"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="titre">
+                                Titre <p-sortIcon field="titre"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="state">
+                                État <p-sortIcon field="state"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="status">
+                                Statut <p-sortIcon field="status"></p-sortIcon>
+                            </th>
+                            <th>Ressenti global</th>
+                            <th>CV</th>
+                            <th>TJM [Min-Souhaite]</th>
+                            <th>Profile</th>
+                            <th>Contact</th>
+                            <th>Responsable</th>
+                            <th>Actions</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-candidate>
+                        <tr>
+                            <td>
+                                {{ candidate.lastUpdate | date : "dd/MM/yyyy" }}
+                            </td>
+                            <td [routerLink]="[
+                                    '/back-office/candidat/profile',
+                                    candidate.id
+                                ]" title="View Profile">
+                                {{ candidate.fullName }}
+                            </td>
+                            <td>{{ candidate.titre }}</td>
+                            <td>{{ candidate.state }}</td>
+                            <td>{{ candidate.statuscandidat}}</td>
+                            <td style="text-align: left">
+                                <div class="rating">
+                                    <ngx-stars
+                                        *ngIf="myRating[candidate.id] !== undefined"
+                                        [initialStars]="myRating[candidate.id] || 0"
+                                        [maxStars]="5"
+                                        [wholeStars]="false"
+                                        [readonly]="false"
+                                        [size]="24"
+                                        [color]="'#ffc700'"
+                                        (ratingOutput)="addRating($event, candidate.id)">
+                                    </ngx-stars>
+                                </div>
+
+                            </td>
+                            <td>
+                                <a *ngIf="candidate.cvurl" [href]="candidate.cvurl" target="_blank" pButton pRipple
+                                   type="button" icon="pi pi-file-pdf"
+                                   class="p-button p-component p-button-text p-button-icon-only"
+                                   title="Download CV"></a>
+                                <span *ngIf="!candidate.cvurl">No CV</span>
+                            </td>
+                            <td>
+                                <span class="tjm-range">{{ candidate.tjmmin }} -
+                                    {{ candidate.tjmsouhaite }} €</span>
+                            </td>
+                            <td>
+                                <a (click)="showProfile(candidate)" title="more info">
+                                    <i class="pi pi-user" style="font-size: 1.5rem"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a *ngIf="candidate.telephone" [href]="'tel:' + candidate.telephone"
+                                   title="{{ candidate.telephone }}">
+                                    <i class="pi pi-phone" style="
+                                            font-size: 1.5rem;
+                                            margin-right: 1rem;
+                                        "></i>
+                                </a>
+                                <a *ngIf="candidate.email" [href]="'mailto:' + candidate.email"
+                                   title="{{ candidate.email }}">
+                                    <i class="pi pi-envelope" style="font-size: 1.5rem"></i>
+                                </a>
+                            </td>
+                            <td>{{ candidate.responsable }}</td>
+                            <td>
+                                <a (click)="redirectUpdate(candidate.id)" title="Modifier le candidat">
+                                    <i class="pi pi-pencil" style="
+                                            font-size: 1.5rem;
+                                            margin-right: 1rem;
+                                        "></i>
+                                </a>
+                                <a (click)="showProfile(candidate)" title="Supprimer le candidat">
+                                    <i class="pi pi-trash" style="font-size: 1.5rem"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+
+                <!-- Profile Dialog -->
+                <p-dialog header="Profile Information" [(visible)]="displayProfileDialog" [modal]="true"
+                          [style]="{ width: '450px' }" [closable]="true" [baseZIndex]="10000">
+                    <div *ngIf="selectedCandidate" class="profile-container">
+                        <!-- Candidate Picture -->
+                        <div class="profile-picture">
+                            <img *ngIf="selectedCandidate.picture" [src]="selectedCandidate.picture"
+                                 alt="Candidate Picture" />
+                        </div>
+
+                        <!-- Profile Information -->
+                        <div class="profile-info">
+                            <p>
+                                <strong>Full Name:</strong>
+                                {{ selectedCandidate.fullName }}
+                            </p>
+                            <p>
+                                <strong>Email:</strong>
+                                {{ selectedCandidate.email }}
+                            </p>
+                            <p>
+                                <strong>Telephone:</strong>
+                                {{ selectedCandidate.telephone }}
+                            </p>
+                            <p>
+                                <strong>Status:</strong>
+                                {{ selectedCandidate.status }}
+                            </p>
+
+                            <!-- Dropdown to change candidate's state -->
+                            <p><strong>State:</strong></p>
+                            <p-dropdown [options]="states" [(ngModel)]="selectedCandidate.state" (onChange)="
+                                    updateEtat(
+                                        selectedCandidate.id,
+                                        selectedCandidate.state
+                                    )
+                                " placeholder="Select Etat" appendTo="body" [autoZIndex]="false"></p-dropdown>
+                        </div>
+                    </div>
+                </p-dialog>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="p-col-12 chart-container">
+            <!-- First Chart Card -->
+            <div class="card chart-card">
+                <h5>Candidates by State</h5>
+                <p-chart type="pie" [data]="pieData" [options]="pieOptions"></p-chart>
+            </div>
+
+            <!-- Second Chart Card -->
+            <div class="card chart-card">
+                <h5>Candidates by Status</h5>
+                <p-chart type="bar" [data]="pieData" [options]="pieOptions"></p-chart>
+            </div>
+
+            <!-- Third Chart Card -->
+            <div class="card chart-card">
+                <h5>Candidates by Update Date</h5>
+                <p-chart type="line" [data]="pieData" [options]="pieOptions"></p-chart>
+            </div>
+        </div>
+    </div>
+</div>

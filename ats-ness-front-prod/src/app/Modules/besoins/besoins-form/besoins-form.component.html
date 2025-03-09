@@ -1,0 +1,455 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+<!-- Loading Overlay -->
+<div class="global-overlay" *ngIf="isLoading">
+    <div class="overlay"></div>
+    <div class="spinner-container">
+        <p-progressSpinner
+            styleClass="custom-spinner"
+            [style]="{'width': '80px', 'height': '80px'}"
+            strokeWidth="4"
+            animationDuration="0.5s">
+        </p-progressSpinner>
+        <div class="progress-label">
+            <i class="pi pi-spin pi-sync"></i>
+            <span>{{ progress | number:'1.0-0' }}%</span>
+        </div>
+    </div>
+</div>
+
+<div class="form-container">
+    <p-card styleClass="form-card shadow-4">
+        <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2 px-4 py-3 surface-section">
+                <i class="pi pi-file-edit text-2xl text-primary"></i>
+                <h2 class="m-0 text-2xl font-semibold">Créer un Besoin</h2>
+            </div>
+        </ng-template>
+
+        <form [formGroup]="besoinForm" (ngSubmit)="onSubmit()" class="p-fluid">
+            <p-divider align="left">
+                <span class="p-tag">Informations générales</span>
+            </p-divider>
+
+            <div class="grid">
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="titre" class="font-medium">Titre*</label>
+                        <span class="p-input-icon-left w-full">
+                            <i class="pi pi-file"></i>
+                            <input id="titre"
+                                   type="text"
+                                   pInputText
+                                   formControlName="titre"
+                                   placeholder="Saisissez le titre du besoin"
+                                   [pTooltip]="'Entrez un titre descriptif'"
+                                   class="p-inputtext-lg"/>
+                        </span>
+                        <small class="p-error" *ngIf="besoinForm.get('titre')?.invalid && besoinForm.get('titre')?.touched">
+                            Le titre est requis
+                        </small>
+                    </div>
+                </div>
+
+
+                <div class="col-12 md:col-6">
+                    <div class="field">
+
+                    <label for="etat" class="font-bold">État*</label>
+                    <p-dropdown id="etat" formControlName="etat"
+                                name="etat"
+                                [options]="states" placeholder="Sélectionnez l'état"
+                                styleClass="w-full" required>
+                    </p-dropdown>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="dateDeDemarrage" class="font-medium">Date de démarrage*</label>
+                        <p-calendar id="dateDeDemarrage"
+                                  formControlName="dateDeDemarrage"
+                                  [showIcon]="true"
+                                  dateFormat="dd/mm/yy"
+                                  [showButtonBar]="true"
+                                  [styleClass]="'p-inputtext-lg'"
+                                  placeholder="Sélectionnez une date">
+                        </p-calendar>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <p-card styleClass="surface-ground">
+                        <div class="field-checkbox">
+                            <p-checkbox formControlName="besoinEnAvanceDePhase"
+                                      [binary]="true"
+                                      inputId="besoinEnAvanceDePhase">
+                            </p-checkbox>
+                            <label for="besoinEnAvanceDePhase" class="ml-2">
+                                <i class="pi pi-clock mr-2"></i>
+                                Besoin en avance de phase
+                            </label>
+                        </div>
+                    </p-card>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <p-card styleClass="surface-ground">
+                        <div class="field-checkbox">
+                            <p-checkbox formControlName="reccurent"
+                                      [binary]="true"
+                                      inputId="reccurent">
+                            </p-checkbox>
+                            <label for="reccurent" class="ml-2">
+                                <i class="pi pi-refresh mr-2"></i>
+                                Récurrent
+                            </label>
+                        </div>
+                    </p-card>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <p-card styleClass="surface-ground">
+                        <div class="field-checkbox">
+                            <p-checkbox formControlName="demarrageASAP"
+                                      [binary]="true"
+                                      inputId="demarrageASAP">
+                            </p-checkbox>
+                            <label for="demarrageASAP" class="ml-2">
+                                <i class="pi pi-bolt mr-2"></i>
+                                Démarrage ASAP
+                            </label>
+                        </div>
+                    </p-card>
+                </div>
+                <div class="col-12 md:col-4">
+                    <p-card styleClass="surface-ground">
+                        <div class="field-checkbox">
+                            <p-checkbox formControlName="habilitable"
+                                        [binary]="true"
+                                        inputId="habilitable">
+                            </p-checkbox>
+                            <label for="habilitable" class="ml-2">
+                                <i class="pi pi-bolt mr-2"></i>
+                                Habilitable
+                            </label>
+                        </div>
+                    </p-card>
+                </div>
+            </div>
+
+            <p-divider align="left">
+                <span class="p-tag">Référentiel</span>
+            </p-divider>
+            <div formGroupName="referentiel" class="container p-4">
+                <!-- Section Profils -->
+                <div class="p-field mb-4">
+                    <label class="font-bold block mb-2">Profils*</label>
+                    <div formArrayName="profilReferentiels">
+                        <div *ngFor="let profilReferentiel of getProfilReferentiels().controls; let i = index"
+                             [formGroupName]="i"
+                             class="mb-3">
+                            <!-- Ligne de profil avec dropdowns -->
+                            <div class="grid align-items-center">
+                                <div class="col-5">
+                                    <p-dropdown
+                                        id="profile-{{ i }}"
+                                        [options]="availableProfils[i] || originalProfils"
+                                        placeholder="Sélectionnez un profil"
+                                        formControlName="profil"
+                                        (onChange)="onProfilChangeAdd(i)"
+                                        class="w-full"
+                                    ></p-dropdown>
+                                </div>
+                                <div class="col-5">
+                                    <p-dropdown
+                                        id="niveau-{{ i }}"
+                                        [options]="niveauxTechnos"
+                                        placeholder="Sélectionnez un niveau"
+                                        formControlName="niveau"
+                                        class="w-full"
+                                    ></p-dropdown>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <ng-container *ngIf="profilReferentiel.get('profil')?.value && profilReferentiel.get('niveau')?.value">
+                                        <button
+                                            pButton
+                                            icon="pi pi-plus"
+                                            class="p-button-rounded p-button-primary mr-2"
+                                            (click)="addProfilReferentiel()"
+                                            title="Ajouter un profil"
+                                            type="button"
+                                        ></button>
+                                        <button
+                                            pButton
+                                            icon="pi pi-minus"
+                                            class="p-button-rounded p-button-danger"
+                                            (click)="removeProfilReferentiel(i)"
+                                            title="Supprimer ce profil"
+                                            *ngIf="getProfilReferentiels().length > 1"
+                                            type="button"
+                                        ></button>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Segments -->
+                <div class="p-field mb-4">
+                    <label class="font-bold block mb-2">Segment*</label>
+                    <div class="w-full">
+                        <p-multiSelect
+                            id="segments"
+                            [options]="segments"
+                            placeholder="Sélectionnez un segment"
+                            formControlName="segments"
+                            (onChange)="onSegmentChange($event)"
+                            class="w-full"
+                        ></p-multiSelect>
+                    </div>
+                </div>
+
+                <!-- Section Sous-segments -->
+                <div class="p-field mb-4">
+                    <label class="font-bold block mb-2">Sous-segment*</label>
+                    <div class="w-full">
+                        <p-multiSelect
+                            id="sous-segment"
+                            [options]="sousSegmentsOptions"
+                            placeholder="Sélectionnez un sous-segment"
+                            formControlName="sousSegments"
+                            (onChange)="onTechnoChange($event)"
+                            class="w-full"
+                        ></p-multiSelect>
+                    </div>
+                </div>
+
+                <!-- Section Technologies -->
+                <div class="p-field mb-4">
+                    <label class="font-bold block mb-2">Technologies*</label>
+                    <div class="w-full">
+                        <p-multiSelect
+                            placeholder="Sélectionnez les technologies"
+                            [options]="technologiesOptions"
+                            (onChange)="filterTechno()"
+                            formControlName="technologie"
+                            class="w-full"
+                        ></p-multiSelect>
+                    </div>
+                </div>
+            </div>
+
+            <p-divider align="left" class="mt-4">
+                <span class="p-tag">Niveaux de technologies demandés</span>
+            </p-divider>
+            <div formGroupName="besoinsTechnologies" class="container p-4">
+
+                <div *ngFor="let tech of besoinsTechnologies.controls; let i = index" [formGroupName]="i" class="p-field mb-4">
+                <div class="p-card p-3 mb-3 shadow-2">
+                    <div class="flex justify-between items-center">
+                        <!--                        <h4 class="font-bold text-primary-600">Technologie {{ i + 1 }}</h4>-->
+                        <button *ngIf="besoinsTechnologies.controls.length > 1" pButton type="button" icon="pi pi-trash"
+                                class="p-button-rounded p-button-danger p-button-text"
+                                (click)="removeBesoinTechnologie(i)"
+                                tooltip="Supprimer ce niveau"></button>
+                    </div>
+
+                    <div class="p-field mt-3">
+                        <label class="font-bold">Technologie*</label>
+                        <p-dropdown
+                            placeholder="Sélectionnez les technologies"
+                            [options]="availableTechnologies[i]"
+                            (onChange)="onTechnologieChange(i)"
+                            [formControl]="getBesoinsTechnologiesControl(i, 'technologie')">
+                        </p-dropdown>
+                    </div>
+
+                    <div class="p-field mb-4">
+                        <label for="anneesExperience" class="font-bold">Années d'Expérience*</label>
+                        <p-inputNumber
+                            placeholder="Saisir les années d'expérience"
+                            [formControl]="getBesoinsTechnologiesControl(i, 'anneesExperience')"
+                            name="annesexprUpdate"
+                            [min]="0"
+                            [showButtons]="true"
+                            required>
+                        </p-inputNumber>
+                    </div>
+
+
+
+                    <div class="p-field mt-3">
+                        <label class="font-bold">Niveau*</label>
+                        <p-dropdown
+                            placeholder="Sélectionnez le niveau"
+                            [options]="niveauxTechnos"
+                            [formControl]="getBesoinsTechnologiesControl(i, 'niveau')">
+
+                        </p-dropdown>
+                    </div>
+
+                    <div class="p-field mt-3">
+                        <label class="font-bold">Importance*</label>
+                        <p-dropdown
+                            placeholder="Sélectionnez l'importance"
+                            [options]="importanceOptions"
+                            [formControl]="getBesoinsTechnologiesControl(i,'importance')">
+                        </p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bouton pour ajouter un niveau -->
+            <div class="flex justify-content-center mt-3">
+                <button pButton
+                        label="Ajouter un niveau pour une technologie demandée"
+                        icon="pi pi-plus"
+                        class="p-button-rounded p-button-primary"
+                        (click)="addBesoinTechnologie()">
+                </button>
+            </div>
+
+            </div>
+
+            <p-divider align="left" class="mt-4">
+                <span class="p-tag">Profil du Besoin</span>
+            </p-divider>
+
+            <div formGroupName="profilBesoins" class="grid">
+                <!-- Première section -->
+                <div class="col-12 md:col-6 lg:col-6">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12">
+                            <label class="font-semibold">Difficultés*</label>
+                            <span class="p-input-icon-left w-full">
+                        <i class="pi pi-desktop"></i>
+                        <input pInputText formControlName="difficultes" placeholder="Décrivez les difficultés" class="w-full"/>
+                    </span>
+                        </div>
+
+                        <div class="field col-12">
+                            <label class="font-semibold">Seniorité*</label>
+                            <p-dropdown formControlName="seniorite" [options]="senioriteOptions"
+                                        placeholder="Sélectionnez le niveau" styleClass="w-full"
+                                        [style]="{'width':'100%'}">
+                            </p-dropdown>
+                        </div>
+
+                        <div class="field col-12">
+                            <label class="font-semibold">Années d'Expérience*</label>
+                            <p-inputNumber formControlName="anneesExperienceTotales" mode="decimal"
+                                           [showButtons]="true" [min]="0" styleClass="w-full">
+                            </p-inputNumber>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section TJM -->
+                <div class="col-12 md:col-6 lg:col-6">
+                    <p-panel header="Taux Journaliers Moyens (TJM)" [toggleable]="true" styleClass="mb-4">
+                        <div class="p-fluid p-formgrid grid">
+                            <div class="field col-12 md:col-6">
+                                <label class="font-semibold">TJM Min Estimé*</label>
+                                <p-inputNumber formControlName="tjmMinEstime" mode="currency"
+                                               currency="EUR" [min]="0" [showButtons]="true">
+                                </p-inputNumber>
+                            </div>
+
+                            <div class="field col-12 md:col-6">
+                                <label class="font-semibold">TJM Max Estimé*</label>
+                                <p-inputNumber formControlName="tjmMaxEstime" mode="currency"
+                                               currency="EUR" [min]="0" [showButtons]="true">
+                                </p-inputNumber>
+                            </div>
+
+                            <div class="field col-12 md:col-6">
+                                <label class="font-semibold">TJM Min*</label>
+                                <p-inputNumber formControlName="tjmMin" mode="currency"
+                                               currency="EUR" [min]="0" [showButtons]="true">
+                                </p-inputNumber>
+                            </div>
+
+                            <div class="field col-12 md:col-6">
+                                <label class="font-semibold">TJM Max*</label>
+                                <p-inputNumber formControlName="tjmMax" mode="currency"
+                                               currency="EUR" [min]="0" [showButtons]="true">
+                                </p-inputNumber>
+                            </div>
+
+                            <div class="field col-12">
+                                <label class="font-semibold">TJM Souhaité*</label>
+                                <p-inputNumber formControlName="tjmSouhaite" mode="currency"
+                                               currency="EUR" [min]="0" [showButtons]="true">
+                                </p-inputNumber>
+                            </div>
+                        </div>
+                    </p-panel>
+                </div>
+
+                <!-- Section commentaires -->
+                <div class="col-12">
+                    <div class="p-fluid p-formgrid grid">
+                        <div class="field col-12">
+                            <label class="font-semibold">Points Forts mission / avantages*</label>
+                            <textarea pInputTextarea formControlName="avantages"
+                                      rows="4" placeholder="Ajoutez vos Points Forts mission / avantages ici...">
+                    </textarea>
+                        </div>
+
+                        <div class="field col-12">
+                            <label class="font-semibold">Commentaire*</label>
+                            <textarea pInputTextarea formControlName="commentaire"
+                                      rows="4" placeholder="Ajoutez vos commentaires ici...">
+                    </textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <p-divider align="left">
+                <span class="p-tag">Information Client</span>
+            </p-divider>
+
+            <div class="grid" formGroupName="client">
+                <div class="col-12">
+                    <div class="field">
+                        <label for="clientNom" class="font-medium">Nom et prénom du client*</label>
+                        <span class="p-input-icon-left w-full">
+                <i class="pi pi-user"></i>
+                <p-autoComplete
+                    [suggestions]="filteredClientsOptions"
+                    (completeMethod)="filterClients($event)"
+                    placeholder="Saisissez le nom du client"
+                    [forceSelection]="true"
+                    formControlName="nom"
+                    (onClear)="handleClear()"
+                    (onBlur)="processFullName()"
+                    class="w-full">
+                </p-autoComplete>
+            </span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="flex justify-content-end gap-2 mt-4">
+                <p-button type="button"
+                         label="Réinitialiser"
+                         icon="pi pi-refresh"
+                         styleClass="p-button-secondary p-button-outlined"
+                         (click)="resetForm()">
+                </p-button>
+                <p-button type="submit"
+                         label="Créer le besoin"
+                         icon="pi pi-check"
+                         [loading]="isLoading"
+                         styleClass="p-button-lg">
+                </p-button>
+            </div>
+        </form>
+    </p-card>
+</div>

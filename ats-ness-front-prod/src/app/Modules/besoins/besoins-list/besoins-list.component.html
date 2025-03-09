@@ -1,0 +1,620 @@
+<div class="card">
+  <p-table
+      #dt
+      [value]="besoins"
+    [paginator]="true"
+    [rows]="25"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5,10,25,50]"
+    styleClass="p-datatable-striped p-datatable-gridlines"
+    [expandedRowKeys]="expandedRows"
+    dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+  <ng-template pTemplate="caption">
+    <div class="flex flex-column md:flex-row justify-content-between gap-3 align-items-center">
+        <div class="text-900 text-xl font-semibold">Gestion des Besoins</div>
+        <div class="flex gap-3 align-items-center">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                    pInputText
+                    type="text"
+                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                    placeholder="Search..."
+                    class="p-inputtext-sm"
+                />
+            </span>
+            <p-button
+                label="Ajouter Un Besoin"
+                icon="pi pi-plus"
+                type="button"
+                severity="primary"
+                size="small"
+                (click)="navigateToAddBesoin()">
+            </p-button>
+        </div>
+    </div>
+</ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 3rem">
+      </th>
+      <th>Titre</th>
+      <th>Référence</th>
+      <th>Date de création</th>
+      <th>État</th>
+      <th>Société</th>
+      <th>Code QR</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-besoin let-expanded="expanded">
+    <tr>
+      <td>
+        <button
+          type="button"
+          pButton
+          pRipple
+          [pRowToggler]="besoin"
+          class="p-button-text p-button-rounded p-button-plain"
+          [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+        ></button>
+      </td>
+      <td>{{ besoin.titre }}</td>
+      <td>{{ besoin.reference }}</td>
+      <td>{{ besoin.dateDeCreation | date: 'short' }}</td>
+      <td>
+        <p-tag [value]="besoin.etat" [severity]="getStateSeverity(besoin.etat)"></p-tag>
+      </td>
+      <td>{{ besoin?.societe?.nom }}</td>
+      <td>
+        <img
+          *ngIf="besoin.qrCodeImage?.imagenUrl"
+          [src]="besoin.qrCodeImage.imagenUrl"
+          alt="Code QR"
+          style="width: 50px; height: 50px;"
+        />
+      </td>
+      <td>
+        <div class="flex">
+          <button
+            pButton
+            icon="pi pi-search"
+            class="p-button-rounded p-button-info mr-2"
+            (click)="showDetails(besoin)"
+          ></button>
+          <button
+          pButton
+          icon="pi pi-pencil"
+          class="p-button-rounded p-button-warning"
+          (click)="openEditSidebar(besoin)"
+        ></button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-besoin>
+          <tr>
+              <td colspan="9">
+                  <div class="p-3">
+                      <h5>Informations détaillées sur les technologies</h5>
+                      <div class="grid">
+                          <div class="col-12 md:col-6">
+                              <div class="font-bold mb-2">Technologies :</div>
+                              <p-chip
+                                  *ngFor="let tech of besoin.referentiel?.technologie || []"
+                                  [label]="tech"
+                                  class="mr-2 mb-2"
+                              ></p-chip>
+                          </div>
+                          <div class="col-12 md:col-6">
+                              <div class="font-bold mb-2">Détails supplémentaires :</div>
+                              <p *ngIf="besoin.referentiel?.technologie?.length > 0; else noDetails">
+                                  Plus d'informations sur les technologies peuvent être ajoutées ici.
+                              </p>
+                              <ng-template #noDetails>
+                                  <p>Aucune technologie disponible pour ce besoin.</p>
+                              </ng-template>
+                          </div>
+                      </div>
+                  </div>
+              </td>
+          </tr>
+      </ng-template>
+
+  </p-table>
+
+<ng-template pTemplate="emptymessage">
+  <tr>
+    <td colspan="9" class="text-center p-4">
+      <div class="flex flex-column align-items-center">
+        <i class="pi pi-folder-open text-700" style="font-size: 3rem"></i>
+        <span class="text-700 mt-3">Aucun besoin trouvé</span>
+      </div>
+    </td>
+  </tr>
+</ng-template>
+
+<p-dialog
+  header="Détails du besoin"
+  [(visible)]="displayDetails"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '50vw' }"
+>
+  <div *ngIf="selectedBesoin">
+    <h5>{{ selectedBesoin.titre }}</h5>
+    <p><strong>Référence :</strong> {{ selectedBesoin.reference }}</p>
+    <p><strong>Date de création :</strong> {{ selectedBesoin.dateDeCreation | date: 'short' }}</p>
+    <p><strong>État :</strong> {{ selectedBesoin.etat }}</p>
+    <p><strong>Entreprise :</strong> {{ selectedBesoin.societe?.nom }}</p>
+    <p><strong>Code QR :</strong></p>
+    <img
+      *ngIf="selectedBesoin.qrCodeImage?.imagenUrl"
+      [src]="selectedBesoin.qrCodeImage.imagenUrl"
+      alt="Code QR"
+      style="width: 150px; height: 150px;"
+    />
+  </div>
+</p-dialog>
+
+<!--&lt;!&ndash; Edit Sidebar &ndash;&gt;-->
+<!--<p-sidebar-->
+<!--  [(visible)]="displayEditSidebar"-->
+<!--  position="right"-->
+<!--  [style]="{width:'450px'}"-->
+<!--&gt;-->
+<!--  <div *ngIf="selectedBesoin" class="p-fluid">-->
+<!--    <h3>Modifier le Besoin</h3>-->
+
+<!--    <div class="field">-->
+<!--      <label for="titre">Titre</label>-->
+<!--      <input id="titre" type="text" pInputText [(ngModel)]="selectedBesoin.titre">-->
+<!--    </div>-->
+
+<!--    <div class="field">-->
+<!--      <label for="etat">État</label>-->
+<!--      <p-dropdown-->
+<!--        id="etat"-->
+<!--        [options]="etats"-->
+<!--        [(ngModel)]="selectedBesoin.etat"-->
+<!--        optionLabel="label"-->
+<!--        optionValue="value"-->
+<!--      ></p-dropdown>-->
+<!--    </div>-->
+
+<!--    <div class="field">-->
+<!--      <label>Options</label>-->
+<!--      <div class="grid">-->
+<!--        <div class="col-6">-->
+<!--          <p-checkbox-->
+<!--            [(ngModel)]="selectedBesoin.besoinEnAvanceDePhase"-->
+<!--            [binary]="true"-->
+<!--            label="Besoin en avance de phase"-->
+<!--          ></p-checkbox>-->
+<!--        </div>-->
+<!--        <div class="col-6">-->
+<!--          <p-checkbox-->
+<!--            [(ngModel)]="selectedBesoin.reccurent"-->
+<!--            [binary]="true"-->
+<!--            label="Récurrent"-->
+<!--          ></p-checkbox>-->
+<!--        </div>-->
+<!--        <div class="col-6">-->
+<!--          <p-checkbox-->
+<!--            [(ngModel)]="selectedBesoin.demarrageASAP"-->
+<!--            [binary]="true"-->
+<!--            label="Démarrage ASAP"-->
+<!--          ></p-checkbox>-->
+<!--        </div>-->
+<!--        <div class="col-6">-->
+<!--          <p-checkbox-->
+<!--            [(ngModel)]="selectedBesoin.habilitable"-->
+<!--            [binary]="true"-->
+<!--            label="Habilitable"-->
+<!--          ></p-checkbox>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="field">-->
+<!--      <label for="dateDeDemarrage">Date de Démarrage</label>-->
+<!--      <p-calendar-->
+<!--        id="dateDeDemarrage"-->
+<!--        [(ngModel)]="selectedBesoin.dateDeDemarrage"-->
+<!--        [showTime]="true"-->
+<!--      ></p-calendar>-->
+<!--    </div>-->
+
+<!--    <div class="field">-->
+<!--      <label>Profil Besoins</label>-->
+<!--      <div class="grid">-->
+<!--        <div class="col-6">-->
+<!--          <label for="seniorite">Séniorité</label>-->
+<!--          <input id="seniorite" type="text" pInputText [(ngModel)]="selectedBesoin.profilBesoins.seniorite">-->
+<!--        </div>-->
+<!--        <div class="col-6">-->
+<!--          <label for="anneesExperience">Années d'Expérience</label>-->
+<!--          <p-inputNumber-->
+<!--            id="anneesExperience"-->
+<!--            [(ngModel)]="selectedBesoin.profilBesoins.anneesExperienceTotales"-->
+<!--          ></p-inputNumber>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="field">-->
+<!--      <label for="commentaire">Commentaire</label>-->
+<!--      <textarea-->
+<!--        id="commentaire"-->
+<!--        pInputTextarea-->
+<!--        [(ngModel)]="selectedBesoin.profilBesoins.commentaire"-->
+<!--      ></textarea>-->
+<!--    </div>-->
+
+<!--    <button-->
+<!--      pButton-->
+<!--      label="Mettre à jour"-->
+<!--      icon="pi pi-check"-->
+<!--      class="p-button-success mt-3"-->
+<!--      (click)="updateBesoin()"-->
+<!--    ></button>-->
+<!--  </div>-->
+<!--</p-sidebar>-->
+
+
+
+
+
+
+    <!-- Besoin Update -->
+    <p-sidebar
+        [(visible)]="displayEditSidebar"
+        position="right"
+        [style]="{width:'450px'}"
+    >
+        <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-pencil"></i>
+                <span class="font-bold text-xl">Modifier Besoin</span>
+            </div>
+        </ng-template>
+
+        <form [formGroup]="besoinForm"  class="p-4">
+            <p-panel header="Informations de base" [toggleable]="true" styleClass="mb-3">
+                <div class="grid">
+                    <div class="col-12 lg:col-6 field">
+                        <label for="titre" class="font-medium">Titre*</label>
+                        <span class="p-input-icon-left w-full">
+                    <i class="pi pi-tag"></i>
+                    <input id="titre" formControlName="titre" pInputText class="w-full" placeholder="Entrez le titre"/>
+                  </span>
+                    </div>
+
+
+
+                    <div class="col-12 lg:col-6 field">
+                        <label for="etat" class="font-medium">État*</label>
+                        <p-dropdown
+                            id="etat"
+                            formControlName="etat"
+                            [options]="states"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Sélectionnez l'état"
+                            styleClass="w-full">
+                        </p-dropdown>
+                    </div>
+
+
+                    <div class="col-12 lg:col-6 field">
+                        <label for="dateDeDemarrage" class="font-medium">Date de Démarrage</label>
+                        <p-calendar formControlName="dateDeDemarrage" dateFormat="yy-mm-dd"
+                                    [showIcon]="true" styleClass="w-full"></p-calendar>
+                    </div>
+
+                    <div class="col-12 lg:col-6 field">
+                        <label for="plateforme" class="font-medium">Plateforme</label>
+                        <span class="p-input-icon-left w-full">
+                    <i class="pi pi-desktop"></i>
+                    <input id="plateforme" formControlName="plateforme" pInputText class="w-full" placeholder="Enter platform"/>
+                  </span>
+                    </div>
+
+                    <div class="col-12">
+                        <p-divider></p-divider>
+                    </div>
+
+                    <div class="col-12 md:col-4 field">
+                        <p-checkbox formControlName="besoinEnAvanceDePhase" binary="true"
+                                    label="Avance de Phase"></p-checkbox>
+                    </div>
+                    <div class="col-12 md:col-4 field">
+                        <p-checkbox formControlName="reccurent" binary="true"
+                                    label="Récurrent"></p-checkbox>
+                    </div>
+                    <div class="col-12 md:col-4 field">
+                        <p-checkbox formControlName="habilitable" binary="true"
+                                    label="Habilitable"></p-checkbox>
+                    </div>
+                </div>
+
+
+
+            </p-panel>
+
+
+            <p-panel header="Référentiel" [toggleable]="true" styleClass="p-panel">
+                <div formGroupName="referentiel" class="p-fluid p-grid p-formgrid">
+                    <!-- Gestion des Profils -->
+                    <div formArrayName="profilReferentiels">
+                        <div *ngFor="let profilReferentiel of profilReferentielsBesoins.controls; let i = index" [formGroupName]="i" class="p-grid p-formgrid">
+                            <div class="p-field p-col-12 p-md-6">
+                                <label for="profil-{{ i }}" class="p-d-block font-bold mb-2">Profil*</label>
+                                <p-dropdown
+                                    id="profil1-{{ i }}"
+                                    [options]="availableProfils[i]"
+                                    placeholder="Sélectionnez un profil"
+                                    formControlName="profil"
+                                    class="p-d-block"
+                                    (onChange)="onProfilChangeBesoin(i)"
+                                ></p-dropdown>
+                            </div>
+
+                            <div class="p-field p-col-12 p-md-6">
+                                <label for="niveau-{{ i }}" class="p-d-block font-bold mb-2">Niveau*</label>
+                                <p-dropdown
+                                    id="niveau1-{{ i }}"
+                                    [options]="niveauxTechnos"
+                                    placeholder="Sélectionnez un niveau"
+                                    formControlName="niveau"
+                                    class="p-d-block"
+                                ></p-dropdown>
+                            </div>
+
+                            <!-- Boutons d'ajout et de suppression sous chaque profil -->
+                            <div class="p-field text-right mt-2">
+                                <button
+                                    pButton
+                                    icon="pi pi-plus"
+                                    class="p-button-rounded p-button-primary mr-2"
+                                    (click)="addProfilReferentielUpdateBesoin()"
+                                    title="Ajouter un profil"
+                                    type="button"
+                                ></button>
+                                <button
+                                    pButton
+                                    icon="pi pi-minus"
+                                    class="p-button-rounded p-button-danger"
+                                    (click)="removeProfilReferentielUpdateBesoin(i)"
+                                    title="Supprimer ce profil"
+                                    *ngIf="profilReferentielsBesoins.length > 1"
+                                    type="button"
+                                ></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gestion des Segments -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <label for="segments" class="p-d-block font-bold mb-2">Segments*</label>
+                        <p-multiSelect
+                            id="segments1"
+                            [options]="segments"
+                            placeholder="Sélectionnez un segment"
+                            formControlName="segments"
+                            (onChange)="onSegmentChange($event)"
+                            class="p-d-block"
+                        ></p-multiSelect>
+                    </div>
+
+                    <!-- Sous-segments -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <label for="sousSegments" class="p-d-block font-bold mb-2">Sous-segments*</label>
+                        <p-multiSelect
+                            id="sousSegments1"
+                            [options]="sousSegmentsOptions"
+                            placeholder="Sélectionnez un sous-segment"
+                            formControlName="sousSegments"
+                            (onChange)="onTechnoChange($event)"
+                            class="p-d-block"
+                        ></p-multiSelect>
+                    </div>
+
+                    <!-- Technologies -->
+                    <div class="p-field p-col-12 p-md-6">
+                        <label for="technologie" class="p-d-block font-bold mb-2">Technologies*</label>
+                        <p-multiSelect
+                            id="technologie1"
+                            [options]="technologiesOptions"
+                            (onChange)="filterTechnoUpdate()"
+                            placeholder="Sélectionnez les technologies"
+                            formControlName="technologie"
+                            class="p-d-block"
+                        ></p-multiSelect>
+                    </div>
+                </div>
+            </p-panel>
+
+
+
+            <br>
+
+            <p-panel header="Niveaux de technologies demandés" [toggleable]="true" styleClass="p-panel">
+                <div formArrayName="besoinsTechnologies" class="p-fluid p-grid p-formgrid">
+                    <div *ngFor="let tech of besoinsTechnologiesArray.controls; let i = index" [formGroupName]="i" class="p-field mb-4">
+                        <div class="p-card p-3 mb-3 shadow-2">
+                            <div class="flex justify-between items-center">
+                                <button
+                                    *ngIf="besoinsTechnologiesArray.length > 1"
+                                    pButton
+                                    type="button"
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-danger p-button-text"
+                                    (click)="removeBesoinTechnologieUpdate(i)"
+                                    tooltip="Supprimer ce niveau">
+                                </button>
+                            </div>
+
+                            <div class="p-field mt-3">
+                                <label class="font-bold">Technologie*</label>
+                                <p-dropdown
+                                    placeholder="Sélectionnez les technologies"
+                                    [options]="availableTechnologies[i]"
+                                    (onChange)="onTechnologieChangeUpdate(i)"
+                                    formControlName="technologie">
+                                </p-dropdown>
+                            </div>
+
+                            <div class="col-12 md:col-6">
+                                <div class="p-field mb-3">
+                                    <label class="font-bold">Années d'expérience*</label>
+                                    <p-inputNumber
+                                        placeholder="Saisir les années d'expérience"
+                                        formControlName="anneesExperience">
+
+                                        name="tjmMinEstime" [min]="0" [showButtons]="true"
+                                        mode="currency" currency="EUR" minFractionDigits="0"
+                                        maxFractionDigits="0" required>
+                                    </p-inputNumber>
+                                </div>
+                            </div>
+
+                            <div class="p-field mt-3">
+                                <label class="font-bold">Niveau*</label>
+                                <p-dropdown
+                                    placeholder="Sélectionnez le niveau"
+                                    [options]="niveauxTechnos"
+                                    formControlName="niveau">
+                                </p-dropdown>
+                            </div>
+
+                            <div class="p-field mt-3">
+                                <label class="font-bold">Importance*</label>
+                                <p-dropdown
+                                    placeholder="Sélectionnez l'importance"
+                                    [options]="importanceOptions"
+                                    formControlName="importance">
+                                </p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-content-center mt-3">
+                        <button
+                            pButton
+                            label="Ajouter un niveau pour une technologie demandée"
+                            icon="pi pi-plus"
+                            class="p-button-rounded p-button-primary"
+                            type="button"
+                            (click)="addBesoinTechnologieUpdate()"
+                            [disabled]="isButtonDisabled()">
+                        </button>
+
+                    </div>
+
+
+                </div>
+            </p-panel>
+
+
+            <p-panel header="Profil Besoin" [toggleable]="true" styleClass="mb-3">
+                <div formGroupName="profilBesoins" class="grid">
+                    <div class="col-12 field">
+                        <label for="difficultes" class="font-medium">Difficultés</label>
+                        <textarea id="difficultes" formControlName="difficultes" rows="3"
+                                  pInputTextarea class="w-full" placeholder="Describe difficulties"></textarea>
+                    </div>
+
+                    <div class="col-12 lg:col-6 field">
+                        <label for="seniorite" class="font-medium">Seniorité</label>
+                        <p-dropdown
+                            id="seniorite"
+                            formControlName="seniorite"
+                            [options]="seniorityLevels"
+                            optionLabel="label"
+                            optionValue="value"
+                            placeholder="Sélectionnez la séniorité"
+                            styleClass="w-full">
+                        </p-dropdown>
+                    </div>
+
+
+                    <div class="col-12 lg:col-6 field">
+                        <label for="anneesExperienceTotales" class="font-medium">Années d'Expérience</label>
+                        <p-inputNumber formControlName="anneesExperienceTotales" [showButtons]="true"
+                                       buttonLayout="horizontal" spinnerMode="horizontal"
+                                       decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary"
+                                       incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                                       class="w-full"></p-inputNumber>
+                    </div>
+
+                    <div class="col-12">
+                        <p-fieldset legend="TJM Details" [toggleable]="true">
+                            <div class="grid">
+                                <div class="col-12 lg:col-6 field">
+                                    <label for="tjmMinEstime" class="font-medium">TJM Min Estimé</label>
+                                    <p-inputNumber
+                                        formControlName="tjmMinEstime"
+                                        mode="currency"
+                                        currency="EUR"
+                                        minFractionDigits="0"
+                                        maxFractionDigits="0"
+                                        styleClass="w-full"
+                                        [min]="200"
+                                        [max]="2000"
+                                        [step]="5">
+                                    </p-inputNumber>
+                                </div>
+
+                                <div class="col-12 lg:col-6 field">
+                                    <label for="tjmMaxEstime" class="font-medium">TJM Max Estimé</label>
+                                    <p-inputNumber formControlName="tjmMaxEstime" mode="currency" currency="EUR"
+                                                   minFractionDigits="0"
+                                                   maxFractionDigits="0" styleClass="w-full"></p-inputNumber>
+                                </div>
+                                <div class="col-12 lg:col-6 field">
+                                    <label for="tjmMin" class="font-medium">TJM Minimum</label>
+                                    <p-inputNumber formControlName="tjmMin" mode="currency" currency="EUR"
+                                                   minFractionDigits="0"
+                                                   maxFractionDigits="0" styleClass="w-full"></p-inputNumber>
+                                </div>
+                                <div class="col-12 lg:col-6 field">
+                                    <label for="tjmMax" class="font-medium">TJM Maximum</label>
+                                    <p-inputNumber formControlName="tjmMax" mode="currency" currency="EUR"
+                                                   minFractionDigits="0"
+                                                   maxFractionDigits="0" styleClass="w-full"></p-inputNumber>
+                                </div>
+                                <div class="col-12 field">
+                                    <label for="tjmSouhaite" class="font-medium">TJM Souhaité</label>
+                                    <p-inputNumber formControlName="tjmSouhaite" mode="currency" currency="EUR" minFractionDigits="0"
+                                                   maxFractionDigits="0" styleClass="w-full"></p-inputNumber>
+                                </div>
+                            </div>
+                        </p-fieldset>
+                    </div>
+
+                    <div class="col-12 field">
+                        <label for="avantages" class="font-medium">Points Forts mission / avantages</label>
+                        <textarea id="avantages" formControlName="avantages" rows="3"
+                                  pInputTextarea class="w-full" placeholder="Ajoutez vos Points Forts mission / avantages"></textarea>
+                    </div>
+
+                    <div class="col-12 field">
+                        <label for="commentaire" class="font-medium">Commentaire</label>
+                        <textarea id="commentaire" formControlName="commentaire" rows="3"
+                                  pInputTextarea class="w-full" placeholder="Ajoutez vos commentaires"></textarea>
+                    </div>
+                </div>
+            </p-panel>
+
+            <div class="flex justify-content-end gap-2 mt-4">
+                <p-button label="Anuuler" icon="pi pi-times" (click)="displayEditSidebar = false"
+                          styleClass="p-button-secondary"></p-button>
+                <button pButton label="Enregistrer" type="submit" ></button>
+            </div>
+        </form>
+    </p-sidebar>
+</div>

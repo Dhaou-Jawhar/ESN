@@ -1,0 +1,91 @@
+.icon-spacing {
+    margin-right: 8px; /* Ajustez la valeur selon vos besoins */
+}
+
+
+
+.custom-dialog .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007ad9;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.section h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #007ad9;
+    display: inline-block;
+    padding-bottom: 0.2rem;
+}
+.qr-code-container {
+    text-align: center; /* Centre le contenu horizontalement */
+    margin-top: 10px; /* Ajoute un espace entre le titre et l'image */
+}
+
+.qr-image {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ajoute une ombre légère */
+}
+
+.grid .col-6 {
+    padding: 1rem;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+p {
+    margin: 0.5rem 0;
+}
+
+p strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.center-content-besoin {
+    display: flex; /* Active flexbox */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    text-align: center; /* Centre le texte dans le conteneur */
+    margin: 0; /* Supprime les marges */
+    padding: 0; /* Supprime les espacements */
+}
+
+.title-besoin {
+    font-size: 2.5rem; /* Ajuste la taille du texte */
+    font-weight: bold; /* Rend le texte plus visible */
+    color: #333; /* Couleur personnalisée */
+}
+
+
+.max-level-message {
+    text-align: center; /* Centre le texte à l'intérieur */
+}
+
+.button-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Aligne verticalement les boutons */
+    gap: 10px; /* Ajoute un espace entre les boutons */
+}

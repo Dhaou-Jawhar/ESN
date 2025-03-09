@@ -1,0 +1,506 @@
+<!-- Add at the root level of your template -->
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+
+<p-table
+    #dt
+    [value]="actions"
+    [paginator]="true"
+    [rows]="25"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[2,10,25,50]"
+    styleClass="p-datatable-striped"
+    [expandedRowKeys]="expandedRows"
+    dataKey="id"
+    [globalFilterFields]="['nom','societeMere','adresse','rcs','villeRcs','siret']"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+    <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center">
+            <h5 class="m-0">Liste des actions</h5>
+            <div>
+
+                <p-button
+                    label="Ajouter une action"
+                    icon="pi pi-plus"
+                    class="p-button-success"
+                    (click)="navigateToAddAction()">
+                </p-button>
+
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="dateMiseAJour">Dernière MAJ <p-sortIcon field="dateMiseAJour"></p-sortIcon></th>
+
+            <th>Manager</th>
+            <th >Type</th>
+            <th>Relance?</th>
+            <th >Action Pour </th>
+            <th>Personne concernée</th>
+            <th>Prochain RDV planifié</th>
+            <th>Date prochain RDV</th>
+            <th style="width: 5rem">Actions</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-action>
+        <tr>
+            <td>{{ action.dateMiseAJour ? (action.dateMiseAJour | date: 'dd/MM/yyyy') : 'N/A' }}</td>
+
+            <td>{{action.manager}}</td>
+            <td>{{action.type}}</td>
+
+
+
+
+            <td>{{ action.relance ? 'Oui' : 'Non' }}</td>
+
+            <td>{{ action.actionPour || 'N/A' }}</td>
+
+
+            <td>{{ action.etatPersonneConcerne}}</td>
+
+            <td>{{ action.prochainRdvPlanifie !== null && action.prochainRdvPlanifie !== undefined ? (action.prochainRdvPlanifie ? 'Oui' : 'Non') : 'N/A' }}</td>
+
+
+            <td>{{ action.dateProchainRdvPlanifie !== null && action.dateProchainRdvPlanifie !== undefined ? (action.prochainRdvPlanifie ? 'Oui' : 'Non') : 'N/A' }}</td>
+
+
+
+
+            <td>
+                <div class="button-group">
+                    <p-button
+                        icon="pi pi-pencil"
+                        styleClass="p-button-rounded p-button-secondary p-button-outlined"
+                        pTooltip="Modifier"
+                        (click)="loadActionDataAndDisplaySidebar(action.id)">
+                    </p-button>
+                    <p-button
+                        icon="pi pi-trash"
+                        styleClass="p-button-rounded p-button-danger p-button-outlined"
+                        pTooltip="Supprimer"
+                        *ngIf="isAdmin"
+                        (click)="confirmDeleteAction(action.id)">
+                    </p-button>
+                    <p-button
+                        icon="pi pi-eye"
+                        pTooltip="Détails"
+                        styleClass="p-button-text p-button-primary"
+                        (click)="showViewActionDialog(action.id)">
+                    </p-button>
+                </div>
+            </td>
+
+
+
+        </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="10" class="text-center p-4">
+                <div class="flex flex-column align-items-center">
+                    <i class="pi pi-building text-700" style="font-size: 2rem"></i>
+                    <span class="text-700 mt-2">Aucune action ajoutée.</span>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="10" class="text-center p-4">
+                <i class="pi pi-spin pi-spinner mr-2"></i>
+                Loading clients data...
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+
+
+<p-sidebar
+    [(visible)]="displaySidebar"
+    [position]="'right'"
+    [modal]="true"
+    [showCloseIcon]="true"
+    [style]="{width: '400px'}"
+    class="modern-sidebar">
+
+    <div class="sidebar-header">
+        <h3>
+            <i class="pi pi-pencil"></i>
+            <span>Modifier l'action</span>
+        </h3>
+    </div>
+
+    <div class="sidebar-content">
+        <form (ngSubmit)="updateAction(actionSelected.id)" #actionForm2="ngForm" class="p-fluid">
+
+            <!-- Date Création -->
+            <div class="field">
+                <label class="field-label">
+                    <i class="pi pi-calendar icon-spacing"></i>
+                    <span>Date de création*</span>
+                </label>
+                <p-calendar
+                    [(ngModel)]="actionSelected.dateDeCreation"
+                    name="dateProchainRdvPlanifie"
+                    [showTime]="true"
+                    [showIcon]="true"
+                    appendTo="body"
+                    [showButtonBar]="true"
+                    required>
+                </p-calendar>
+            </div>
+
+            <!-- Type -->
+            <div class="field">
+                <label class="field-label">
+                    <i class="pi pi-list icon-spacing"></i>
+                    <span>Type de l'action*</span>
+                </label>
+                <p-dropdown
+                    [(ngModel)]="actionSelected.type"
+                    name="type"
+                    [options]="types"
+                    placeholder="Sélectionnez un type"
+                    [autoZIndex]="true"
+                    [scrollHeight]="'300px'"
+                    appendTo="body"
+                    required>
+                </p-dropdown>
+            </div>
+
+            <!-- Besoin -->
+            <div class="field" *ngIf="shouldShowField('besoin')">
+                <label class="field-label">
+                    <i class="pi pi-briefcase icon-spacing"></i>
+                    <span>Besoin associé*</span>
+                </label>
+                <p-dropdown
+                    [(ngModel)]="actionSelected.besoin"
+                    [ngModelOptions]="{ standalone: true }"
+                    [options]="filteredBesoins"
+                    [filter]="true"
+                    [filterBy]="'label'"
+                    [showClear]="true"
+                    [optionLabel]="'label'"
+                    [optionValue]="'value'"
+                    [filterMatchMode]="'contains'"
+                    [baseZIndex]="1000"
+                    placeholder="Rechercher un besoin..."
+                    required>
+                    <ng-template let-item pTemplate="item">
+                        <div class="flex align-items-center justify-content-between gap-2 p-2">
+                            <span>{{ item.label }}</span>
+                            <button
+                                type="button"
+                                pButton
+                                icon="pi pi-eye"
+                                class="p-button-text p-button-sm">
+                            </button>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
+
+            <div class="options-section">
+                <!-- Relance -->
+                <div class="field-checkbox">
+                    <p-checkbox
+                        [(ngModel)]="actionSelected.relance"
+                        name="relance"
+                        [binary]="true">
+                    </p-checkbox>
+                    <label class="checkbox-label">
+                        <i class="pi pi-refresh icon-spacing"></i>
+                        <span>Relance nécessaire</span>
+                    </label>
+                </div>
+
+                <!-- Prochain RDV -->
+                <div class="field-checkbox" *ngIf="shouldShowField('prochainRdvPlanifie')">
+                    <p-checkbox
+                        [(ngModel)]="actionSelected.prochainRdvPlanifie"
+                        name="prochainRdvPlanifie"
+                        [binary]="true">
+                    </p-checkbox>
+                    <label class="checkbox-label">
+                        <i class="pi pi-calendar-plus icon-spacing"></i>
+                        <span>Planifier le prochain RDV</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Date RDV -->
+            <div class="field" *ngIf="shouldShowField('dateProchainRdvPlanifie')">
+                <label class="field-label">
+                    <i class="pi pi-calendar icon-spacing"></i>
+                    <span>Date du prochain RDV*</span>
+                </label>
+                <p-calendar
+                    [(ngModel)]="actionSelected.dateProchainRdvPlanifie"
+                    name="dateProchainRdvPlanifie"
+                    [showTime]="true"
+                    [showIcon]="true"
+                    appendTo="body"
+                    [showButtonBar]="true"
+                    required>
+                </p-calendar>
+            </div>
+
+            <!-- Commentaires -->
+            <div class="field">
+                <label class="field-label">
+                    <i class="pi pi-comments icon-spacing"></i>
+                    <span>Commentaires</span>
+                </label>
+                <textarea
+                    pInputTextarea
+                    [(ngModel)]="actionSelected.commentaires"
+                    name="commentaires"
+                    rows="3"
+                    class="custom-textarea"
+                    placeholder="Ajoutez vos commentaires...">
+                </textarea>
+            </div>
+
+            <!-- Footer -->
+            <div class="dialog-footer">
+                <p-button
+                    label="Mettre à jour"
+                    icon="pi pi-check"
+                    type="submit"
+                    styleClass="p-button-primary">
+                </p-button>
+            </div>
+        </form>
+    </div>
+</p-sidebar>
+
+
+
+
+
+<p-dialog
+    [(visible)]="displayActionsDetailsDialog"
+    [header]="'Détails de l\'action'"
+    [modal]="true"
+    [style]="{width: '75vw', maxWidth: '700px'}"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+    [dismissableMask]="true"
+    [closable]="true"
+    styleClass="view-action-dialog">
+
+    <!-- En-tête -->
+    <div class="action-header p-3 border-round mb-3 surface-ground">
+        <div class="flex flex-column gap-1 text-sm text-gray-700 mt-2">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-clock text-sm"></i>
+                <span>Créée le {{selectedAction?.dateDeCreation | date:'dd/MM/yyyy à HH:mm'}}</span>
+            </div>
+            <div class="flex align-items-center gap-2" *ngIf="selectedAction?.dateMiseAJour">
+                <i class="pi pi-sync text-sm"></i>
+                <span>Dernière modification le {{selectedAction?.dateMiseAJour | date:'dd/MM/yyyy à HH:mm'}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-content p-3">
+        <div class="main-section">
+            <!-- Type Field -->
+            <div class="field mb-4">
+                <label class="block mb-2">
+                    <i class="pi pi-list text-primary mr-2"></i>
+                    <span class="font-semibold">Type</span>
+                </label>
+                <div class="p-2 surface-ground border-round">
+                    {{selectedAction?.type}}
+                </div>
+            </div>
+
+            <!-- Besoin -->
+            <div class="field mb-4" *ngIf="['Positionnement présenti', 'Positionnement', 'Entretien partenaire', 'Entretien client'].includes(selectedAction?.type)">
+                <label class="block mb-2">
+                    <i class="pi pi-list text-primary mr-2"></i>
+                    <span class="font-semibold">Besoin associé</span>
+                </label>
+                <div class="p-2 surface-ground border-round flex align-items-center justify-content-between">
+                    <span>{{selectedAction?.besoin?.titre}}</span>
+                    <button
+                        pButton
+                        icon="pi pi-eye"
+                        class="p-button-text p-button-sm"
+                        (click)="onEyeClick($event, selectedAction?.besoin?.id)"
+                        pTooltip="Voir le besoin">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="options-section grid mb-4">
+                <div class="col-12 md:col-6">
+                    <div class="field-display p-2 surface-ground border-round">
+                        <div class="flex align-items-center gap-2">
+                            <i [class]="selectedAction?.relance ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                            <span class="font-medium">Relance</span>
+                        </div>
+                        <span class="block mt-1 text-sm text-gray-700">
+                            {{selectedAction?.relance ? 'Oui' : 'Non'}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6" *ngIf="['Appel', 'E-mail', 'Appel + Mail', 'Echange téléphonique', 'RDV'].includes(selectedAction?.type)">
+                    <div class="field-display p-2 surface-ground border-round">
+                        <div class="flex align-items-center gap-2">
+                            <i [class]="selectedAction?.prochainRdvPlanifie ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                            <span class="font-medium">Prochain RDV/Echange planifié</span>
+                        </div>
+                        <span class="block mt-1 text-sm text-gray-700">
+                            {{selectedAction?.prochainRdvPlanifie ? 'Oui' : 'Non'}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date RDV -->
+            <div class="field mb-4" *ngIf="selectedAction?.prochainRdvPlanifie">
+                <label class="block mb-2">
+                    <i class="pi pi-calendar text-primary mr-2"></i>
+                    <span class="font-semibold">Date RDV planifié</span>
+                </label>
+                <div class="p-2 surface-ground border-round">
+                    {{selectedAction?.dateProchainRdvPlanifie | date:'dd/MM/yyyy à HH:mm'}}
+                </div>
+            </div>
+
+            <!-- Commentaires -->
+            <div class="field">
+                <label class="block mb-2">
+                    <i class="pi pi-pencil text-primary mr-2"></i>
+                    <span class="font-semibold">Commentaires</span>
+                </label>
+                <div class="p-2 surface-ground border-round min-h-8rem white-space-pre-line">
+                    {{selectedAction?.commentaires || 'Aucun commentaire'}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+            <p-button
+                icon="pi pi-times"
+                label="Fermer"
+                styleClass="p-button-outlined"
+                (click)="displayActionsDetailsDialog = false">
+            </p-button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+
+
+
+
+<!-- Besoin View Dialog -->
+<p-dialog [(visible)]="displayBesoinDetailsDialog"
+          [modal]="true"
+          [style]="{ width: '55vw' }"
+          [closable]="true"
+          styleClass="p-fluid custom-dialog">
+
+    <ng-container *ngIf="selectedBesoin; else loading">
+        <!-- Header principal -->
+        <div class="grid center-content-besoin">
+            <div class="col-12">
+                <h2 class="title-besoin">{{ selectedBesoin.titre }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Informations principales -->
+        <div class="grid section">
+            <div class="col-6">
+                <h3>Informations Générales</h3>
+                <p><strong>Référence:</strong> {{ selectedBesoin.reference }}</p>
+                <p><strong>État:</strong> {{ selectedBesoin.etat }}</p>
+                <p><strong>Créé le:</strong> {{ selectedBesoin.dateDeCreation | date: 'dd MMM yyyy, HH:mm:ss' }}</p>
+                <p><strong>Dernière mise à jour:</strong> {{ selectedBesoin.dateDerniereMiseAJour | date: 'dd MMM yyyy, HH:mm:ss'}}</p>
+                <p><strong>Plateforme:</strong> {{ selectedBesoin.plateforme || 'Non défini' }}</p>
+                <p><strong>Démarrage ASAP:</strong> {{ selectedBesoin.demarrageASAP ? 'Oui' : 'Non' }}</p>
+                <p><strong>Date de démarrage:</strong> {{ selectedBesoin.dateDeDemarrage | date: 'dd MMM yyyy, HH:mm:ss' }}</p>
+                <p><strong>Besoin en avance de phase:</strong> {{ selectedBesoin.besoinEnAvanceDePhase ? 'Oui' : 'Non' }}</p>
+                <p><strong>Récurrent:</strong> {{ selectedBesoin.reccurent ? 'Oui' : 'Non' }}</p>
+            </div>
+            <div class="col-6">
+                <h3>QR Code</h3>
+                <div class="qr-code-container">
+                    <ng-container *ngIf="selectedBesoin.qrCodeImage; else noQrCode">
+                        <img [src]="selectedBesoin.qrCodeImage.imagenUrl" alt="QR Code" class="qr-image" />
+                    </ng-container>
+                    <ng-template #noQrCode>
+                        <p>Aucun QR Code disponible.</p>
+                    </ng-template>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Profil du besoin -->
+        <div class="grid section">
+            <div class="col-12">
+                <h3>Profil Recherché</h3>
+            </div>
+            <div class="col-6">
+                <p><strong>Difficultés:</strong> {{ selectedBesoin.profilBesoins.difficultes }}</p>
+                <p><strong>Séniorité:</strong> {{ selectedBesoin.profilBesoins.seniorite }}</p>
+                <p><strong>Années d'expérience:</strong> {{ selectedBesoin.profilBesoins.anneesExperienceTotales }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>TJM (min - max):</strong> {{ selectedBesoin.profilBesoins.tjmMin }} - {{ selectedBesoin.profilBesoins.tjmMax }} €</p>
+                <p><strong>TJM souhaité:</strong> {{ selectedBesoin.profilBesoins.tjmSouhaite }} €</p>
+                <p><strong>Avantages:</strong> {{ selectedBesoin.profilBesoins.avantages || 'Non défini' }}</p>
+            </div>
+        </div>
+
+        <!-- Référentiel -->
+        <div class="grid section">
+            <div class="col-12">
+                <h3>Référentiel</h3>
+            </div>
+            <div class="col-6">
+                <p><strong>Segments:</strong> {{ getSegmentsLabels()?.join(', ') }}</p>
+                <p><strong>Sous-segments:</strong> {{ getSousSegmentsLabels()?.join(', ') }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>Profil:</strong> {{ getProfilLabels()?.join(', ') }}</p>
+                <p><strong>Technologies:</strong> {{ getTechnologiesLabels()?.join(', ') }}</p>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <!-- Message de chargement -->
+    <ng-template #loading>
+        <div class="loading">
+            <p>Chargement des détails du besoin...</p>
+        </div>
+    </ng-template>
+    <br>
+    <p-button label="OK" icon="pi pi-check" (click)="displayBesoinDetailsDialog = false"
+              styleClass="p-button-primary p-button-outlined">
+    </p-button>
+
+
+</p-dialog>

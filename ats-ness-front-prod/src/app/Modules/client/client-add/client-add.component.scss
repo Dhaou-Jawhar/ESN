@@ -1,0 +1,348 @@
+.field {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}
+
+input, p-dropdown, p-multiSelect, p-inputNumber, textarea {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+}
+
+textarea {
+    resize: none;
+}
+
+p-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.grid .col-6 {
+    padding: 1rem;
+}
+
+p-panel {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+p-panel .ui-panel-title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.input-group {
+    display: inline-flex;
+    align-items: center;
+}
+
+.input-group .suffix {
+    margin-left: 5px; /* Ajustez l'espacement à votre convenance */
+    font-size: 1rem; /* Taille du texte pour correspondre à l'input */
+}
+
+
+/* Centrer le panneau et appliquer un style moderne */
+.panel-container {
+    margin: 0 auto;
+    max-width: 800px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+}
+
+/* Centrer le contenu de la grille */
+.grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ajouter un peu d'espace et de style aux champs */
+.field {
+    margin-bottom: 20px;
+}
+
+/* Style du label */
+label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Style du p-autoComplete pour améliorer l'apparence */
+.p-input-icon-left {
+    width: 100%;
+}
+
+.p-autocomplete {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.p-autocomplete-panel {
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Ajouter un effet de survol */
+.p-input-icon-left:hover {
+    border-color: #007ad9;
+}
+
+/* Icône stylisée */
+.pi-building {
+    color: #007ad9;
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+/* societe-form.component.scss */
+.form-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+
+    .form-card {
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2),
+        0 1px 1px 0 rgba(0,0,0,.14),
+        0 1px 3px 0 rgba(0,0,0,.12);
+
+        .section-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #495057;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #2196F3;
+        }
+
+        .field {
+            margin-bottom: 1.5rem;
+
+            label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                color: #495057;
+
+                &:after {
+                    content: "*";
+                    color: #e24c4c;
+                    margin-left: 0.25rem;
+                }
+            }
+
+            small.p-error {
+                display: block;
+                margin-top: 0.25rem;
+            }
+        }
+
+        .p-inputtext,
+        .p-inputnumber-input {
+            width: 100%;
+        }
+
+        .p-input-icon-left {
+            width: 100%;
+
+            i {
+                color: #6c757d;
+            }
+
+            input {
+                padding-left: 2.5rem;
+            }
+        }
+
+        .p-fieldset {
+            .p-fieldset-legend {
+                font-size: 1rem;
+                font-weight: 600;
+            }
+        }
+
+        .p-fileupload {
+            .p-button {
+                background: #2196F3;
+            }
+        }
+
+        .p-inputgroup {
+            .p-inputgroup-addon {
+                background: #f8f9fa;
+                border-color: #ced4da;
+                color: #6c757d;
+            }
+        }
+    }
+
+    // Responsive adjustments
+    @media screen and (max-width: 768px) {
+        margin: 1rem;
+
+        .form-card {
+            .section-header {
+                font-size: 1.1rem;
+            }
+        }
+    }
+}
+
+// Custom styling for the submit button
+:host ::ng-deep {
+    .p-button-lg {
+        margin-top: 1rem;
+        min-width: 200px;
+
+        &.p-button {
+            background: #2196F3;
+
+            &:hover {
+                background: #1976D2;
+            }
+
+            &:disabled {
+                background: #90CAF9;
+            }
+        }
+    }
+
+    .p-card {
+        .p-card-header {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #495057;
+        }
+    }
+}
+
+.p-input-icon-left,
+.full-width-textarea {
+    width: 100% !important;
+    flex-grow: 1;
+}
+
+
+
+
+.global-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 12000; /* Assurez-vous que cette valeur est supérieure au sidebar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Couche semi-transparente */
+    z-index: 12001; /* Couche de l'overlay */
+}
+
+.spinner-container {
+    position: relative;
+    z-index: 12002; /* Spinner au-dessus de l'overlay */
+    text-align: center;
+}
+.custom-spinner .p-progress-spinner {
+    border-color: #8A2BE2; /* Couleur violette claire */
+}
+
+.spinner-container p {
+    margin: 0;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 18px;
+    color: white;
+    z-index: 1;
+}
+
+
+
+.custom-dialog .section {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.section-icon {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+
+.field {
+    margin-bottom: 15px;
+}
+
+.label-icon {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+textarea.full-width-textarea {
+    width: 100%;
+    resize: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

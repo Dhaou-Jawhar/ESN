@@ -1,0 +1,1860 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
+<div *ngIf="loading" class="custom-loader">
+    <div class="spinner"></div>
+</div>
+
+<div class="animated-container">
+    <span class="glow-text">
+        {{ formData1.nom }} {{ formData1.prenom }}
+        | {{ formData1.titre }}
+    </span>
+</div>
+
+
+<div class="p-card p-fluid p-p-4 p-shadow-6">
+    <p-tabMenu class="p-mb-5" [model]="routeItems" [(activeItem)]="activeStep"
+               (activeItemChange)="onStepChange($event)"></p-tabMenu>
+
+    <form #candidatureForm="ngForm" (ngSubmit)="onSubmit(candidatureForm)" class="form-container">
+        <!-- Step 1: Information Générale -->
+        <div *ngIf="stepIndex === 0" class="p-d-flex p-flex-column p-ai-center">
+            <div class="p-grid p-fluid">
+                <card class="card4">
+                    <div class="card-title">
+                        <h6>Pièces jointes</h6>
+                    </div>
+                    <!-- Profile Picture Upload -->
+                    <div class="p-field p-fluid" style="max-width: 50.0rem;">
+                        <label for="imgFile">Profile Picture</label>
+                        <p-fileUpload mode="advanced" [multiple]="false" accept="image/*"
+                                      [maxFileSize]="1000000" (onSelect)="onFileSelect($event, 'imgFile')"
+                                      [showCancelButton]="false" chooseLabel="Sélectionner une image">
+                        </p-fileUpload>
+                    </div>
+
+                    <!-- CV Upload -->
+                    <div class="p-field p-fluid" style="max-width: 50.0rem;">
+                        <label for="cvFile">Profile CV</label>
+                        <p-fileUpload id="cvFile" name="cvFile" (onSelect)="onFileSelect($event, 'cvFile')"
+                                      [multiple]="false" [customUpload]="true" chooseLabel="Choose CV" uploadLabel="Upload"
+                                      cancelLabel="Cancel" (uploadHandler)="onFileUpload($event, 'cvFile')"
+                                      [disabled]="isUploading['cvFile']">
+                        </p-fileUpload>
+                    </div>
+
+                    <div class="p-field p-fluid" style="max-width: 50.0rem;">
+                        <label for="cvNESS">CV format NESS TECHNOLOGIES</label>
+                        <p-fileUpload id="cvNESS" name="cvNESS" (onSelect)="onFileSelect($event, 'cvNessFile')"
+                                      [multiple]="false" [customUpload]="true" chooseLabel="Choose CV" uploadLabel="Upload"
+                                      cancelLabel="Cancel" (uploadHandler)="onFileUpload($event, 'cvNessFile')"
+                                      [disabled]="isUploading['cvFile']">
+                        </p-fileUpload>
+                    </div>
+                </card>
+
+
+                <card class="card4">
+                    <div class="card-title">
+                        <h6>Dates</h6>
+                    </div>
+
+                    <div class="p-field p-fluid">
+                        <label for="cnx">Date de création</label>
+                        <p id="cnx">{{ formData1.dateDeCreation | date: 'short' }}</p>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="dispo">Date dernière mise à jour</label>
+                        <p id="dispo">{{ formData1.dateDerniereMiseAJour| date: 'short'  }}</p>
+                    </div>
+
+                    <div class="card-title">
+                        <h6>Interne</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="etat">État</label>
+                        <p-dropdown id="etat" [options]="states" [(ngModel)]="formData1.etat"
+                                    placeholder="Sélectionner un État" [ngModelOptions]="{standalone: true}" optionLabel="label"
+                                    optionValue="value">
+                        </p-dropdown>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Niveau">Niveau</label>
+                        <p-dropdown id="Niveau" [options]="NiveauOptions" [(ngModel)]="formData1.niveau"
+                                    placeholder="Niveau" [ngModelOptions]="{standalone: true}">
+                        </p-dropdown>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Jobboard">Jobboard</label>
+                        <p-dropdown id="Jobboard" [options]="job" [(ngModel)]="formData1.jobboard"
+                                    placeholder="Jobboard" [ngModelOptions]="{standalone: true}">
+                        </p-dropdown>
+                    </div>
+
+                    <div class="p-field p-fluid">
+                        <label for="manager">Manager</label>
+                        <p id="manager" class="center-container">{{ formData1.responsable }}</p>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label>Ambassadeur?</label>
+                        <p-checkbox [(ngModel)]="formData1.ambassadeur" [ngModelOptions]="{standalone: true}"
+                                    [binary]="true" inputId="isAmbassadeur" class="center-container" />
+                    </div>
+
+
+                </card>
+
+
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+
+
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+
+                </card>
+
+
+            </div>
+            <button pButton type="button" label="Suivant" class="p-mt-3 p-button-primary" style="margin-left:35rem;"
+                    (click)="goToNextStep()" [disabled]="!candidatureForm.form.valid"></button>
+        </div>
+
+        <!-- Step 2: Pièces Jointes -->
+        <div *ngIf="stepIndex === 1" class="p-d-flex p-flex-column p-ai-center">
+            <div class="p-grid p-fluid">
+                <!--Card 1 : Info General-->
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations Génerales</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="nom">Nom</label>
+                        <input id="nom" type="text" pInputText [(ngModel)]="formData1.nom"
+                               [ngModelOptions]="{standalone: true}" name="nom" required />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="prenom">Prenom</label>
+                        <input id="prenom" type="text" pInputText [(ngModel)]="formData1.prenom" name="prenom"
+                               [ngModelOptions]="{standalone: true}" required />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="telephone">Téléphone</label>
+                        <input id="telephone" type="text" pInputText [(ngModel)]="formData1.telephone" name="telephone"
+                               pattern="[\+0-9]+" placeholder="Num tel" />
+                    </div>
+                    <div class="p-field p-fluid" style="max-width: 25.0rem;">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" [(ngModel)]="formData1.email" pInputText name="email"
+                               [ngModelOptions]="{standalone: true}" required />
+                    </div>
+                    <div class="p-field p-fluid" style="max-width: 25.0rem;">
+                        <label for="email2">Email secondaire</label>
+                        <input id="email2" type="email" [(ngModel)]="formData1.emailSecondaire" pInputText
+                               [ngModelOptions]="{standalone: true}" name="email2" required />
+                    </div>
+
+                </card>
+
+
+                <!-- Card 2 : Localisation -->
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Localisation</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="adress">Adresse</label>
+                        <input id="adress" type="text" pInputText [(ngModel)]="formData1.adresse"
+                               [ngModelOptions]="{standalone: true}" name="adress" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Compolément">Complément</label>
+                        <input id="Compolément" type="text" pInputText [(ngModel)]="formData1.complement"
+                               [ngModelOptions]="{standalone: true}" name="Compolément" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="codePostal">Code Postal</label>
+                        <input id="codePostal" type="number" pInputText [(ngModel)]="formData1.codePostal"
+                               [ngModelOptions]="{standalone: true}" name="codePostal" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Département">Département</label>
+                        <input id="Département" type="text" pInputText [(ngModel)]="formData1.departement"
+                               [ngModelOptions]="{standalone: true}" name="Département" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Ville">Ville</label>
+                        <input id="Ville" type="text" pInputText [(ngModel)]="formData1.ville"
+                               [ngModelOptions]="{standalone: true}" name="Ville" />
+                    </div>
+                </card>
+
+                <!--Card 3 : Nationalite -->
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Nationalité</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label>Nationalité</label>
+
+                        <p-autoComplete id="nationalite" name="nationalite" [suggestions]="filteredCountries"
+                                        (completeMethod)="filterCountries($event)" (onSelect)="onCountrySelect($event)"
+                                        field="label" [forceSelection]="true" [dropdown]="true" [(ngModel)]="formData1.nationalite"
+                                        [ngModelOptions]="{standalone: true}">
+                            <ng-template let-country pTemplate="item">
+                                <div class="p-d-flex p-ai-center">
+                                    <img *ngIf="country.code" src="https://flagcdn.com/w20/{{country.code}}.png"
+                                         alt="{{country.label}}" class="p-mr-8"
+                                         style="width: 1.25rem; height: 0.875rem;" />
+                                    <span>{{ country.label }}</span>
+                                </div>
+                            </ng-template>
+                        </p-autoComplete>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Habilitable?</h6>
+                        </div>
+                        <div class="p-field p-fluid">
+                            <label>Habilitable</label>
+
+                            <p-checkbox [(ngModel)]="formData1.habilitable" [binary]="true" inputId="dc"
+                                        [ngModelOptions]="{standalone: true}" class="center-container"></p-checkbox>
+                        </div>
+                        <div class="p-field p-fluid">
+                            <label>Je ne sais pas</label>
+
+                            <p-checkbox [(ngModel)]="formData1.jesaispas" [binary]="true" inputId="dc"
+                                        [ngModelOptions]="{standalone: true}" class="center-container"></p-checkbox>
+                        </div>
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaire</h6>
+                        </div>
+                        <div class="p-field p-fluid">
+                            <label>Commentaire</label>
+
+                            <textarea id="Commentaire" type="text" pInputText
+                                      [(ngModel)]="formData1.commentaireGeneralite" name="Commentaire"
+                                      [ngModelOptions]="{standalone: true}" style="resize: none;"></textarea>
+                        </div>
+                    </card>
+                </card>
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                </card>
+
+
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                <button pButton type="button" label="Précédent" class="p-button-secondary" style="width:10rem"
+                        (click)="goToPreviousStep()"></button>
+                <button pButton type="button" label="Suivant" class="p-button-primary" style="width:10rem"
+                        (click)="goToNextStep()"></button>
+            </div>
+        </div>
+
+        <!--                &lt;!&ndash; Step 3: Détails du Poste &ndash;&gt;-->
+        <!--                <div *ngIf="stepIndex === 2" class="p-d-flex p-flex-column p-ai-center">-->
+        <!--                    <div class="card-title">-->
+        <!--                        <h6>Interne</h6>-->
+        <!--                    </div>-->
+        <!--                    <div class="p-field p-fluid">-->
+        <!--                        <label for="etat">État</label>-->
+        <!--                        <p-dropdown id="etat" [options]="states" [(ngModel)]="formData1.etat"-->
+        <!--                            placeholder="Sélectionner un État" [ngModelOptions]="{standalone: true}">-->
+        <!--                        </p-dropdown>-->
+        <!--                    </div>-->
+        <!--                    <div class="p-field p-fluid">-->
+        <!--                        <label for="Jobboard">Jobboard</label>-->
+        <!--                        <p-dropdown id="Jobboard" [options]="job" [(ngModel)]="formData1.Jobboard"-->
+        <!--                            placeholder="Jobboard" [ngModelOptions]="{standalone: true}">-->
+        <!--                        </p-dropdown>-->
+        <!--                    </div>-->
+
+        <!--                    <div class="p-field p-fluid">-->
+        <!--                        <label for="manager">Manager</label>-->
+        <!--                        <p id="manager" class="center-container">{{ formData1.responsable }}</p>-->
+        <!--                    </div>-->
+        <!--                    <div class="p-field p-fluid">-->
+        <!--                        <label>Ambassadeur?</label>-->
+        <!--                        <p-checkbox [(ngModel)]="formData1.isAmbassadeur"-->
+        <!--                                    [ngModelOptions]="{standalone: true}" [binary]="true" inputId="isAmbassadeur"-->
+        <!--                            class="center-container" />-->
+        <!--                    </div>-->
+        <!--                    <div class="p-field p-mt-4 flex justify-content-center gap-4">-->
+        <!--                        <button pButton type="button" label="Previous" class="p-button-secondary p-mr-2"-->
+        <!--                            (click)="goToPreviousStep()"></button>-->
+        <!--                        <button pButton type="button" label="Next" class="p-button-primary p-ml-2"-->
+        <!--                            (click)="goToNextStep()" [disabled]="!candidatureForm.form.valid"></button>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+
+        <!-- Step 4: Coordonnées -->
+
+        <!---------------------FORMATION-------------------->
+        <div *ngIf="stepIndex === 2" class="p-d-flex p-flex-column p-ai-center">
+
+            <div class="p-grid p-fluid">
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Formations</h6>
+                    </div>
+                    <!-- Loop through formations -->
+                    <p-card *ngFor="let formation of formData1.formations; let i = index" class="card1">
+                        <!--                                <h6 class="center-container">Formation {{i + 1}}</h6>-->
+                        <!--
+                                                        Show Formation Details -->
+                        <div class="p-field-formation p-fluid">
+                            <label for="titre{{i}}" class="center-container">Titre</label>
+                            <input id="titre{{i}}" type="text" pInputText [(ngModel)]="formation.titre"
+                                   name="titre{{i}}" [ngModelOptions]="{standalone: true}" />
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <label for="etablissement{{i}}" class="center-container">Etablissement</label>
+                            <input id="etablissement{{i}}" type="text" pInputText [(ngModel)]="formation.etablissement"
+                                   name="etablissement{{i}}" [ngModelOptions]="{standalone: true}" />
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 1.25rem;">
+                            <div class="p-field-formation p-fluid">
+                                <label for="annee{{i}}" class="center-container">Obtention</label>
+                                <p-calendar id="annee{{i}}" [(ngModel)]="formation.anneeObtention" view="year"
+                                            dateFormat="yy" name="annee{{i}}"
+                                            [ngModelOptions]="{standalone: true}"></p-calendar>
+                            </div>
+                            <div class="p-field-formation p-fluid">
+                                <label for="pays{{i}}" class="center-container">Pays</label>
+                                <p-autoComplete id="pays{{i}}" [(ngModel)]="formation.pays"
+                                                [suggestions]="filteredCountries" (completeMethod)="filterCountries($event)"
+                                                optionLabel="label" [forceSelection]="true" [dropdown]="true" name="pays{{i}}"
+                                                [ngModelOptions]="{standalone: true}">
+                                    <ng-template let-country pTemplate="item">
+                                        <div class="p-d-flex p-ai-center">
+                                            <img *ngIf="country.code"
+                                                 src="https://flagcdn.com/w20/{{country.code.toLowerCase()}}.png"
+                                                 [alt]="country.label" class="p-mr-2"
+                                                 style="width: 1.25rem; height: 0.875rem;" />
+                                            <span>{{ country.label }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <label for="commentaire{{i}}" class="center-container">Commentaire</label>
+                            <textarea style="resize: none;" class="center-container" id="commentaire{{i}}"
+                                      pInputTextarea [(ngModel)]="formation.commentaire" name="commentaire{{i}}" rows="3"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+
+                        <!-- Delete Formation Button -->
+                        <button pButton type="button" icon="pi pi-trash" class="p-button-danger" style="width: 1.8rem;"
+                                (click)="removeFormation(i)" *ngIf="formData1.formations.length > 1">
+                        </button>
+                    </p-card>
+
+                    <!-- Button to Add a New Formation -->
+                    <div class="p-d-flex p-jc-center">
+                        <button pButton type="button" icon="pi pi-plus" label="Ajouter une formation"
+                                style="width: auto; white-space: nowrap;" class="custom-button200"
+                                (click)="addFormation()"></button>
+                    </div>
+                </card>
+
+                <!---------------------Certifications-------------------->
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Certifications</h6>
+                    </div>
+                    <!-- Loop through Certification -->
+                    <p-card *ngFor="let certification of formData1.certifications; let i = index" class="card1">
+                        <!--                                <h6 class="center-container">Certification {{i + 1}}</h6>-->
+
+                        <!-- Show Certifivations Details -->
+
+                        <div class="p-field-formation p-fluid">
+                            <label for="titre{{i}}" class="center-container">Titre</label>
+                            <input id="titre{{i}}" type="text" pInputText name="titre{{i}}"
+                                   [(ngModel)]="certification.titreCertif" [ngModelOptions]="{standalone: true}" />
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <label for="etablissement{{i}}" class="center-container">Etablissement</label>
+                            <input id="etablissement{{i}}" type="text" pInputText name="etablissement{{i}}"
+                                   [(ngModel)]="certification.etablissementCertif" [ngModelOptions]="{standalone: true}" />
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; gap: 1.25rem;">
+                            <div class="p-field-formation p-fluid">
+                                <label for="annee{{i}}" class="center-container">Obtention</label>
+                                <p-calendar id="annee{{i}}" view="year" dateFormat="yy" name="annee{{i}}"
+                                            [(ngModel)]="certification.anneeObtentionCertif"
+                                            [ngModelOptions]="{standalone: true}"></p-calendar>
+                            </div>
+                            <div class="p-field-formation p-fluid">
+                                <label for="pays{{i}}" class="center-container">Pays</label>
+                                <p-autoComplete id="pays{{i}}" [(ngModel)]="certification.paysCertif"
+                                                [suggestions]="filteredCountries" (completeMethod)="filterCountries($event)"
+                                                field="label" [forceSelection]="true" [dropdown]="true" name="pays{{i}}"
+                                                [ngModelOptions]="{standalone: true}">
+                                    <ng-template let-country pTemplate="item">
+                                        <div class="p-d-flex p-ai-center">
+                                            <img *ngIf="country.code"
+                                                 src="https://flagcdn.com/w20/{{country.code.toLowerCase()}}.png"
+                                                 [alt]="country.label" class="p-mr-2"
+                                                 style="width: 1.25rem; height: 0.875rem;" />
+                                            <span>{{ country.label }}</span>
+                                        </div>
+                                    </ng-template>
+                                </p-autoComplete>
+                            </div>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <label for="commentaire{{i}}" class="center-container">Commentaire</label>
+                            <textarea style="resize: none;" class="center-container" id="commentaire{{i}}"
+                                      pInputTextarea name="commentaire{{i}}" rows="3"
+                                      [(ngModel)]="certification.commentaireCertif"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+                        <!-- Delete certification Button -->
+                        <button pButton type="button" icon="pi pi-trash" class="p-button-danger" style="width: 1.8rem;"
+                                (click)="removeCertification(i)" *ngIf="formData1.certifications.length > 1">
+                        </button>
+
+                    </p-card>
+
+
+                    <!-- Button to Add a New certification -->
+                    <div class="p-d-flex p-jc-center">
+                        <button pButton type="button" icon="pi pi-plus" label="Ajouter une certification"
+                                style="width: auto; white-space: nowrap;" class="custom-button200"
+                                (click)="addCertification()"></button>
+                    </div>
+                </card>
+
+                <!---------------------LANGUE-------------------->
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Langues</h6>
+                    </div>
+                    <!-- Loop through formations -->
+                    <p-card *ngFor="let langue of candidat.langues; let i = index" class="card1">
+                        <!--                                <h6 class="center-container">Langues {{i + 1}}</h6>-->
+                        <!-- Show Formation Details -->
+
+                        <div class="p-field p-fluid">
+                            <label for="language">Langues</label>
+                            <p-autoComplete id="language" name="language" [suggestions]="filteredLanguages"
+                                            (completeMethod)="filterLanguage($event)" (onSelect)="onLangugeSelect($event)"
+                                            field="label" [forceSelection]="true" [dropdown]="true" [(ngModel)]="langue.name"
+                                            [ngModelOptions]="{standalone: true}">
+                                <ng-template let-language pTemplate="item">
+                                    <div class="p-d-flex p-ai-center">
+                                        <img *ngIf="language.code" src="https://flagcdn.com/w20/{{language.code}}.png"
+                                             alt="{{language.label}}" class="p-mr-8"
+                                             style="width: 1.25rem; height: 0.875rem;" />
+                                        <span>{{ language.label }}</span>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                        </div>
+
+                        <!--                                <div class="p-field p-fluid">-->
+                        <!--                                    <label for="level">Niveau</label>-->
+                        <!--                                    <p-dropdown id="level" [options]="level" [(ngModel)]="langue.lev"-->
+                        <!--                                        placeholder="Niveau" [ngModelOptions]="{standalone: true}">-->
+                        <!--                                    </p-dropdown>-->
+                        <!--                                </div>-->
+                        <div class="rating ">
+                            <label>Niveau :</label>
+                            <div style="margin-left:5rem">
+                                <ngx-stars
+                                    [initialStars]="myRatingLnag[langue.id] || 0"
+                                    [maxStars]="5"
+                                    [wholeStars]="false"
+                                    [readonly]="false"
+                                    [size]="24"
+                                    [color]="'#ffc700'"
+                                    (ratingOutput)="addRatingLangue($event, langue.id)" >
+                                </ngx-stars>
+                            </div>
+                        </div>
+
+                        <div class="p-field-formation p-fluid">
+                            <label for="commentaire{{i}}" class="center-container">Commentaire</label>
+                            <textarea style="resize: none;" class="center-container" id="commentaire{{i}}"
+                                      pInputTextarea name="commentaire{{i}}" rows="3" [(ngModel)]="langue.commentaire"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                        <!-- Delete Formation Button -->
+                        <button pButton type="button" icon="pi pi-trash" class="p-button-danger" style="width: 1.8rem;"
+                                (click)="removeLangue(i)" *ngIf="formData1.langues.length > 1">
+                        </button>
+                    </p-card>
+                    <!-- Button to Add a New Formation -->
+                    <div class="p-d-flex p-jc-center" style="width:100%">
+                        <button pButton type="button" icon="pi pi-plus" label="Ajouter une langue"
+                                style="width: auto; white-space: nowrap;" class="custom-button200"
+                                (click)="addLangue()"></button>
+                    </div>
+                </card>
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                </card>
+
+            </div>
+
+            <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                <button pButton type="button" label="Précédent" class="p-button-secondary" style="width:10rem"
+                        (click)="goToPreviousStep()"></button>
+                <button pButton type="button" label="Suivant" class="p-button-primary" (click)="goToNextStep()"
+                        style="width:10rem" [disabled]="!candidatureForm.form.valid"></button>
+            </div>
+        </div>
+
+
+        <!-- Step 5: Niveau et disponibilité candidat -->
+        <div *ngIf="stepIndex === 3" class="p-d-flex p-flex-column p-ai-center">
+            <div class="p-grid p-fluid">
+                <card class="card2">
+                    <div class="p-field-formation p-fluid">
+                        <div class="card-title">
+                            <h6>Titre du CV</h6>
+                        </div>
+                        <input id="title" type="text" pInputText [(ngModel)]="formData1.titre" name="title"
+                               [ngModelOptions]="{standalone: true}" />
+                    </div>
+                    <div class="p-grid p-fluid">
+
+                        <card class="card5">
+                            <div class="card-title">
+                                <h6>Référentiel</h6>
+                            </div>
+
+                                <div>
+                                    <!-- Section des profils -->
+                                    <div class="p-field mb-4">
+                                        <div class="flex justify-content-between align-items-center mb-3">
+                                            <label>Profils :</label>
+                                            <!-- Bouton pour ajouter un profil -->
+                                            <button
+                                                pButton
+                                                icon="pi pi-plus"
+                                                class="p-button-rounded p-button-primary small-button"
+                                                (click)="addProfilReferentiel()"
+                                                title="Ajouter un profil"
+                                                type="button">
+                                            </button>
+                                        </div>
+
+                                        <!-- Liste des profils -->
+                                        <div *ngFor="let profilRef of formData1?.referentiels[0]?.profilReferentiels; let j = index" class="p-3 border-round mb-2">
+                                            <div class="grid align-items-center">
+                                                <!-- Dropdown pour sélectionner un profil -->
+                                                <div class="col-5">
+                                                    <p-dropdown
+                                                        [options]="availableProfils[j]"
+                                                        [(ngModel)]="profilRef.profil"
+                                                        [ngModelOptions]="{ standalone: true }"
+                                                        (onChange)="onProfilChangeAdd(j)"
+                                                        placeholder="Sélectionnez un profil">
+                                                    </p-dropdown>
+                                                </div>
+                                                <!-- Dropdown pour sélectionner un niveau -->
+                                                <div class="col-5">
+                                                    <p-dropdown
+                                                        [options]="niveauxTechnos"
+                                                        [(ngModel)]="profilRef.niveau"
+                                                        [ngModelOptions]="{standalone: true}"
+                                                        placeholder="Sélectionnez un niveau">
+                                                    </p-dropdown>
+                                                </div>
+                                                <!-- Bouton pour supprimer un profil -->
+                                                <div class="col-2 text-right">
+                                                    <button
+                                                        pButton
+                                                        icon="pi pi-minus"
+                                                        class="p-button-rounded p-button-danger p-button-outlined small-button"
+                                                        (click)="removeProfilReferentiel(j)"
+                                                        title="Supprimer ce profil"
+                                                        *ngIf="formData1.referentiels[0].profilReferentiels.length > 1"
+                                                        type="button">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Section segments -->
+                                    <div class="p-field p-mb-3">
+                                        <label for="segments">Segment:</label>
+                                        <p-multiSelect
+                                            id="segments"
+                                            [options]="segments"
+                                            [(ngModel)]="formData1.referentiels[0].segments"
+                                            [ngModelOptions]="{standalone: true}"
+                                            placeholder="Sélectionnez un segment"
+                                            (onChange)="onSegmentChange($event, 0)">
+                                        </p-multiSelect>
+                                    </div>
+
+                                    <!-- Section sous-segments -->
+                                    <div class="p-field p-mb-3">
+                                        <label for="sous-segment">Sous-segment:</label>
+                                        <p-multiSelect
+                                            id="sous-segment"
+                                            [options]="sousSegmentsOptions"
+                                            [(ngModel)]="formData1.referentiels[0].sousSegments"
+                                            [ngModelOptions]="{standalone: true}"
+                                            placeholder="Sélectionnez un sous-segment"
+                                            (onChange)="onSousSegmentChange($event, 0)">
+                                        </p-multiSelect>
+                                    </div>
+
+                                    <!-- Section technologies -->
+                                    <div class="p-field p-mb-3">
+                                        <label for="techno">Technologies :</label>
+                                        <p-multiSelect
+                                            id="techno"
+                                            [options]="technologiesOptions"
+                                            [(ngModel)]="formData1.referentiels[0].technologie"
+                                            [ngModelOptions]="{standalone: true}"
+                                            placeholder="Sélectionnez des technologies">
+                                        </p-multiSelect>
+                                    </div>
+                                </div>
+
+
+
+                                <card class="card5">
+                                <div class="card-title">
+                                    <h6>Expériences</h6>
+                                </div>
+                                <p-card *ngFor="let experience of formData1.experiences; let i = index" class="card5">
+                                    <label for="titleExp" class="center-container">Titre expérience</label>
+                                    <input id="titleExp" type="text" pInputText [(ngModel)]="experience.titre"
+                                           name="title" [ngModelOptions]="{standalone: true}" />
+                                    <label for="client" class="center-container">Client</label>
+                                    <input id="client" type="text" pInputText [(ngModel)]="experience.client"
+                                           name="client" [ngModelOptions]="{standalone: true}" />
+
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; gap: 1.25rem;">
+                                        <div class="p-field-formation p-fluid">
+                                            <label for="year{{i}}" class="center-container">Date début</label>
+                                            <p-calendar id="year{{i}}" view="month" dateFormat="yy-mm"
+                                                        yearRange="1900:2100" name="year{{i}}" [(ngModel)]="experience.dateDeb"
+                                                        [ngModelOptions]="{standalone: true}">
+                                            </p-calendar>
+                                        </div>
+                                        <div class="p-field-formation p-fluid">
+                                            <label for="year1{{i}}" class="center-container">Date fin</label>
+                                            <p-calendar id="year1{{i}}" view="month" dateFormat="yy-mm"
+                                                        yearRange="1900:2100" name="year1{{i}}" [(ngModel)]="experience.dateFin"
+                                                        [ngModelOptions]="{standalone: true}">
+                                            </p-calendar>
+                                        </div>
+                                    </div>
+                                    <div class="p-field-formation p-fluid">
+                                        <label for="commentaireExp{{i}}" class="center-container">Commentaire</label>
+                                        <textarea style="resize: none;" class="center-container"
+                                                  id="commentaireExp{{i}}" pInputTextarea name="commentaireExp{{i}}" rows="3"
+                                                  [(ngModel)]="experience.description"
+                                                  [ngModelOptions]="{standalone: true}"></textarea>
+                                    </div>
+                                    <!-- Delete certification Button -->
+                                    <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                                            style="width: 1.8rem;margin-left:1.8rem;" (click)="removeExperience(i)"
+                                            *ngIf="formData1.experiences.length > 1">
+                                    </button>
+                                </p-card>
+
+                                <!-- Button to Add a New certification -->
+                                <div class="p-d-flex p-jc-center">
+                                    <button pButton type="button" icon="pi pi-plus" label="Ajouter une expérience"
+                                            style="width: auto; white-space: nowrap;" class="custom-button200"
+                                            (click)="addExperience()"></button>
+                                </div>
+                            </card>
+
+                        </card>
+
+
+                        <card class="card5">
+                            <div class="card-title">
+                                <h6>Évaluation Compétences</h6>
+                            </div>
+                            <p-card *ngFor="let techno of formData1.ratedTechnologies; let i = index" class="card5">
+
+                                <div class="p-field p-fluid">
+                                    <p-dropdown id="Technos{{i}}" [(ngModel)]="techno.name" name="Technos{{i}}"
+                                                [options]="technoAEvaluerOptions" placeholder="Sélectionnez une technologie"
+                                                filter="true" filterPlaceholder="Rechercher..." [showClear]="true">
+                                    </p-dropdown>
+                                </div>
+
+                                <!-- Champ Années d'Expérience -->
+                                <div class="form-group">
+                                    <label for="experience-{{i}}" style="margin-right: 1rem;">Années d'Expérience
+                                        :</label>
+                                    <input type="number" id="experience-{{i}}" name="experience-{{i}}"
+                                           [(ngModel)]="techno.anneesExperiences" [ngModelOptions]="{standalone: true}"
+                                           (ngModelChange)="updateExperience(techno.id, techno.anneesExperiences)"
+                                           step="0.5" min="0" class="form-control" style="width: 5rem;" required>
+                                </div>
+
+                                <div class="rating" *ngIf="techno.anneesExperiences">
+                                    <label>Évaluation : </label>
+                                    <div style="margin-left:11rem">
+                                        <ngx-stars
+                                            [initialStars]="myRatingTechs[techno.id] || 0"
+                                            [maxStars]="5"
+                                            [wholeStars]="false"
+                                            [readonly]="false"
+                                            [size]="24"
+                                            [color]="'#ffc700'"
+                                            (ratingOutput)="addAndRateTechnology(candidat.id,$event, techno)" >
+                                        </ngx-stars>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Delete Technology Button -->
+                                <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                                        style="width: 1.8rem" (click)="removeTechnologie(i,techno.id)">
+                                </button>
+                            </p-card>
+
+                            <!-- Button to Add a New Technology -->
+                            <div class="p-d-flex p-jc-center">
+                                <button pButton style="margin-right: -1rem; width: 15rem;" type="button"
+                                        icon="pi pi-plus" label="Évaluer une technologie" class="custom-button200"
+                                        (click)="addTechnologie()"></button>
+                            </div>
+
+
+                            <card class="card5">
+                                <div class="card-title">
+                                    <h6>Nuage Technologique</h6>
+                                </div>
+                                <p-tabView>
+                                    <ng-container>
+                                        <p-tabPanel header="Technologies">
+                                            <p-chip *ngFor="let tech of filteredTechno" [label]="tech"
+                                                    styleClass="m-1"></p-chip>
+                                        </p-tabPanel>
+                                    </ng-container>
+                                    <ng-container>
+                                        <p-tabPanel header="Autres">
+                                            <p-chip *ngFor="let otherTechno of otherTechnologies" [label]="otherTechno"
+                                                    styleClass="m-1"></p-chip>
+                                        </p-tabPanel>
+                                    </ng-container>
+                                </p-tabView>
+                            </card>
+
+
+
+                            <card class="card5">
+                                <div class="card-title">
+                                    <h6>Statistiques du profil</h6>
+                                </div>
+                                <p-tabView>
+                                    <ng-container>
+                                        <p-tabPanel header="Segments">
+                                            <p-chip *ngFor="let segment of segmentsStats"
+                                                    [label]="getSegmentLabel(segment.name) + ': ' + segment.percentage "
+                                                    styleClass="m-1">
+                                            </p-chip>
+                                        </p-tabPanel>
+                                    </ng-container>
+
+                                    <ng-container>
+                                        <p-tabPanel header="Sous-Segments">
+                                            <p-chip *ngFor="let sousSegment of sousSegmentsStats"
+                                                    [label]="getSousSegmentLabel(sousSegment.name) + ': ' + sousSegment.percentage "
+                                                    styleClass="m-1">
+                                            </p-chip>
+                                        </p-tabPanel>
+                                    </ng-container>
+
+
+                                    <ng-container>
+                                        <p-tabPanel header="Technologies">
+                                            <p-chip *ngFor="let technology of technologiesStats"
+                                                    [label]="technology.name + ': ' + technology.percentage"
+                                                    styleClass="m-1">
+                                            </p-chip>
+                                        </p-tabPanel>
+                                    </ng-container>
+                                </p-tabView>
+                            </card>
+                        </card>
+                    </div>
+                </card>
+
+
+
+
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                </card>
+
+
+            </div>
+
+
+            <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                <button pButton type="button" label="Précédent" class="p-button-secondary" style="width:10rem"
+                        (click)="goToPreviousStep()"></button>
+                <button pButton type="button" label="Suivant" class="p-button-primary" (click)="goToNextStep()"
+                        style="width:10rem" [disabled]="!candidatureForm.form.valid"></button>
+            </div>
+        </div>
+
+        <!-- Step 6: Technologies Maîtrisées -->
+        <div *ngIf="stepIndex === 4" class="p-d-flex p-flex-column p-ai-center">
+
+            <div class="p-grid p-fluid">
+                <card class="card4">
+                    <div class="card-title">
+                        <h6>Statut</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="etat">État</label>
+                        <p-dropdown id="statut" [options]="statut" [(ngModel)]="formData1.statusCandidat"
+                                    [ngModelOptions]="{standalone: true}" placeholder="Sélectionner un statut">
+                        </p-dropdown>
+                    </div>
+                    <card class="card4">
+                        <div class="card-title">
+                            <h6>Informations avant entretien</h6>
+                        </div>
+
+                        <div class="p-field p-fluid">
+                            <label for="tjm">TJM</label>
+                            <input id="tjm" type="number" pInputText [(ngModel)]="formData1.tjm" style="width: 7rem"
+                                   [ngModelOptions]="{standalone: true}" name="tjm" />
+                        </div>
+
+                        <div class="p-field p-fluid">
+                            <label for="salaire">Salaire</label>
+                            <input id="salaire" type="number" pInputText [(ngModel)]="formData1.salaire"
+                                   style="width: 7rem" [ngModelOptions]="{standalone: true}" name="salaire" />
+                        </div>
+
+                    </card>
+                </card>
+                <card class="card4">
+                    <div class="card-title">
+                        <h6>Durant entretien</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="tjmMin">TJM Minimum</label>
+                        <input id="tjmMin" [(ngModel)]="formData1.tjmMin" style="width: 7rem"
+                               [ngModelOptions]="{standalone: true}" type="number" pInputText name="tjmMin" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="tjmSouhaite">TJM Souhaité</label>
+                        <input id="tjmSouhaite" [(ngModel)]="formData1.tjmSouhaite" style="width: 7rem"
+                               [ngModelOptions]="{standalone: true}" type="number" pInputText name="tjmSouhaite" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="salaireMin">Salaire Minimum</label>
+                        <input id="salaireMin" [(ngModel)]="formData1.salaireMin" style="width: 7rem"
+                               [ngModelOptions]="{standalone: true}" type="number" pInputText name="salaireMin" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="salaireSouhaite">Salaire Souhaité</label>
+                        <input id="salaireSouhaite" type="number" pInputText [(ngModel)]="formData1.salaireSouhaite"
+                               style="width: 7rem" [ngModelOptions]="{standalone: true}" name="salaireSouhaite" />
+                    </div>
+
+
+                </card>
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                </card>
+            </div>
+
+            <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                <button pButton type="button" label="Précédent" class="p-button-secondary" style="width:10rem"
+                        (click)="goToPreviousStep()"></button>
+                <button pButton type="button" label="Suivant" class="p-button-primary" (click)="goToNextStep()"
+                        style="width:10rem" [disabled]="!candidatureForm.form.valid"></button>
+            </div>
+        </div>
+
+        <!-- Step 7: Département -->
+        <div *ngIf="stepIndex === 5" class="p-d-flex p-flex-column p-ai-center">
+            <div class="p-grid p-fluid">
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations globales</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label>Ecoute du marché?</label>
+                        <p-checkbox [(ngModel)]="formData1.ecouteDuMarche" [ngModelOptions]="{standalone: true}"
+                                    [binary]="true" inputId="marche" class="center-container" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label>CV à jour?</label>
+                        <p-checkbox [(ngModel)]="formData1.cvAJour" [ngModelOptions]="{standalone: true}"
+                                    [binary]="true" inputId="up2date" class="center-container" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="preavis">Préavis</label>
+                        <p-dropdown id="preavis" [options]="preavis" [(ngModel)]="formData1.preavis"
+                                    placeholder="Sélectionner un préavis" [ngModelOptions]="{standalone: true}">
+                        </p-dropdown>
+                    </div>
+
+                </card>
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Trajet</h6>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Durée">Durée</label>
+                        <input id="Durée" type="number" pInputText [(ngModel)]="formData1.dureeTrajet"
+                               [ngModelOptions]="{standalone: true}" name="Durée" />
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label for="Durée à gare principale">Durée à gare principale</label>
+                        <input id="Durée à gare principale" type="number" pInputText
+                               [(ngModel)]="formData1.dureeGarePrincipale" [ngModelOptions]="{standalone: true}"
+                               name="Durée à gare principale" />
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <label class="center-container">Départements</label>
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="3"
+                                  [(ngModel)]="formData1.departementTrajet" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                </card>
+                <div class="p-grid p-fluid">
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Références clients</h6>
+                        </div>
+                        <p-card *ngFor="let ref of formData1.referencesClients; let i = index; trackBy: trackByIndex" class="card1">
+                            <!-- Champ Référence -->
+                            <div class="p-field p-fluid">
+                                <label for="ref{{i}}">Référence {{i + 1}}</label>
+                                <input type="text" pInputText [(ngModel)]="formData1.referencesClients[i]" [ngModelOptions]="{standalone: true}" />
+                            </div>
+
+                            <!-- Bouton pour supprimer une référence -->
+                            <button pButton type="button" icon="pi pi-trash" class="p-button-danger"
+                                    style="width: 1.8rem; margin-left: 1.8rem"
+                                    (click)="removeReference(i)"
+                                    *ngIf="formData1.referencesClients.length > 1">
+                            </button>
+                        </p-card>
+
+
+
+                        <!-- Bouton pour ajouter une nouvelle référence -->
+                        <div class="p-d-flex p-jc-center" style="width: 100%;">
+                            <button pButton type="button" icon="pi pi-plus" label="Ajouter une référence"
+                                    class="custom-button200" style="width: auto; white-space: nowrap;"
+                                    (click)="addReference()"></button>
+                        </div>
+                    </card>
+
+                </div>
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                </card>
+            </div>
+            <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                <button pButton type="button" label="Précédent" class="p-button-secondary" style="width:10rem"
+                        (click)="goToPreviousStep()"></button>
+                <button pButton type="button" label="Suivant" class="p-button-primary" (click)="goToNextStep()"
+                        style="width:10rem" [disabled]="!candidatureForm.form.valid"></button>
+            </div>
+        </div>
+
+        <div *ngIf="stepIndex === 6" class="p-d-flex p-flex-column p-ai-center">
+            <div class="p-grid p-fluid">
+                <card class="card3">
+                    <div class="card-title">
+                        <h6>Notation finale</h6>
+                    </div>
+                    <div class="rating ">
+                        <label>Ressenti global : </label>
+                        <br><br>
+                        <div   style="margin-left: 28rem">
+                            <ngx-stars
+                                *ngIf="myRating[formData1.id] !== undefined"
+                                [initialStars]="myRating[formData1.id] || 0"
+                                [maxStars]="5"
+                                [wholeStars]="false"
+                                [readonly]="false"
+                                [size]="24"
+                                [color]="'#ffc700'"
+                                (ratingOutput)="addRating($event, formData1.id)" >
+                            </ngx-stars>
+                        </div>
+                    </div>
+
+                    <div class="p-field p-fluid">
+                        <label>A un dossier de compétences?</label>
+                        <p-checkbox [(ngModel)]="formData1.dossierCompetences" [binary]="true" inputId="dc"
+                                    [ngModelOptions]="{standalone: true}" class="center-container"></p-checkbox>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label>Dates des missions?</label>
+                        <p-checkbox [(ngModel)]="formData1.dateMissions" [binary]="true" inputId="missions"
+                                    [ngModelOptions]="{standalone: true}" class="center-container"></p-checkbox>
+                    </div>
+                    <div class="p-field p-fluid">
+                        <label>Format Word?</label>
+                        <p-checkbox [(ngModel)]="formData1.formatWord" [binary]="true" inputId="wordF"
+                                    [ngModelOptions]="{standalone: true}" class="center-container"></p-checkbox>
+                    </div>
+                </card>
+                <card class="card1">
+                    <div class="card-title">
+                        <h6>Informations à clarifier</h6>
+                    </div>
+                    <div class="p-field-formation p-fluid">
+                        <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                  [(ngModel)]="formData1.infosAClarifier" [ngModelOptions]="{standalone: true}"></textarea>
+                    </div>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Souhaits Candidat</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="6"
+                                      [(ngModel)]="formData1.souhaitsCandidat"
+                                      [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                    <card class="card1">
+                        <div class="card-title">
+                            <h6>Commentaires</h6>
+                        </div>
+                        <div class="p-field-formation p-fluid">
+                            <textarea style="resize: none;" class="center-container" pInputTextarea rows="10"
+                                      [(ngModel)]="formData1.comments" [ngModelOptions]="{standalone: true}"></textarea>
+                        </div>
+
+                    </card>
+                </card>
+            </div>
+            <div class="p-field p-mt-4 flex justify-content-center gap-4">
+                <button pButton type="button" label="Précédent" class="p-button-secondary" style="width:10rem"
+                        (click)="goToPreviousStep()"></button>
+                <button pButton type="submit" style="width:10rem" label="Soumettre" class="p-button-primary"></button>
+            </div>
+        </div>
+        <div *ngIf="stepIndex === 7" class="p-d-flex p-flex-column p-ai-center">
+            <div class="p-3 ">
+                <!-- Header section with add button -->
+                <div class="flex justify-content-between align-items-center mb-4">
+                    <p-button
+                        label="Nouvelle Action"
+                        icon="pi pi-plus"
+                        class="p-button-success"
+                        (click)="showActionDialog()">
+                    </p-button>
+                </div>
+                <div class="cards-container">
+                    <ng-container *ngIf="actions?.length > 0; else noActions">
+                        <div *ngFor="let action of actions; index as i" class="action-card">
+                            <p-card class="h-full shadow-2 hover:shadow-4 transition-all duration-300">
+                                <!-- En-tête de la Card -->
+                                <ng-template pTemplate="header">
+                                    <div class="bg-primary-50 p-4 flex align-items-center justify-content-between">
+                                        <div class="flex align-items-center">
+                                            <i class="pi pi-bookmark text-primary-500 mr-2 text-xl"></i>
+                                            <span class="text-xl font-medium text-primary-700">{{ action.type || "N/A" }}</span>
+                                        </div>
+                                        <p-tag [value]="action.prochainRdvPlanifie ? 'RDV Planifié' : 'Sans RDV'"
+                                               [severity]="action.prochainRdvPlanifie ? 'success' : 'info'" [rounded]="true">
+                                        </p-tag>
+                                    </div>
+                                </ng-template>
+
+                                <!-- Contenu de la Card -->
+                                <div class="p-4">
+                                    <div *ngIf="action.prochainRdvPlanifie" class="mb-4 surface-100 p-3 border-round">
+                                        <div class="flex align-items-center">
+                                            <i class="pi pi-calendar text-primary-500 mr-2"></i>
+                                            <div>
+                                                <div class="text-sm text-600">Prochain RDV</div>
+                                                <div class="font-medium">{{ action.dateProchainRdvPlanifie | date: "dd MMM yyyy HH:mm" }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid">
+                                        <div class="col-12 mb-3">
+                                            <div class="flex flex-column gap-3">
+                                                <div class="flex justify-content-between align-items-center p-2 surface-ground border-round">
+                                                    <div>
+                                                        <div class="text-sm text-600">Créé le</div>
+                                                        <div class="font-medium">{{ action.dateDeCreation | date: "dd MMM yyyy" }}</div>
+                                                    </div>
+                                                    <div class="text-right">
+                                                        <div class="text-sm text-600">Mis à jour le</div>
+                                                        <div class="font-medium">{{ action.dateMiseAJour | date: "dd MMM yyyy" }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex align-items-center p-2 surface-ground border-round">
+                                                    <i class="pi pi-user text-primary-500 mr-2"></i>
+                                                    <div>
+                                                        <div class="text-sm text-600">Manager</div>
+                                                        <div class="font-medium">{{ action.manager || "N/A" }}</div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex align-items-center p-2 surface-ground border-round">
+                                                    <i class="pi pi-users text-primary-500 mr-2"></i>
+                                                    <div>
+                                                        <div class="text-sm text-600">Personne concernée</div>
+                                                        <div class="font-medium">{{ action.etatPersonneConcerne || "N/A" }}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Footer de la Card -->
+                                <ng-template pTemplate="footer">
+                                    <div class="action-card-footer">
+                                        <p-button icon="pi pi-eye" label="Détails" styleClass="p-button-text p-button-primary"
+                                                  (click)="showViewActionDialog(action.id)"></p-button>
+                                        <div class="flex gap-2">
+                                            <p-button
+                                                icon="pi pi-pencil"
+                                                styleClass="p-button-rounded p-button-secondary p-button-outlined"
+                                                pTooltip="Modifier"
+                                                (click)="loadActionDataAndDisplaySidebar(action.id)">
+                                            </p-button>
+
+                                            <p-button icon="pi pi-trash" styleClass="p-button-rounded p-button-danger p-button-outlined"
+                                                      *ngIf="isAdmin"
+                                                      (click)="confirmDeleteAction(action.id)"
+                                                      pTooltip="Supprimer"></p-button>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-card>
+                        </div>
+                    </ng-container>
+
+                    <ng-template #noActions>
+                        <p>No actions available</p>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <p-dialog
+        [(visible)]="displayActionDialog"
+        [header]="'Ajouter une action'"
+        [modal]="true"
+        [style]="{width: '75vw', maxWidth: '700px'}"
+        [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+        [dismissableMask]="true"
+        [closable]="true"
+        styleClass="action-dialog">
+
+        <form (ngSubmit)="onSubmitActionCandidat()" #actionForm2="ngForm" class="p-fluid">
+            <!-- En-tête -->
+            <div class="action-header">
+                <div class="header-content">
+                    <i class="pi pi-info-circle"></i>
+                    <span>Détails de l'action</span>
+                </div>
+            </div>
+
+            <div class="dialog-content">
+                <div class="main-section">
+                    <!-- Type Field -->
+                    <div class="field">
+                        <label for="types" class="field-label">
+                            <i class="pi pi-list text-primary"></i>
+                            <span>Type*</span>
+                        </label>
+                        <p-dropdown
+                            id="types1"
+                            [(ngModel)]="action.type"
+                            name="etat"
+                            [options]="candidattTypes"
+                            placeholder="Sélectionnez un type"
+                            [autoZIndex]="true"
+                            [scrollHeight]="'300px'"
+                            appendTo="body"
+                            required>
+                        </p-dropdown>
+                    </div>
+
+                    <!-- Besoin -->
+                    <div class="field" *ngIf="['Positionnement présenti', 'Positionnement', 'Entretien partenaire', 'Entretien client'].includes(action.type)">
+                        <label for="besoin" class="field-label">
+                            <i class="pi pi-list text-primary"></i>
+                            <span>Besoin*</span>
+                        </label>
+                        <p-dropdown
+                            #dropdownRef
+                            id="besoin"
+                            [(ngModel)]="action.besoin"
+                            [ngModelOptions]="{ standalone: true }"
+                            [options]="filteredBesoins"
+                            [filter]="true"
+                            [filterBy]="'label'"
+                            [showClear]="true"
+                            [optionLabel]="'label'"
+                            [optionValue]="'value'"
+                            [filterMatchMode]="'contains'"
+                            [autoDisplayFirst]="false"
+                            [scrollHeight]="'200px'"
+                            styleClass="w-full"
+                            [baseZIndex]="1000"
+                            (onFilter)="filterBesoins($event)"
+                            placeholder="Rechercher un besoin..."
+                            required>
+
+                            <ng-template let-item pTemplate="item">
+                                <div class="flex align-items-center justify-content-between gap-2 p-2">
+                                    <span>{{ item.label }}</span>
+                                    <button
+                                        type="button"
+                                        pButton
+                                        icon="pi pi-eye"
+                                        class="p-button-text p-button-sm"
+                                        (click)="onEyeClick($event, item.value.id)"
+                                        (mousedown)="preventDropdownClose($event)">
+                                    </button>
+                                </div>
+                            </ng-template>
+
+                            <ng-template pTemplate="selectedItem" let-item>
+                                <span>{{ item?.label }}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+
+                    <!-- Options -->
+                    <div class="options-section">
+                        <div class="field-checkbox">
+                            <p-checkbox id="relance1" [(ngModel)]="action.relance" name="relance1" [binary]="true"></p-checkbox>
+                            <label for="relance1" class="checkbox-label">
+                                <i [class]="action.relance ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                                <span>Relance</span>
+                            </label>
+                        </div>
+
+                        <div class="field-checkbox" *ngIf="['Appel', 'E-mail', 'Appel + Mail', 'Echange téléphonique', 'RDV'].includes(action.type)">
+                            <p-checkbox id="prochainRdvPlanifie1" [(ngModel)]="action.prochainRdvPlanifie" name="prochainRdvPlanifie1" [binary]="true"></p-checkbox>
+                            <label for="prochainRdvPlanifie1" class="checkbox-label">
+                                <i [class]="action.prochainRdvPlanifie ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                                <span>Prochain RDV/Echange planifié</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Date RDV -->
+                    <div class="field" *ngIf="action.prochainRdvPlanifie">
+                        <label for="RDVplanif1" class="field-label">
+                            <i class="pi pi-calendar text-primary"></i>
+                            <span>Date RDV planifié*</span>
+                        </label>
+                        <p-calendar
+                            id="RDVplanif1"
+                            [(ngModel)]="action.dateProchainRdvPlanifie"
+                            name="RDVplanif1"
+                            [showTime]="true"
+                            [showIcon]="true"
+                            appendTo="body"
+                            required>
+                        </p-calendar>
+                    </div>
+
+                    <!-- Commentaires -->
+                    <div class="field">
+                        <label for="comment" class="field-label">
+                            <i class="pi pi-pencil text-primary"></i>
+                            <span>Commentaires</span>
+                        </label>
+                        <textarea
+                            pInputTextarea
+                            id="comment"
+                            [(ngModel)]="action.commentaires"
+                            name="comment"
+                            rows="3"
+                            class="custom-textarea"
+                            placeholder="Saisissez vos commentaires ici...">
+                    </textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="dialog-footer">
+                <p-button
+                    label="Ajouter"
+                    icon="pi pi-check"
+                    [disabled]="!actionForm2.valid"
+                    type="submit"
+                    styleClass="p-button-primary">
+                </p-button>
+            </div>
+        </form>
+    </p-dialog>
+
+</div>
+
+
+
+
+
+
+<!-- Besoin View Dialog -->
+<p-dialog [(visible)]="displayBesoinDetailsDialog"
+          [modal]="true"
+          [style]="{ width: '55vw' }"
+          [closable]="true"
+          styleClass="p-fluid custom-dialog">
+
+    <ng-container *ngIf="selectedBesoin; else loading">
+        <!-- Header principal -->
+        <div class="grid center-content-besoin">
+            <div class="col-12">
+                <h2 class="title-besoin">{{ selectedBesoin?.titre }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Informations principales -->
+        <div class="grid section">
+            <div class="col-6">
+                <h3>Informations Générales</h3>
+                <p><strong>Référence:</strong> {{ selectedBesoin?.reference }}</p>
+                <p><strong>État:</strong> {{ selectedBesoin?.etat }}</p>
+                <p><strong>Créé le:</strong> {{ selectedBesoin?.dateDeCreation | date: 'dd MMM yyyy, HH:mm:ss' }}</p>
+                <p><strong>Dernière mise à jour:</strong> {{ selectedBesoin?.dateDerniereMiseAJour | date: 'dd MMM yyyy, HH:mm:ss'}}</p>
+                <p><strong>Plateforme:</strong> {{ selectedBesoin?.plateforme || 'Non défini' }}</p>
+                <p><strong>Démarrage ASAP:</strong> {{ selectedBesoin?.demarrageASAP ? 'Oui' : 'Non' }}</p>
+                <p><strong>Date de démarrage:</strong> {{ selectedBesoin?.dateDeDemarrage | date: 'dd MMM yyyy, HH:mm:ss' }}</p>
+                <p><strong>Besoin en avance de phase:</strong> {{ selectedBesoin?.besoinEnAvanceDePhase ? 'Oui' : 'Non' }}</p>
+                <p><strong>Récurrent:</strong> {{ selectedBesoin?.reccurent ? 'Oui' : 'Non' }}</p>
+            </div>
+            <div class="col-6">
+                <h3>QR Code</h3>
+                <div class="qr-code-container">
+                    <ng-container *ngIf="selectedBesoin?.qrCodeImage; else noQrCode">
+                        <img [src]="selectedBesoin?.qrCodeImage?.imagenUrl" alt="QR Code" class="qr-image" />
+                    </ng-container>
+                    <ng-template #noQrCode>
+                        <p>Aucun QR Code disponible.</p>
+                    </ng-template>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Profil du besoin -->
+        <div class="grid section">
+            <div class="col-12">
+                <h3>Profil Recherché</h3>
+            </div>
+            <div class="col-6">
+                <p><strong>Difficultés:</strong> {{ selectedBesoin?.profilBesoins?.difficultes }}</p>
+                <p><strong>Séniorité:</strong> {{ selectedBesoin?.profilBesoins?.seniorite }}</p>
+                <p><strong>Années d'expérience:</strong> {{ selectedBesoin?.profilBesoins?.anneesExperienceTotales }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>TJM (min - max):</strong> {{ selectedBesoin?.profilBesoins?.tjmMin }} - {{ selectedBesoin?.profilBesoins?.tjmMax }} €</p>
+                <p><strong>TJM souhaité:</strong> {{ selectedBesoin?.profilBesoins?.tjmSouhaite }} €</p>
+                <p><strong>Avantages:</strong> {{ selectedBesoin?.profilBesoins?.avantages || 'Non défini' }}</p>
+            </div>
+        </div>
+
+        <!-- Référentiel -->
+        <div class="grid section">
+            <div class="col-12">
+                <h3>Référentiel</h3>
+            </div>
+            <div class="col-6">
+                <p><strong>Segments:</strong> {{ getSegmentsLabels()?.join(', ') }}</p>
+                <p><strong>Sous-segments:</strong> {{ getSousSegmentsLabels()?.join(', ') }}</p>
+            </div>
+            <div class="col-6">
+                <p><strong>Profil:</strong> {{ getProfilLabels()?.join(', ') }}</p>
+                <p><strong>Technologies:</strong> {{ getTechnologiesLabels()?.join(', ') }}</p>
+            </div>
+        </div>
+
+    </ng-container>
+
+    <!-- Message de chargement -->
+    <ng-template #loading>
+        <div class="loading">
+            <p>Chargement des détails du besoin...</p>
+        </div>
+    </ng-template>
+    <br>
+    <p-button label="OK" icon="pi pi-check" (click)="displayBesoinDetailsDialog = false"
+              styleClass="p-button-primary p-button-outlined">
+    </p-button>
+
+
+</p-dialog>
+
+
+
+
+<p-dialog
+    [(visible)]="displayActionsDetailsDialog"
+    [header]="'Détails de l\'action'"
+    [modal]="true"
+    [style]="{width: '75vw', maxWidth: '700px'}"
+    [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
+    [dismissableMask]="true"
+    [closable]="true"
+    styleClass="view-action-dialog">
+
+    <!-- En-tête -->
+    <div class="action-header p-3 border-round mb-3 surface-ground">
+        <div class="flex flex-column gap-1 text-sm text-gray-700 mt-2">
+            <div class="flex align-items-center gap-2">
+                <i class="pi pi-clock text-sm"></i>
+                <span>Créée le {{selectedAction?.dateDeCreation | date:'dd/MM/yyyy à HH:mm'}}</span>
+            </div>
+            <div class="flex align-items-center gap-2" *ngIf="selectedAction?.dateMiseAJour">
+                <i class="pi pi-sync text-sm"></i>
+                <span>Dernière modification le {{selectedAction?.dateMiseAJour | date:'dd/MM/yyyy à HH:mm'}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-content p-3">
+        <div class="main-section">
+            <!-- Type Field -->
+            <div class="field mb-4">
+                <label class="block mb-2">
+                    <i class="pi pi-list text-primary mr-2"></i>
+                    <span class="font-semibold">Type</span>
+                </label>
+                <div class="p-2 surface-ground border-round">
+                    {{selectedAction?.type}}
+                </div>
+            </div>
+
+            <!-- Besoin -->
+            <div class="field mb-4" *ngIf="shouldShowField1('besoin')">
+                <label class="block mb-2">
+                    <i class="pi pi-list text-primary mr-2"></i>
+                    <span class="font-semibold">Besoin associé</span>
+                </label>
+                <div class="p-2 surface-ground border-round flex align-items-center justify-content-between">
+                    <span>{{selectedAction?.besoin?.titre}}</span>
+                    <button
+                        pButton
+                        icon="pi pi-eye"
+                        class="p-button-text p-button-sm"
+                        (click)="onEyeClick($event, selectedAction?.besoin?.id)"
+                        pTooltip="Voir le besoin">
+                    </button>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="options-section grid mb-4">
+                <div class="col-12 md:col-6">
+                    <div class="field-display p-2 surface-ground border-round">
+                        <div class="flex align-items-center gap-2">
+                            <i [class]="selectedAction?.relance ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                            <span class="font-medium">Relance</span>
+                        </div>
+                        <span class="block mt-1 text-sm text-gray-700">
+                            {{selectedAction?.relance ? 'Oui' : 'Non'}}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-6" *ngIf="shouldShowField1('prochainRdvPlanifie')">
+                    <div class="field-display p-2 surface-ground border-round">
+                        <div class="flex align-items-center gap-2">
+                            <i [class]="selectedAction?.prochainRdvPlanifie ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                            <span class="font-medium">Prochain RDV/Echange planifié</span>
+                        </div>
+                        <span class="block mt-1 text-sm text-gray-700">
+                            {{selectedAction?.prochainRdvPlanifie ? 'Oui' : 'Non'}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date RDV -->
+            <div class="field mb-4" *ngIf="selectedAction?.prochainRdvPlanifie">
+                <label class="block mb-2">
+                    <i class="pi pi-calendar text-primary mr-2"></i>
+                    <span class="font-semibold">Date RDV planifié</span>
+                </label>
+                <div class="p-2 surface-ground border-round">
+                    {{selectedAction?.dateProchainRdvPlanifie | date:'dd/MM/yyyy à HH:mm'}}
+                </div>
+            </div>
+
+            <!-- Commentaires -->
+            <div class="field">
+                <label class="block mb-2">
+                    <i class="pi pi-pencil text-primary mr-2"></i>
+                    <span class="font-semibold">Commentaires</span>
+                </label>
+                <div class="p-2 surface-ground border-round min-h-8rem white-space-pre-line">
+                    {{selectedAction?.commentaires || 'Aucun commentaire'}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-end gap-2">
+            <p-button
+                icon="pi pi-times"
+                label="Fermer"
+                styleClass="p-button-outlined"
+                (click)="displayActionsDetailsDialog = false">
+            </p-button>
+        </div>
+    </ng-template>
+</p-dialog>
+
+
+<p-sidebar
+    [(visible)]="displaySidebar"
+    [position]="'right'"
+    [modal]="true"
+    [showCloseIcon]="true"
+    [style]="{width: '400px'}"
+    class="modern-sidebar">
+
+    <div class="sidebar-header">
+        <h3>
+            <i class="pi pi-pencil"></i>
+            <span>Modifier l'action</span>
+        </h3>
+    </div>
+
+    <div class="sidebar-content">
+        <form (ngSubmit)="updateAction(actionSelected.id)" #actionForm2="ngForm" class="p-fluid">
+
+            <!-- Date Création -->
+            <div class="field">
+                <label class="field-label">
+                    <i class="pi pi-calendar icon-spacing"></i>
+                    <span>Date de création*</span>
+                </label>
+                <p-calendar
+                    [(ngModel)]="actionSelected.dateDeCreation"
+                    name="dateProchainRdvPlanifie"
+                    [showTime]="true"
+                    [showIcon]="true"
+                    appendTo="body"
+                    [showButtonBar]="true"
+                    required>
+                </p-calendar>
+            </div>
+
+            <!-- Type -->
+            <div class="field">
+                <label class="field-label">
+                    <i class="pi pi-list icon-spacing"></i>
+                    <span>Type de l'action*</span>
+                </label>
+                <p-dropdown
+                    [(ngModel)]="actionSelected.type"
+                    name="type"
+                    [options]="candidattTypes"
+                    placeholder="Sélectionnez un type"
+                    [autoZIndex]="true"
+                    [scrollHeight]="'300px'"
+                    appendTo="body"
+                    required>
+                </p-dropdown>
+            </div>
+
+            <!-- Besoin -->
+            <div class="field" *ngIf="shouldShowField('besoin')">
+                <label class="field-label">
+                    <i class="pi pi-briefcase icon-spacing"></i>
+                    <span>Besoin associé*</span>
+                </label>
+                <p-dropdown
+                    [(ngModel)]="actionSelected.besoin"
+                    [ngModelOptions]="{ standalone: true }"
+                    [options]="filteredBesoins"
+                    [filter]="true"
+                    [filterBy]="'label'"
+                    [showClear]="true"
+                    [optionLabel]="'label'"
+                    [optionValue]="'value'"
+                    [filterMatchMode]="'contains'"
+                    [baseZIndex]="1000"
+                    (onFilter)="filterBesoins($event)"
+                    placeholder="Rechercher un besoin..."
+                    required>
+                    <ng-template let-item pTemplate="item">
+                        <div class="flex align-items-center justify-content-between gap-2 p-2">
+                            <span>{{ item.label }}</span>
+                            <button
+                                type="button"
+                                pButton
+                                icon="pi pi-eye"
+                                class="p-button-text p-button-sm">
+                            </button>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+            </div>
+
+            <div class="options-section">
+                <!-- Relance -->
+                <div class="field-checkbox">
+                    <p-checkbox
+                        [(ngModel)]="actionSelected.relance"
+                        name="relance"
+                        [binary]="true">
+                    </p-checkbox>
+                    <label class="checkbox-label">
+                        <i class="pi pi-refresh icon-spacing"></i>
+                        <span>Relance nécessaire</span>
+                    </label>
+                </div>
+
+                <!-- Prochain RDV -->
+                <div class="field-checkbox" *ngIf="shouldShowField('prochainRdvPlanifie')">
+                    <p-checkbox
+                        [(ngModel)]="actionSelected.prochainRdvPlanifie"
+                        name="prochainRdvPlanifie"
+                        [binary]="true">
+                    </p-checkbox>
+                    <label class="checkbox-label">
+                        <i class="pi pi-calendar-plus icon-spacing"></i>
+                        <span>Planifier le prochain RDV</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Date RDV -->
+            <div class="field" *ngIf="shouldShowField('dateProchainRdvPlanifie')">
+                <label class="field-label">
+                    <i class="pi pi-calendar icon-spacing"></i>
+                    <span>Date du prochain RDV*</span>
+                </label>
+                <p-calendar
+                    [(ngModel)]="actionSelected.dateProchainRdvPlanifie"
+                    name="dateProchainRdvPlanifie"
+                    [showTime]="true"
+                    [showIcon]="true"
+                    appendTo="body"
+                    [showButtonBar]="true"
+                    required>
+                </p-calendar>
+            </div>
+
+            <!-- Commentaires -->
+            <div class="field">
+                <label class="field-label">
+                    <i class="pi pi-comments icon-spacing"></i>
+                    <span>Commentaires</span>
+                </label>
+                <textarea
+                    pInputTextarea
+                    [(ngModel)]="actionSelected.commentaires"
+                    name="commentaires"
+                    rows="3"
+                    class="custom-textarea"
+                    placeholder="Ajoutez vos commentaires...">
+                </textarea>
+            </div>
+
+            <!-- Footer -->
+            <div class="dialog-footer">
+                <p-button
+                    label="Mettre à jour"
+                    icon="pi pi-check"
+                    type="submit"
+                    styleClass="p-button-primary">
+                </p-button>
+            </div>
+        </form>
+    </div>
+</p-sidebar>

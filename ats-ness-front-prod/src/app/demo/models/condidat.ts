@@ -1,0 +1,77 @@
+
+import { EtatCandidat } from "./enums/EtatCandidat";
+import { Niveau } from "./enums/Niveau";
+import {Utilisateur} from "./utilisateur";
+import {Certifications} from "./Certifications";
+import {Experiences} from "./Experiences";
+import {Formations} from "./Formations";
+import {Langues} from "./Langues";
+import {Profil} from "./Profil";
+import {Referentiel} from "./Referentiel";
+import { StatusCandidat } from "./enums/StatusCandidat";
+import {Technology} from "./Technology";
+import {Actions} from "./Actions";
+import {StatistiquesProfil} from "./StatistiquesProfil";
+
+export class Candidat {
+    id: number;
+    nom:any;
+    prenom:any;
+    dateDerniereMiseAJour: Date;
+    titre: string;
+    tjmMin: any;
+    tjmSouhaite: any;
+    salaireMin: any;
+    salaireSouhaite: any;
+    tjm:any;
+    salaire:number;
+    cvurl: any;
+    pictureUrl: any;
+    email: string;
+    telephone: string;
+    nationalite: string;
+    adresse: string;
+    ville: string;
+    codePostal: string;
+    departement: string;
+    departementTrajet:any;
+    dossierCompetences:boolean;
+    dateMissions:boolean;
+    formatWord:boolean;
+    habilitable:boolean;
+    jesaispas:boolean;
+    infosAClarifier:any;
+    comments:any;
+    etat: EtatCandidat;
+    dateDeCreation:any;
+    niveau: Niveau;
+    description:string;
+    utilisateur: Utilisateur;
+    disponibilite:any;
+    emailSecondaire:any;
+    complement : any;
+    ambassadeur : boolean;
+    ecouteDuMarche : boolean;
+    cvAJour : boolean;
+    preavis : string;
+    souhaitsCandidat : any;
+    dureeTrajet : any;
+    dureeGarePrincipale : any;
+    jobboard:any;
+    responsable:string;
+    statusCandidat: StatusCandidat;
+    commentaireGeneralite: string;
+    level: any;
+    certifications: Certifications[] = [];
+    experiences: Experiences[] = [];
+    formations: Formations[] = [];
+    langues: Langues[] = [];
+    profils: Profil[] =[];
+    referentiels: Referentiel[] = [];
+    referencesClients:[]=[];
+    ratedTechnologies:Technology[]=[];
+    actions?: Actions[];
+    statistiquesProfil?:StatistiquesProfil;
+
+
+}

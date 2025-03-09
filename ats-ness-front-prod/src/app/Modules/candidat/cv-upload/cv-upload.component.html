@@ -1,0 +1,39 @@
+<p-toast></p-toast>
+
+<div *ngIf="loading" class="custom-loader">
+    <div class="spinner-container">
+        <div class="spinner" [style]="{'--progress': loadingPercentage + '%'}"></div>
+        <div class="progress-text">{{ loadingPercentage }}%</div>
+    </div>
+</div>
+
+<!-- Button to open upload dialog -->
+<!-- <button pButton label="Upload CV" icon="pi pi-upload" class="p-mb-3" (click)="showUploadDialog()"></button> -->
+<button pButton type="button" icon="pi pi-upload" class="p-button-rounded p-button-secondary " (click)="showUploadDialog()">
+</button>
+
+
+
+<!-- Dialog for file upload -->
+<p-dialog [(visible)]="uploadDialogVisible" header="Upload CV" [modal]="true" [closable]="true" class="upload-dialog"
+          [style]="{width: '450px'}">
+    <div class="cv-upload-container">
+        <div class="upload-section modern-upload">
+            <div class="p-fileupload-content upload-content">
+                <i class="pi pi-cloud-upload"></i>
+                <h3>Upload your CV</h3>
+                <p>Accepted format: PDF only</p>
+                <small>Max file size: 5MB</small>
+            </div>
+            <p-fileUpload name="cvFile" [customUpload]="true" chooseLabel="Choose CV" uploadLabel="Upload"
+                          cancelLabel="Cancel" (uploadHandler)="onFileUpload($event, 'cvFile')" [disabled]="isUploading['cvFile']"
+                          [ngStyle]="{ 'width': 'auto' }" accept=".pdf">
+            </p-fileUpload>
+        </div>
+    </div>
+</p-dialog>
+
+
+
+
+

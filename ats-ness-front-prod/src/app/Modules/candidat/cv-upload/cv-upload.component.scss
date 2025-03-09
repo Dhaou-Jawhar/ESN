@@ -1,0 +1,169 @@
+.cv-upload-container {
+    position: relative;
+    padding: 2rem;
+
+    .upload-section {
+        padding: 1.5rem 0;
+
+        .modern-upload {
+            .p-fileupload-content {
+                padding: 2.5rem 2rem;
+                border: 2px dashed #e5e7eb;
+                border-radius: 0.75rem;
+                background: #f9fafb;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    border-color: #6366f1;
+                    background: #f5f3ff;
+                    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+                }
+            }
+
+            .upload-content {
+                text-align: center;
+
+                i {
+                    font-size: 3rem;
+                    color: #6366f1;
+                    margin-bottom: 1rem;
+                    transition: color 0.3s ease;
+                }
+
+                h3 {
+                    margin: 0.5rem 0;
+                    color: #374151;
+                    font-weight: 600;
+                    font-size: 1.25rem;
+                }
+
+                p {
+                    color: #6b7280;
+                    margin: 0.25rem 0;
+                }
+
+                small {
+                    color: #9ca3af;
+                }
+            }
+        }
+    }
+}
+
+::ng-deep .upload-dialog {
+    .p-dialog-header {
+        padding: 1.5rem;
+
+        .p-dialog-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+    }
+
+    .p-dialog-content {
+        padding: 0;
+    }
+
+    .p-dialog-footer {
+        padding: 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+}
+
+.upload-button-container button {
+    font-size: 1.2rem;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+    }
+}
+
+.upload-progress-dialog {
+    ::ng-deep .p-dialog-content {
+        padding: 2rem;
+    }
+
+    .progress-content {
+        text-align: center;
+
+        h3 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+
+        small {
+            display: block;
+            margin-top: 1rem;
+            color: #6b7280;
+        }
+    }
+
+    ::ng-deep .custom-progress {
+        height: 0.75rem;
+        border-radius: 1rem;
+
+        .p-progressbar-value {
+            background: #6366f1;
+            transition: width 0.3s ease;
+        }
+    }
+}
+
+///////////////////////// SPINNER ////////////////////
+
+
+
+.custom-loader {
+    display: flex;
+    justify-content: flex-end; /* Aligner à droite */
+    align-items: flex-start;   /* Aligner en haut */
+    height: 100vh;
+    position: fixed; /* Positionnement fixé pour rester visible en haut à droite même lors du défilement */
+    top: 9.5rem;  /* Collé en haut */
+    right: 14rem; /* Collé à droite */
+    z-index: 9999;
+    padding: 20px; /* Pour ajouter un peu d'espace depuis le bord de la fenêtre */
+    background-color: transparent; /* Arrière-plan transparent */
+}
+
+
+.spinner-container {
+    position: relative;
+    display: inline-block;
+}
+
+.spinner {
+    border: 4px solid rgba(171, 13, 238, 0.1);
+    border-left-color: purple;
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    animation: spin 1s linear infinite;
+    position: relative;
+    background: conic-gradient(rgba(171, 13, 238, 0.1) 0%, rgba(171, 13, 238, 0.5) calc(var(--progress) * 1%), transparent calc(var(--progress) * 1% + 1%));
+    box-shadow: 0px 0px 15px rgba(171, 13, 238, 0.5); /* Effet de halo */
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: purple;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

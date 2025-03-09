@@ -1,0 +1,415 @@
+<!-- Add at the root level of your template -->
+<p-toast position="top-right"></p-toast>
+
+<p-table
+    #dt
+    [value]="clients"
+    [paginator]="true"
+    [rows]="25"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[2,10,25,50]"
+    styleClass="p-datatable-striped"
+    [expandedRowKeys]="expandedRows"
+    dataKey="id"
+    [globalFilterFields]="['nom','societeMere','adresse','rcs','villeRcs','siret']"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+    <ng-template pTemplate="caption">
+        <div class="flex justify-content-between align-items-center">
+            <h5 class="m-0">Liste des clients</h5>
+            <div>
+
+                <p-button
+                    label="Ajouter un client"
+                    icon="pi pi-plus"
+                    class="p-button-success"
+                    (click)="navigateToAddClient()">
+                </p-button>
+
+                <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                    pInputText
+                    type="text"
+                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                    placeholder="Search..."
+                />
+            </span>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 6rem">Nom et Prénom</th>
+            <th>Société</th>
+            <th pSortableColumn="dateDerniereMiseAJour">Dernière MAJ <p-sortIcon field="dateDerniereMiseAJour"></p-sortIcon></th>
+
+            <th pSortableColumn="genre">Genre <p-sortIcon field="genre"></p-sortIcon></th>
+            <th >E-mails</th>
+            <th>Téléphones</th>
+            <th pSortableColumn="localisation">Localisation <p-sortIcon field="localisation"></p-sortIcon></th>
+            <th pSortableColumn="statut">Statut <p-sortIcon field="statut"></p-sortIcon></th>
+            <th pSortableColumn="modeDeFonctionnement">Mode fonctionnement <p-sortIcon field="modeDeFonctionnement"></p-sortIcon></th>
+            <th pSortableColumn="preferenceDeCommunication">Préférence communication <p-sortIcon field="preferenceDeCommunication"></p-sortIcon></th>
+            <th >Organigramme </th>
+            <th>Référentiel</th>
+            <th>LinkedIn</th>
+            <th>Prospection</th>
+            <th pSortableColumn="besoins">Besoins<p-sortIcon field="besoins"></p-sortIcon></th>
+            <th style="width: 5rem">Actions</th>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-client>
+        <tr>
+            <td>{{client.nom}} {{client.prenom}}</td>
+            <td>{{client?.societe?.nom}}</td>
+            <td>{{ client.dateDerniereMiseAJour ? (client.dateDerniereMiseAJour | date: 'dd/MM/yyyy') : 'N/A' }}</td>
+
+            <td>{{client.genre}}</td>
+            <td>
+                <div class="email-container">
+                    <div class="email-row">
+                        <a *ngIf="client.email" [href]="'mailto:' + client.email" title="{{ client.email }}">
+                            <span class="label-mail">Pri:</span>
+                            <i class="pi pi-envelope" style="font-size: 1.2rem; margin-left: 0.5rem;"></i>
+                        </a>
+                    </div>
+                    <div class="email-row">
+                        <a *ngIf="client.emailSecondaire" [href]="'mailto:' + client.emailSecondaire" title="{{ client.emailSecondaire }}" class="email-link">
+                            <span class="label-mail">Sec:</span>
+                            <i class="pi pi-envelope" style="font-size: 1.2rem; margin-left: 0.5rem;"></i>
+                        </a>
+                    </div>
+                </div>
+            </td>
+
+
+
+
+            <td>
+            <div class="contact-container">
+                <div class="contact-row">
+                    <a *ngIf="client.telephonePrso" [href]="'tel:' + client.telephonePrso" title="{{ client.telephonePrso }}">
+                        <span class="label">Perso:</span>
+                        <i class="pi pi-phone" style="font-size: 1.2rem; margin-left: 0.5rem;"></i>
+                    </a>
+                </div>
+                <div class="contact-row">
+                    <a *ngIf="client.telephonePro" [href]="'tel:' + client.telephonePro" title="{{ client.telephonePro }}">
+                        <span class="label">Proff:</span>
+                        <i class="pi pi-phone" style="font-size: 1.2rem; margin-left: 0.5rem;"></i>
+                    </a>
+                </div>
+            </div>
+        </td>
+
+
+            <td>{{client.localisation}}</td>
+            <td>{{client.statut}}</td>
+            <td>{{client.modeDeFonctionnement}}</td>
+            <td>{{client.preferenceDeCommunication}}</td>
+            <td>
+                <a (click)="showOrganigramme(client)"  title="Plus d'informations">
+                    <i class="pi pi-sitemap" style="font-size: 2rem"></i>
+                </a>
+            </td>
+
+            <td>
+                <a (click)="showReferentiel(client)" title="Référentiel">
+                    <i class="fas fa-folder-tree" style="font-size: 1.5rem"></i>
+                </a>
+            </td>
+            <td>
+                <a (click)="showLinkedIn(client)" title="LinkedIn"  target="_blank">
+                    <i class="fab fa-linkedin" style="font-size: 1.5rem"></i>
+                </a>
+            </td>
+
+            <td>
+                <a (click)="showProspection(client)" title="Prospection" target="_blank">
+                    <i class="pi pi-chart-line" style="font-size: 1.5rem"></i>
+                </a>
+            </td>
+
+            <td>{{client.besoins.length}}</td>
+
+
+            <td>
+                <button pButton
+                        icon="pi pi-pencil"
+                        (click)="navigateToEditClient(client.id)"
+                        class="p-button-rounded p-button-outlined p-button-sm"
+                        pTooltip="Edit">
+                </button>
+            </td>
+        </tr>
+    </ng-template>
+
+
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="10" class="text-center p-4">
+                <div class="flex flex-column align-items-center">
+                    <i class="pi pi-building text-700" style="font-size: 2rem"></i>
+                    <span class="text-700 mt-2">No clients found.</span>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="10" class="text-center p-4">
+                <i class="pi pi-spin pi-spinner mr-2"></i>
+                Loading clients data...
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog
+    [(visible)]="displayReferentielDialog"
+    [modal]="true"
+    [style]="{ width: '60%' }"
+    [closable]="true"
+    [baseZIndex]="10000"
+    [styleClass]="'ref'"
+>
+    <!-- Header centré -->
+        <div class="dialog-header">
+            <h2>Informations Référentiel</h2>
+        </div>
+
+    <div *ngIf="selectedClient" class="referentiel-container">
+        <!-- Profil Information -->
+        <div class="referentiel-info">
+            <!-- Section Profils -->
+            <div class="referentiel-title">
+                <p><strong>Profils:</strong></p>
+            </div>
+            <ul class="referentiel-list">
+                <li *ngFor="let profilReferentiel of selectedClient.referentiel.profilReferentiels">
+                    <div class="profil-item">
+                        <span><strong>Profil:</strong> {{ profilReferentiel.profil }}</span>
+                        <span><strong>Niveau:</strong> {{ profilReferentiel.niveau }}</span>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Autres sections -->
+            <p><strong>Segments:</strong> {{ selectedClient.referentiel.segments }}</p>
+            <p><strong>Sous-segments:</strong> {{ selectedClient.referentiel.sousSegments }}</p>
+            <p><strong>Technologies:</strong> {{ selectedClient.referentiel.technologie }}</p>
+        </div>
+    </div>
+</p-dialog>
+
+
+
+
+<p-dialog
+    [(visible)]="displayOrganigrammeDialog"
+    [modal]="true"
+    [style]="{ width: '60%' }"
+    [closable]="true"
+    [baseZIndex]="10000"
+    [styleClass]="'ref'"
+>
+    <!-- Header au centre -->
+        <div class="dialog-header">
+            <h2>Informations Organigramme</h2>
+        </div>
+
+    <div *ngIf="selectedClient" class="organigramme-container">
+        <!-- Profil Information -->
+        <div class="organigramme-info">
+            <ul>
+                <li>
+                    <strong>Niveau de service:</strong>
+                    <span>{{ selectedClient.organigramme.serviceNiveau }}</span>
+                </li>
+                <li>
+                    <strong>Taille de l'équipe:</strong>
+                    <span>{{ selectedClient.organigramme.tailleEquipe }}</span>
+                </li>
+                <li>
+                    <strong>Pourcentage de prestation:</strong>
+                    <span>{{ selectedClient.organigramme.pourcentageDePrestation }}%</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</p-dialog>
+
+
+<p-dialog
+    [(visible)]="displayLinkedInDialog"
+    [modal]="true"
+    [style]="{ width: '60%' }"
+    [closable]="true"
+    [baseZIndex]="10000"
+    [styleClass]="'ref'"
+>
+    <!-- Header au centre -->
+    <div class="dialog-header">
+        <h2>Informations LinkedIn</h2>
+    </div>
+
+    <div *ngIf="selectedClient" class="organigramme-container">
+        <!-- Profil Information -->
+        <div class="organigramme-info">
+            <ul>
+                <li>
+                    <strong>Lien:</strong>
+                    <span>{{ selectedClient.linkedIn.lien }}</span>
+                </li>
+                <li>
+                    <strong>Titre du travail:</strong>
+                    <span>{{ selectedClient.linkedIn.jobTitle }}</span>
+                </li>
+                <li>
+                    <strong>Travail description:</strong>
+                    <span>{{ selectedClient.linkedIn.jobDescription }}</span>
+                </li>
+                <li>
+                    <strong>Localisation du travail:</strong>
+                    <span>{{ selectedClient.linkedIn.jobLocation }}</span>
+                </li>
+                <li>
+                    <strong>Société antérieure:</strong>
+                    <span>{{ selectedClient.linkedIn.previousCompany }}</span>
+                </li>
+                <li>
+                    <strong>Travail antérieur:</strong>
+                    <span>{{ selectedClient.linkedIn.previousJob }}</span>
+                </li>
+                <li>
+                    <strong>Description travail antérieur:</strong>
+                    <span>{{ selectedClient.linkedIn.previousJobDescription }}</span>
+                </li>
+                <li>
+                    <strong>Liste de compétences:</strong>
+                    <span>{{ selectedClient.linkedIn.allSkills }}</span>
+                </li>
+                <li>
+                    <strong>Compétences travail actuel:</strong>
+                    <span>{{ selectedClient.linkedIn.skillsJobActuel }}</span>
+                </li>
+                <li>
+                    <strong>Compétences travail précédent:</strong>
+                    <span>{{ selectedClient.linkedIn.skillsJobPrecedent }}</span>
+                </li>
+                <li>
+                    <strong>Libellé général:</strong>
+                    <span>{{ selectedClient.linkedIn.libelleGeneral }}</span>
+                </li>
+                <li>
+                    <strong>Degré d'activité LinkedIn:</strong>
+                    <span>{{ selectedClient.linkedIn.degreActiviteLinkedIn }}</span>
+                </li>
+                <li>
+                    <strong>Informations:</strong>
+                    <span>{{ selectedClient.linkedIn.infos }}</span>
+                </li>
+                <li>
+                    <strong>Poste actuel:</strong>
+                    <span>{{ selectedClient.linkedIn.posteActuel }}</span>
+                </li>
+                <li>
+                    <strong>Localisation:</strong>
+                    <span>{{ selectedClient.linkedIn.localisation }}</span>
+                </li>
+                <li>
+                    <strong>Durée dernière société:</strong>
+                    <span>{{ selectedClient.linkedIn.dureeDerniereSociete }}</span>
+                </li>
+                <li>
+                    <strong>Description poste dernière société:</strong>
+                    <span>{{ selectedClient.linkedIn.descriptionPosteDerniereSociete }}</span>
+                </li>
+                <li>
+                    <strong>Mots clés:</strong>
+                    <span>{{ selectedClient.linkedIn.motsCles }}</span>
+                </li>
+                <li>
+                    <strong>Nombre de push CV:</strong>
+                    <span>{{ selectedClient.linkedIn.nbrPushCV }}</span>
+                </li>
+                <li>
+                    <strong>Commentaires:</strong>
+                    <span>{{ selectedClient.linkedIn.commentaires }}</span>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="displayProspectionDialog"
+    [modal]="true"
+    [style]="{ width: '60%' }"
+    [closable]="true"
+    [baseZIndex]="10000"
+    [styleClass]="'ref'"
+>
+    <!-- Header au centre -->
+    <div class="dialog-header">
+        <h2>Informations Prospection</h2>
+    </div>
+
+    <div *ngIf="selectedClient" class="organigramme-container">
+        <!-- Profil Information -->
+        <div class="organigramme-info">
+            <ul>
+                <li>
+                    <strong>Nombre d'appels:</strong>
+                    <span>{{ selectedClient?.prospection?.nbrAppels }}</span>
+                </li>
+                <li>
+                    <strong>Nombre de mails:</strong>
+                    <span>{{ selectedClient?.prospection?.nbrMails }}</span>
+                </li>
+                <li>
+                    <strong>Date de première action</strong>
+                    <span>{{ selectedClient?.prospection?.datePremiereAction  | date: 'dd/MM/yyyy HH:mm'}}</span>
+                </li>
+                <li>
+                    <strong>Date de dernière action</strong>
+                    <span>{{ selectedClient?.prospection?.dateDerniereAction  | date: 'dd/MM/yyyy HH:mm'}}</span>
+                </li>
+                <li>
+                    <strong>Nombre de jours depuis dernière action</strong>
+                    <span>{{ selectedClient?.prospection?.nbrJoursDepuisDerniereAction }}</span>
+                </li>
+                <li>
+                    <strong>Ajout LinkedIn ?</strong>
+                    <span>{{ selectedClient?.prospection?.ajoutLinkedIn }}</span>
+                </li>
+                <li *ngIf="selectedClient?.prospection?.ajoutLinkedIn == true">
+                    <strong>Date d'ajout LinkedIn</strong>
+                    <span>{{ selectedClient?.prospection?.dateajoutLinkedIn | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </li>
+                <li>
+                    <strong>LinkedIn accepté ?</strong>
+                    <span>{{ selectedClient?.prospection?.linkedInAccepte }}</span>
+                </li>
+                <li *ngIf="selectedClient?.prospection?.linkedInAccepte == true">
+                    <strong>Date d'acceptation LinkedIn</strong>
+                    <span>{{ selectedClient?.prospection?.dateAcceptationLinkedIn  | date: 'dd/MM/yyyy HH:mm'}}</span>
+                </li>
+                <li>
+                    <strong>Mail LinkedIn envoyé ?</strong>
+                    <span>{{ selectedClient?.prospection?.mailLinkedInEnvoye }}</span>
+                </li>
+                <li *ngIf="selectedClient?.prospection?.mailLinkedInEnvoye == true">
+                    <strong>Date d'envoi mail LinkedIn</strong>
+                    <span>{{ selectedClient?.prospection?.dateEnvoiMailLinkedIn | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</p-dialog>

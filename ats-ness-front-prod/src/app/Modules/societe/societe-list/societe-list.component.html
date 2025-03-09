@@ -1,0 +1,190 @@
+<!-- Add at the root level of your template -->
+<p-toast position="top-right"></p-toast>
+
+<div class="card">
+    <p-table
+        #dt
+        [value]="societes"
+        [paginator]="true"
+        [rows]="25"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[5,10,25,50]"
+        styleClass="p-datatable-striped p-datatable-gridlines"
+        [expandedRowKeys]="expandedRows"
+        dataKey="id"
+        [globalFilterFields]="['nom','societeMere','adresse','rcs','villeRcs','siret']"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+
+        <ng-template pTemplate="caption">
+            <div class="flex flex-column md:flex-row justify-content-between gap-3 align-items-center">
+                <div class="text-900 text-xl font-semibold">Societes List</div>
+                <div class="flex gap-3 align-items-center">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input
+                            pInputText
+                            type="text"
+                            (input)="dt.filterGlobal($event.target.value, 'contains')"
+                            placeholder="Search..."
+                            class="p-inputtext-sm"
+                        />
+                    </span>
+                    <p-button
+                        label="Add New Societe"
+                        icon="pi pi-plus"
+                        severity="primary"
+                        size="small"
+                        (click)="navigateToAddSociete()">
+                    </p-button>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 3rem"></th>
+                <th class="text-900">Date MAJ</th>
+                <th style="width: 6rem">Logo</th>
+                <th  class="text-900">Name </th>
+                <th class="text-900">Societe Mere </th>
+                <th class="text-900">Address </th>
+                <th  class="text-900">Besoins</th>
+                <th  class="text-900">Clients</th>
+                <th style="width: 5rem">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-societe let-expanded="expanded">
+            <tr class="p-selectable-row">
+                <td>
+                    <button type="button"
+                            pButton
+                            pRipple
+                            [pRowToggler]="societe"
+                            class="p-button-text p-button-rounded p-button-plain"
+                            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'">
+                    </button>
+                </td>
+                <td>{{ societe.dateDeDerniereMiseAJour ? (societe.dateDeDerniereMiseAJour | date: 'dd/MM/yyyy') : 'N/A' }}</td>
+                <td>
+                    <img *ngIf="societe.logo"
+                         [src]="societe.logo"
+                         alt="Logo"
+                         class="company-logo shadow-2 border-round"
+                         style="width: 40px; height: 40px; object-fit: cover;"
+                    />
+                </td>
+                <td class="font-medium">{{societe.nom}}</td>
+                <td>{{societe.societeMere}}</td>
+                <td>{{societe.adresse}}</td>
+                <td>{{societe.besoin.length.toString()}}</td>
+                <td>{{societe.client.length.toString()}}</td>
+                <!-- <td><p-badge [value]="societe.besoin.length.toString()" severity="info"></p-badge></td> -->
+                <td>
+                    <button pButton
+                            icon="pi pi-pencil"
+                            (click)="navigateToEditSociete(societe.id)"
+                            class="p-button-rounded p-button-outlined p-button-sm"
+                            pTooltip="Edit">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="rowexpansion" let-societe>
+            <tr>
+                <td colspan="12">
+                    <div class="p-4 surface-card border-round-xl">
+                        <p-divider align="left" styleClass="mb-4">
+                            <div class="inline-flex align-items-center">
+                                <i class="pi pi-images mr-2 text-primary"></i>
+                                <span class="font-bold text-900">Organigrammes</span>
+                                <p-badge [value]="societe.organigramme.length.toString()" severity="info" styleClass="ml-2"></p-badge>
+                            </div>
+                        </p-divider>
+
+                        <div class="grid">
+                            <div *ngFor="let url of societe.organigramme" class="col-12 sm:col-6 md:col-4 lg:col-3 xl:col-2">
+                                <div class="organigramme-card p-3 surface-ground border-round">
+                                    <div class="image-container">
+                                        <img [src]="url"
+                                             alt="Organigramme"
+                                             class="organigramme-image w-full border-round shadow-2"
+                                             (click)="openImage(url)"/>
+                                        <div class="image-overlay flex align-items-center justify-content-center">
+                                            <button pButton
+                                                    icon="pi pi-eye"
+                                                    (click)="openImage(url)"
+                                                    class="p-button-rounded p-button-text">
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-content-center gap-2 mt-3">
+                                        <button pButton
+                                                icon="pi pi-download"
+                                                (click)="downloadOrganigramme(url)"
+                                                class="p-button-rounded p-button-outlined p-button-sm"
+                                                pTooltip="Download Image">
+                                        </button>
+                                        <button pButton
+                                                icon="pi pi-external-link"
+                                                (click)="openImage(url)"
+                                                class="p-button-rounded p-button-outlined p-button-sm"
+                                                pTooltip="View Full Size">
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="12">
+                    <div class="flex flex-column align-items-center p-5">
+                        <i class="pi pi-building text-700" style="font-size: 2.5rem"></i>
+                        <span class="text-700 text-lg mt-3">No societes found</span>
+                        <p class="text-500 mt-2">Try adjusting your search or add a new societe.</p>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="12">
+                    <div class="flex flex-column align-items-center p-4">
+                        <i class="pi pi-spin pi-spinner text-primary" style="font-size: 2rem"></i>
+                        <span class="text-700 mt-2">Loading societes data...</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Dialog for full-size image view -->
+<p-dialog
+    [(visible)]="displayDialog"
+    [modal]="true"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    [style]="{width: '90vw', height: '90vh'}"
+    [maximizable]="true"
+    styleClass="image-dialog">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center">
+            <i class="pi pi-image mr-2 text-primary"></i>
+            <span class="font-semibold">Full Size View</span>
+        </div>
+    </ng-template>
+    <div class="flex align-items-center justify-content-center h-full">
+        <img *ngIf="selectedImage"
+             [src]="selectedImage"
+             alt="Full size organigramme"
+             class="full-size-image max-w-full max-h-full"/>
+    </div>
+</p-dialog>

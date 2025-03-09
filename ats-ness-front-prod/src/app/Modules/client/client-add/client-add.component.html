@@ -1,0 +1,878 @@
+<p-toast></p-toast>
+<div class="global-overlay" *ngIf="isLoading">
+    <!-- Overlay semi-transparent -->
+    <div class="overlay"></div>
+
+    <div class="spinner-container" style="position: relative; display: flex; flex-direction: column; align-items: center;">
+        <p-progressSpinner class="custom-spinner"
+                           [style]="{'width': '80px', 'height': '80px'}"
+                           strokeWidth="3.5"
+                           animationDuration="0.5s">
+        </p-progressSpinner>ng
+
+        <!-- Pourcentage affiché au centre du spinner -->
+        <p style="font-size: 18px; color: white; position: absolute; z-index: 1;">{{ progress | number:'1.0-0' }}%</p>
+    </div>
+</div>
+
+
+<form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
+    <p-panel header="Informations Client" styleClass="mb-3">
+        <div class="grid">
+            <!-- Partie gauche (2/3) -->
+            <div class="col-8">
+                <!-- Ligne 1 -->
+                <div class="grid">
+                    <div class="col-6" formGroupName="societe">
+                        <div class="field">
+                            <label  class="font-bold"><i class="pi pi-building mr-2"></i> Société</label>
+                            <p-autoComplete
+                                [suggestions]="filteredSocieteMereOptions"
+                                (completeMethod)="filterSocieteMere($event)"
+                                placeholder="Sélectionnez société"
+                                [forceSelection]="true"
+                                formControlName="nom"
+                                (onClear)="handleClear()"
+                                (onBlur)="checkValidity()"
+                                class="w-full">
+                            </p-autoComplete>
+                        </div>
+                        <div *ngIf="isValidSociete == false" class="mr-2 text-center">
+                            <button
+                                pButton
+                                type="button"
+                                label="Nouvelle société"
+                                class="p-button-raised p-button-rounded p-button-primary"
+                                (click)="showAddSocieteDialog()">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="poste" class="font-bold"><i class="pi pi-chart-bar"></i> Poste</label>
+                            <input id="poste" type="text" pInputText formControlName="poste" class="w-full" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ligne 2 -->
+                <div class="field">
+                    <label for="localisation" class="font-bold"><i class="pi pi-map-marker"></i> Localisation</label>
+                    <input id="localisation" type="text" pInputText formControlName="localisation" class="w-full" />
+                </div>
+
+                <!-- Ligne 3 -->
+                <div class="grid">
+                    <div class="col-4">
+                        <div class="field">
+                            <label for="genre" class="font-bold"><i class="pi pi-user-edit"></i> Genre</label>
+                            <p-dropdown
+                                id="genre"
+                                formControlName="genre"
+                                [options]="genre"
+                                optionLabel="label"
+                                optionValue="value"
+                                placeholder="Sélectionnez le genre"
+                                styleClass="w-full">
+                            </p-dropdown>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="field">
+                            <label for="prenom" class="font-bold"><i class="pi pi-user"></i> Prénom</label>
+                            <input id="prenom" type="text" pInputText formControlName="prenom" class="w-full" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="field">
+                            <label for="nom" class="font-bold"><i class="pi pi-user"></i> Nom</label>
+                            <input id="nom" type="text" pInputText formControlName="nom" class="w-full" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ligne 4 -->
+                <div class="grid">
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="email" class="font-bold"><i class="pi pi-envelope"></i> Email</label>
+                            <input id="email" type="email" pInputText formControlName="email" class="w-full" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="emailSec" class="font-bold"><i class="pi pi-envelope"></i> Email secondaire</label>
+                            <input id="emailSec" type="email" pInputText formControlName="emailSecondaire" class="w-full" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ligne 5 -->
+                <div class="grid">
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="telPro" class="font-bold"><i class="pi pi-phone"></i> Téléphone Professionnel</label>
+                            <input id="telPro" type="number" pInputText formControlName="telephonePro" class="w-full" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="telPerso" class="font-bold"><i class="pi pi-phone"></i> Téléphone Personnel</label>
+                            <input id="telPerso" type="number" pInputText formControlName="telephonePrso" class="w-full" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ligne 6 -->
+                <div class="field">
+                    <label for="statut" class="font-bold"><i class="pi pi-briefcase"></i> Statut</label>
+                    <p-dropdown
+                        id="statut"
+                        formControlName="statut"
+                        [options]="statuts"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Sélectionnez le statut"
+                        styleClass="w-full">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <!-- Partie droite (1/3) -->
+            <div class="col-4">
+                <div class="field">
+                    <label><i class="pi pi-heart"></i> Intimité</label>
+                    <app-stars-input formControlName="intimiteClient"></app-stars-input>
+                </div>
+                <div class="field">
+                    <label><i class="pi pi-user"></i> Ambassadeur</label>
+                    <p-checkbox formControlName="isAmbassadeur" [binary]="true"></p-checkbox>
+                </div>
+                <div class="field">
+                    <label><i class="pi pi-cog"></i> Mode de fonctionnement</label>
+                    <textarea pInputTextarea rows="3" formControlName="modeDeFonctionnement" class="w-full"></textarea>
+                </div>
+                <div class="field">
+                    <label><i class="pi pi-send"></i> Préférences de communication</label>
+                    <p-multiSelect
+                        [options]="preferences"
+                        formControlName="preferenceDeCommunication"
+                        placeholder="Sélectionnez les préférences">
+                    </p-multiSelect>
+                </div>
+                <div class="field">
+                    <label><i class="pi pi-user"></i> Personnalité</label>
+                    <textarea pInputTextarea rows="3" formControlName="personnalite" class="w-full"></textarea>
+                </div>
+                <div class="field">
+                    <label><i class="pi pi-comment"></i> Commentaires profils recherchés</label>
+                    <textarea pInputTextarea rows="3" formControlName="commentaireProfilsRecherches" class="w-full"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bouton de Soumission -->
+        <div class="mt-3">
+            <button pButton type="submit" label="Enregistrer Client" class="p-button-raised" [disabled]="!clientForm.valid">
+            </button>
+        </div>
+    </p-panel>
+</form>
+
+
+
+
+
+
+
+
+
+
+    <p-dialog
+        [(visible)]="displaySocieteDialog"
+        [header]="'Ajouter une nouvelle société'"
+        [modal]="true"
+        [style]="{ width: '70vw' }"
+        [closable]="true"
+        styleClass="p-fluid custom-dialog"
+    >
+        <form [formGroup]="societeForm" (ngSubmit)="onSubmitSociete()" class="p-fluid">
+            <div class="grid">
+                <!-- Section d'Informations sur l'entreprise -->
+                <div class="col-12 section">
+                    <h3 class="section-title">
+                        <i class="pi pi-info-circle section-icon"></i>
+                        Informations sur l'entreprise
+                    </h3>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label for="nom">
+                            <i class="pi pi-building label-icon"></i>
+                            Nom de la société*
+                        </label>
+                        <input
+                            id="name"
+                            type="text"
+                            pInputText
+                            formControlName="nom"
+                            placeholder="Entrez le nom de la société"
+                        />
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>
+                            <i class="pi pi-sitemap label-icon"></i>
+                            Société Mère*
+                        </label>
+                        <p-autoComplete
+                            [suggestions]="filteredSocieteMereOptions"
+                            (completeMethod)="filterSocieteMere($event)"
+                            placeholder="Sélectionnez ou entrez une société mère"
+                            [forceSelection]="false"
+                            formControlName="societeMere"
+                        ></p-autoComplete>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="field">
+                        <label for="adresse">
+                            <i class="pi pi-map-marker label-icon"></i>
+                            Adresse*
+                        </label>
+                        <textarea
+                            id="adresse"
+                            pInputTextarea
+                            formControlName="adresse"
+                            [rows]="3"
+                            placeholder="Entrez l'adresse de la société"
+                            class="full-width-textarea"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- Section d'Informations Financières -->
+                <div class="col-12 section">
+                    <h3 class="section-title">
+                        <i class="pi pi-wallet section-icon"></i>
+                        Informations Financières
+                    </h3>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="field">
+                        <label for="capitalSocial">
+                            <i class="pi pi-money-bill label-icon"></i>
+                            Capital Social*
+                        </label>
+                        <p-inputNumber
+                            id="capitalSocial"
+                            formControlName="capitalSocial"
+                            mode="currency"
+                            currency="EUR"
+                            locale="fr-FR"
+                            placeholder="Entrez le capital social"
+                        ></p-inputNumber>
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="field">
+                        <label for="rcs">
+                            <i class="pi pi-id-card label-icon"></i>
+                            Numéro RCS*
+                        </label>
+                        <input
+                            id="rcs"
+                            type="text"
+                            pInputText
+                            formControlName="rcs"
+                            placeholder="Entrez le numéro RCS"
+                        />
+                    </div>
+                </div>
+                <div class="col-12 md:col-4">
+                    <div class="field">
+                        <label for="villeRcs">
+                            <i class="pi pi-map label-icon"></i>
+                            Ville RCS*
+                        </label>
+                        <input
+                            id="villeRcs"
+                            type="text"
+                            pInputText
+                            formControlName="villeRcs"
+                            placeholder="Entrez la ville RCS"
+                        />
+                    </div>
+                </div>
+
+                <!-- Section de Téléchargement des Fichiers -->
+                <div class="col-12 section">
+                    <h3 class="section-title">
+                        <i class="pi pi-folder-open section-icon"></i>
+                        Documents & Médias
+                    </h3>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>
+                            <i class="pi pi-image label-icon"></i>
+                            Organigrammes
+                        </label>
+                        <p-fileUpload
+                            mode="advanced"
+                            [multiple]="true"
+                            accept="image/*,.pdf"
+                            [maxFileSize]="1000000"
+                            (onSelect)="onFileSelect($event, 'organigrammes')"
+                            [showCancelButton]="false"
+                            chooseLabel="Sélectionner des fichiers"
+                        ></p-fileUpload>
+                    </div>
+                </div>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label>
+                            <i class="pi pi-camera label-icon"></i>
+                            Logo de la société
+                        </label>
+                        <p-fileUpload
+                            mode="advanced"
+                            [multiple]="false"
+                            accept="image/*"
+                            [maxFileSize]="1000000"
+                            (onSelect)="onFileSelect($event, 'logo')"
+                            [showCancelButton]="false"
+                            chooseLabel="Sélectionner un logo"
+                        ></p-fileUpload>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Buttons -->
+            <div class="flex justify-content-end gap-2 mt-3">
+                <p-button
+                    label="Annuler"
+                    icon="pi pi-times"
+                    (click)="displaySocieteDialog = false"
+                    styleClass="p-button-secondary p-button-outlined"
+                ></p-button>
+                <p-button
+                    label="Ajouter"
+                    icon="pi pi-check"
+                    [disabled]="societeForm.invalid"
+                    type="submit"
+                    styleClass="p-button-primary"
+                ></p-button>
+            </div>
+        </form>
+    </p-dialog>
+
+
+    <!--    &lt;!&ndash; Organigramme &ndash;&gt;-->
+<!--    <p-panel header="Organigramme" [toggleable]="true" styleClass="mb-3" >-->
+<!--        <div class="grid" formGroupName="organigramme">-->
+<!--            <div class="col-6">-->
+<!--                <div class="field">-->
+<!--                    <label for="tailleEquipe">Taille de l'Équipe</label>-->
+<!--                    <p-inputNumber id="tailleEquipe" formControlName="tailleEquipe"></p-inputNumber>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-6">-->
+<!--                <div class="field">-->
+<!--                    <label for="pourcentagePrestation">Pourcentage de Prestation</label>-->
+<!--                    <div class="input-group">-->
+<!--                        <p-inputNumber id="pourcentagePrestation" formControlName="pourcentagePrestation"></p-inputNumber>-->
+<!--                        <span class="suffix">%</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+<!--            <div class="col-12">-->
+<!--                <div class="field">-->
+<!--                    <label for="serviceNiveau">Services Niveau</label>-->
+<!--                    <div class="p-inputgroup">-->
+<!--                        <input-->
+<!--                            id="serviceNiveau"-->
+<!--                            type="text"-->
+<!--                            pInputText-->
+<!--                            placeholder="Saisissez un Service/Niveau"-->
+<!--                            #servInput-->
+<!--                        />-->
+<!--                        <button-->
+<!--                            pButton-->
+<!--                            type="button"-->
+<!--                            icon="pi pi-plus"-->
+<!--                            class="p-button-success"-->
+<!--                            (click)="addServ(servInput)"-->
+<!--                            [disabled]="!servInput.value"-->
+<!--                        ></button>-->
+<!--                    </div>-->
+<!--                    <div class="p-mt-2" *ngIf="serviceNiveauControl.length > 0">-->
+<!--                        <div-->
+<!--                            *ngFor="let serv of serviceNiveauControl.controls; let i = index"-->
+<!--                            class="p-d-flex p-ai-center p-mb-2"-->
+<!--                        >-->
+<!--                            <span class="p-mr-2">{{ serv.value }}</span>-->
+<!--                            <button-->
+<!--                                pButton-->
+<!--                                type="button"-->
+<!--                                icon="pi pi-times"-->
+<!--                                class="p-button-danger p-button-text p-button-sm"-->
+<!--                                (click)="removeServ(i)"-->
+<!--                            ></button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </p-panel>-->
+
+    <!-- Référentiel -->
+<!--    <p-panel header="Référentiel" [toggleable]="true" styleClass="mb-3">-->
+<!--        <div class="grid">-->
+<!--            <div class="col-6">-->
+<!--                <div class="field">-->
+<!--                    <label>Segments</label>-->
+<!--                    <p-multiSelect-->
+<!--                        [options]="segmentsOptions"-->
+<!--                        formControlName="segments"-->
+<!--                        optionLabel="name"-->
+<!--                        [showHeader]="false">-->
+<!--                    </p-multiSelect>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-6">-->
+<!--                <div class="field">-->
+<!--                    <label>Sous-Segments</label>-->
+<!--                    <p-multiSelect-->
+<!--                        [options]="sousSegmentsOptions"-->
+<!--                        formControlName="sousSegments"-->
+<!--                        optionLabel="name"-->
+<!--                        [showHeader]="false">-->
+<!--                    </p-multiSelect>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-12">-->
+<!--                <div class="field">-->
+<!--                    <label>Technologies</label>-->
+<!--                    <p-multiSelect-->
+<!--                        [options]="technologiesOptions"-->
+<!--                        formControlName="technologies"-->
+<!--                        optionLabel="name"-->
+<!--                        [showHeader]="false">-->
+<!--                    </p-multiSelect>-->
+<!--                </div>-->
+<!--            </div>-->
+
+<!--            &lt;!&ndash; Profils Référentiel &ndash;&gt;-->
+<!--            <div class="col-12">-->
+<!--                <div formArrayName="profilReferentiels">-->
+<!--                    <div *ngFor="let profil of profilReferentielsControls; let i = index"-->
+<!--                         [formGroupName]="i" class="grid mb-3">-->
+<!--                        <div class="col-5">-->
+<!--                            <label>Profil</label>-->
+<!--                            <input type="text" pInputText formControlName="profil" />-->
+<!--                        </div>-->
+<!--                        <div class="col-5">-->
+<!--                            <label>Niveau</label>-->
+<!--                            <input type="text" pInputText formControlName="niveau" />-->
+<!--                        </div>-->
+<!--                        <div class="col-2">-->
+<!--                            <button pButton type="button" icon="pi pi-trash"-->
+<!--                                    class="p-button-danger"-->
+<!--                                    (click)="removeProfil(i)">-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <button pButton type="button" label="Ajouter Profil"-->
+<!--                        (click)="addProfil()">-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </p-panel>-->
+
+<!--    &lt;!&ndash; LinkedIn &ndash;&gt;-->
+<!--    <p-panel header="LinkedIn" [toggleable]="true" styleClass="mb-3">-->
+<!--        <div class="grid" formGroupName="linkedIn">-->
+<!--            <div class="col-6">-->
+<!--                <div class="field">-->
+<!--                    <label for="linkedInLink">Lien LinkedIn</label>-->
+<!--                    <input-->
+<!--                        id="linkedInLink"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="lien"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="jobTitle">Titre du Poste</label>-->
+<!--                    <input-->
+<!--                        id="jobTitle"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="jobTitle"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="jobDescription">Description du Poste</label>-->
+<!--                    <input-->
+<!--                        id="jobDescription"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="jobDescription"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="jobLocation">Localisation du Poste</label>-->
+<!--                    <input-->
+<!--                        id="jobLocation"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="jobLocation"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="posteActuel">Poste actuel</label>-->
+<!--                    <input-->
+<!--                        id="posteActuel"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="posteActuel"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="localisationLinkedin">Localisation poste actuel</label>-->
+<!--                    <input-->
+<!--                        id="localisationLinkedin"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="localisationLinkedin"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label >Skills Actuelles</label>-->
+<!--                    <p-multiSelect-->
+<!--                        id="skillsJobActuel"-->
+<!--                        [options]="technologiesMap"-->
+<!--                        placeholder="Sélectionnez les technologies"-->
+<!--                        formControlName="skillsJobActuel"-->
+<!--                        class="p-d-block"-->
+<!--                    ></p-multiSelect>-->
+<!--                </div>-->
+
+<!--                <div class="field">-->
+<!--                    <label for="libelleGeneral">Libellé général</label>-->
+<!--                    <input-->
+<!--                        id="libelleGeneral"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="libelleGeneral"-->
+<!--                    />-->
+<!--                </div>-->
+
+<!--                <div class="field">-->
+<!--                    <label for="degreActiviteLinkedIn" class="font-bold">Degré d'activité LinkedIn</label>-->
+<!--                    <p-inputNumber id="degreActiviteLinkedIn" formControlName="degreActiviteLinkedIn" class="w-full"></p-inputNumber>-->
+<!--                </div>-->
+
+<!--                <div class="field">-->
+<!--                    <label for="infos">Informations</label>-->
+<!--                    <input-->
+<!--                        id="infos"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="infos"-->
+<!--                    />-->
+<!--                </div>-->
+
+<!--            </div>-->
+<!--            <div class="col-6">-->
+<!--                <div class="field">-->
+<!--                    <label for="jobDescription">Société précédente</label>-->
+<!--                    <input-->
+<!--                        id="previousCompany"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="previousCompany"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="previousJob">Poste précédent</label>-->
+<!--                    <input-->
+<!--                        id="previousJob"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="previousJob"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="previousJobDescription">Description du poste précédent</label>-->
+<!--                    <input-->
+<!--                        id="previousJobDescription"-->
+<!--                        type="text"-->
+<!--                        pInputText-->
+<!--                        formControlName="previousJobDescription"-->
+<!--                    />-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label for="dureeDerniereSociete" class="font-bold">Durée derniere société</label>-->
+<!--                    <p-inputNumber id="dureeDerniereSociete" formControlName="dureeDerniereSociete" class="w-full"></p-inputNumber>-->
+<!--                </div>-->
+<!--                <div class="field">-->
+<!--                    <label >Skills poste précédent</label>-->
+<!--                    <p-multiSelect-->
+<!--                        id="skillsJobPrecedent"-->
+<!--                        [options]="technologiesMap"-->
+<!--                        placeholder="Sélectionnez les technologies"-->
+<!--                        formControlName="skillsJobPrecedent"-->
+<!--                        class="p-d-block"-->
+<!--                    ></p-multiSelect>-->
+<!--                </div>-->
+
+<!--                <div class="field">-->
+<!--                    <label for="nbrPushCV" class="font-bold">Nombre de push CV</label>-->
+<!--                    <p-inputNumber id="nbrPushCV" formControlName="nbrPushCV" class="w-full"></p-inputNumber>-->
+<!--                </div>-->
+
+<!--                <div class="field">-->
+<!--                    <label for="serviceNiveau">Mots clés</label>-->
+<!--                    <div class="p-inputgroup">-->
+<!--                        <input-->
+<!--                            id="motsCles"-->
+<!--                            type="text"-->
+<!--                            pInputText-->
+<!--                            placeholder="Saisissez un mot clé"-->
+<!--                            #motCleInput-->
+<!--                        />-->
+<!--                        <button-->
+<!--                            pButton-->
+<!--                            type="button"-->
+<!--                            icon="pi pi-plus"-->
+<!--                            class="p-button-success"-->
+<!--                            (click)="addMotCle(motCleInput)"-->
+<!--                            [disabled]="!motCleInput.value"-->
+<!--                        ></button>-->
+<!--                    </div>-->
+<!--                    <div class="p-mt-2" *ngIf="motsClesControl.length > 0">-->
+<!--                        <div-->
+<!--                            *ngFor="let mot of motsClesControl.controls; let i = index"-->
+<!--                            class="p-d-flex p-ai-center p-mb-2"-->
+<!--                        >-->
+<!--                            <span class="p-mr-2">{{ mot.value }}</span>-->
+<!--                            <button-->
+<!--                                pButton-->
+<!--                                type="button"-->
+<!--                                icon="pi pi-times"-->
+<!--                                class="p-button-danger p-button-text p-button-sm"-->
+<!--                                (click)="removeMotCle(i)"-->
+<!--                            ></button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="field">-->
+<!--                    <label for="commentaires" class="font-bold">Commentaires</label>-->
+<!--                    <textarea id="commentaires" pInputTextarea rows="3" formControlName="commentaires" class="w-full"></textarea>-->
+<!--                </div>-->
+
+<!--            </div>-->
+
+
+<!--        </div>-->
+<!--    </p-panel>-->
+    <!-- Besoins -->
+<!--    <p-panel header="Besoins" [toggleable]="true" styleClass="mb-3">-->
+<!--        <div formArrayName="besoins">-->
+<!--            <div *ngFor="let besoin of besoinsControls; let i = index"-->
+<!--                 [formGroupName]="i" class="card mb-3">-->
+<!--                <div class="grid">-->
+<!--                    &lt;!&ndash; Main Information Card &ndash;&gt;-->
+<!--                    <p-card styleClass="mb-4">-->
+<!--                        <ng-template pTemplate="header">-->
+<!--                            <div class="text-xl font-bold mb-2 p-3 bg-primary-50" >Informations Principales</div>-->
+<!--                        </ng-template>-->
+
+<!--                        <div class="grid">-->
+<!--                            <div class="col-12 md:col-6">-->
+<!--                                <div class="p-field mb-4">-->
+<!--                                    <label for="titre" class="font-bold">Titre</label>-->
+<!--                                    <span class="p-input-icon-left w-full">-->
+<!--            <i class="pi pi-tag"></i>-->
+<!--            <input id="titre"-->
+<!--                   formControlName="titre"-->
+<!--                   name="titre"-->
+<!--                   required-->
+<!--                   placeholder="Entrez le titre du besoin" pInputText class="w-full"/>-->
+<!--          </span>-->
+<!--                                </div>-->
+
+<!--                                <div class="p-field mb-4">-->
+<!--                                    <label for="etat" class="font-bold">État</label>-->
+<!--                                    <p-dropdown id="etat" formControlName="etat"  name="etat"-->
+<!--                                                [options]="states" placeholder="Sélectionnez l'état"-->
+<!--                                                styleClass="w-full" required>-->
+<!--                                    </p-dropdown>-->
+<!--                                </div>-->
+
+<!--                                <div class="p-field mb-4">-->
+<!--                                    <label for="dateDeDemarrage" class="font-bold">Date de Démarrage</label>-->
+<!--                                    <p-calendar id="dateDeDemarrage" formControlName="dateDeDemarrage"-->
+<!--                                                name="dateDeDemarrage" [showTime]="true" required-->
+<!--                                                styleClass="w-full" [showIcon]="true">-->
+<!--                                    </p-calendar>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="col-6 md:col-6">-->
+<!--                                <div class="flex flex-column gap-3">-->
+<!--                                    <div class="p-field-checkbox">-->
+<!--                                        <p-checkbox id="besoinEnAvanceDePhase" formControlName="besoinEnAvanceDePhase"-->
+<!--                                                    name="besoinEnAvanceDePhase" [binary]="true">-->
+<!--                                        </p-checkbox>-->
+<!--                                        <label for="besoinEnAvanceDePhase" class="ml-2">Besoin en Avance de Phase</label>-->
+<!--                                    </div>-->
+
+<!--                                    <div class="p-field-checkbox">-->
+<!--                                        <p-checkbox id="reccurent" formControlName="reccurent"-->
+<!--                                                    name="reccurent" [binary]="true">-->
+<!--                                        </p-checkbox>-->
+<!--                                        <label for="reccurent" class="ml-2">Récurrent</label>-->
+<!--                                    </div>-->
+
+<!--                                    <div class="p-field-checkbox">-->
+<!--                                        <p-checkbox id="demarrageASAP" formControlName="demarrageASAP"-->
+<!--                                                    name="demarrageASAP" [binary]="true">-->
+<!--                                        </p-checkbox>-->
+<!--                                        <label for="demarrageASAP" class="ml-2">Démarrage ASAP</label>-->
+<!--                                    </div>-->
+
+<!--                                    <div class="p-field-checkbox">-->
+<!--                                        <p-checkbox id="habilitable" formControlName="habilitable"-->
+<!--                                                    name="habilitable" [binary]="true">-->
+<!--                                        </p-checkbox>-->
+<!--                                        <label for="habilitable" class="ml-2">Habilitable</label>-->
+<!--                                    </div>-->
+
+
+
+
+
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </p-card>-->
+
+<!--                    <p-card styleClass="mb-4">-->
+<!--                        <ng-template pTemplate="header">-->
+<!--                            <div class="text-xl font-bold mb-2 p-3 bg-primary-50">Référentiel</div>-->
+<!--                        </ng-template>-->
+<!--                        <div formArrayName="referentiel">-->
+
+<!--                        <div formArrayName="profilReferentiels">-->
+<!--                              <div *ngFor="let profilReferentiel of besoinsProfilsReferentielControls; let i = index" [formGroupName]="i" class="mb-3">-->
+<!--                                  <div class="grid">-->
+<!--                                      &lt;!&ndash; Profil &ndash;&gt;-->
+<!--                                      <div class="col-6">-->
+<!--                                          <p-dropdown-->
+<!--                                              id="profile-{{ i }}"-->
+<!--                                              [options]="availableProfils[i] || originalProfils"-->
+<!--                                              placeholder="Sélectionnez un profil"-->
+<!--                                              formControlName="profil"-->
+<!--                                              (onChange)="onProfilChangeAdd(i)"-->
+<!--                                          ></p-dropdown>-->
+<!--                                      </div>-->
+
+<!--                                      &lt;!&ndash; Niveau &ndash;&gt;-->
+<!--                                      <div class="col-6">-->
+<!--                                          <p-dropdown-->
+<!--                                              id="niveau-{{ i }}"-->
+<!--                                              [options]="niveauxTechnos"-->
+<!--                                              placeholder="Sélectionnez un niveau"-->
+<!--                                              formControlName="niveau"-->
+<!--                                          ></p-dropdown>-->
+<!--                                      </div>-->
+<!--                                  </div>-->
+
+<!--                                  &lt;!&ndash; Boutons + et - alignés sur une seule ligne &ndash;&gt;-->
+<!--                                  <div class="p-field text-right">-->
+<!--                                      <button-->
+<!--                                          pButton-->
+<!--                                          icon="pi pi-plus"-->
+<!--                                          class="p-button-rounded p-button-primary mr-2"-->
+<!--                                          (click)="addProfilReferentiel(i)"-->
+<!--                                          title="Ajouter un profil"-->
+<!--                                          type="button"-->
+<!--                                      ></button>-->
+<!--                                      <button-->
+<!--                                          pButton-->
+<!--                                          icon="pi pi-minus"-->
+<!--                                          class="p-button-rounded p-button-danger"-->
+<!--                                          (click)="removeProfilReferentiel(i, index)"-->
+<!--                                          title="Supprimer ce profil"-->
+<!--                                          *ngIf="besoinsProfilsReferentielControls.length > 1"-->
+<!--                                          type="button"-->
+<!--                                      ></button>-->
+<!--                                  </div>-->
+<!--                              </div>-->
+<!--                          </div>-->
+<!--                        &lt;!&ndash; Segments &ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="p-field mb-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label class="font-bold">Segment*</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p-multiSelect&ndash;&gt;-->
+<!--&lt;!&ndash;                                id="segments"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [options]="segments"&ndash;&gt;-->
+<!--&lt;!&ndash;                                placeholder="Sélectionnez un segment"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [(ngModel)]="besoin.referentiel.segments"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [ngModelOptions]="{ standalone: true }"&ndash;&gt;-->
+<!--&lt;!&ndash;                                (onChange)="onSegmentChange($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;                            ></p-multiSelect>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        &lt;!&ndash; Sous-segments &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="p-field mb-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label class="font-bold">Sous-segment*</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p-multiSelect&ndash;&gt;-->
+<!--&lt;!&ndash;                                id="sous-segment"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [options]="sousSegmentsOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                placeholder="Sélectionnez un sous-segment"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [(ngModel)]="besoin.referentiel.sousSegments"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [ngModelOptions]="{ standalone: true }"&ndash;&gt;-->
+<!--&lt;!&ndash;                                (onChange)="onTechnoChange($event)"&ndash;&gt;-->
+<!--&lt;!&ndash;                            ></p-multiSelect>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        &lt;!&ndash; Technologies &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="p-field mb-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label class="font-bold">Technologies*</label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p-multiSelect&ndash;&gt;-->
+<!--&lt;!&ndash;                                placeholder="Sélectionnez les technologies"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [options]="technologiesOptions"&ndash;&gt;-->
+<!--&lt;!&ndash;                                (onChange)="filterTechno()"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [(ngModel)]="besoin.referentiel.technologie"&ndash;&gt;-->
+<!--&lt;!&ndash;                                [ngModelOptions]="{ standalone: true }"&ndash;&gt;-->
+<!--&lt;!&ndash;                            ></p-multiSelect>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--                      </div>-->
+<!--                    </p-card>-->
+
+<!--                    <div class="col-12 text-right">-->
+<!--                        <button pButton type="button" icon="pi pi-trash"-->
+<!--                                class="p-button-danger"-->
+<!--                                (click)="removeBesoin(i)">-->
+<!--                            Supprimer Besoin-->
+<!--                        </button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <button pButton type="button" label="Ajouter Besoin"-->
+<!--                    (click)="addBesoin()">-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </p-panel>-->
+
+

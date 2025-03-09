@@ -1,0 +1,628 @@
+/* Global Styles */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--surface-a); /* Utilise la variable de thème PrimeNG pour le fond */
+    font-family: var(--font-family); /* Utilise la police de thème PrimeNG */
+}
+
+/* Centering the container */
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%; /* Hauteur totale de l'écran */
+    box-sizing: border-box;
+    padding: 0.5px; /* Espacement autour de la carte */
+}
+
+
+/* Title Centering */
+.center-title {
+    text-align: center; /* Centre le texte horizontalement */
+    width: 100%; /* Assure que la largeur est à 100% */
+    margin: 0; /* Enlève les marges par défaut */
+    position: relative; /* Nécessaire pour utiliser le transform */
+    top: 50%; /* Déplace le titre au milieu verticalement */
+    transform: translateY(-50%); /* Ajuste la position pour centrer exactement */
+}
+
+/* PrimeNG Card Styles */
+.p-card {
+    // max-width: 1600px; /* Largeur maximale pour une carte plus large */
+    width: 100%;
+    padding: 0.5em; /* Padding léger pour un meilleur espacement */
+    margin: 1rem; /* Ajoute de l'espace autour de chaque carte */
+    // position: relative; /* Nécessaire pour l'animation */
+}
+
+/* Scrollable Steps */
+.steps-wrapper {
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 1.5em; /* Espace entre les étapes et le formulaire */
+}
+
+.scrollable-steps {
+    display: inline-block;
+    min-width: 100%; /* Assure que les étapes remplissent la largeur */
+    padding-bottom: 0.5em; /* Espace en dessous des étapes */
+    border-bottom: 2px solid var(--primary-color); /* Indicateur visuel pour les étapes */
+}
+
+/* Form styles */
+form {
+    margin-top: 1px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre les entrées */
+}
+
+/* Form Field Styles */
+.p-field {
+    width: 100%;
+    max-width: 300px; /* Largeur légèrement augmentée pour un meilleur rapport avec la carte plus large */
+    margin: 0 auto 1.5em auto; /* Centre les champs de formulaire avec espacement */
+}
+
+.p-field label {
+    margin-bottom: 0.5em;
+    display: block;
+    text-align: center; /* Centre les labels */
+    color: var(--text-color); /* Utilise la couleur de thème PrimeNG pour le texte */
+}
+
+/* Button Styles */
+.p-button {
+    width: 120px;
+    margin-top: 1.5em;
+}
+
+/* Flex button layout */
+.p-d-flex.p-jc-between .p-button {
+    width: 48%;
+}
+
+/* Adjusting space between flag and country name */
+.p-d-flex.p-ai-center img {
+    margin-right: 8px; /* Ajuste la marge pour créer un espace entre le drapeau et le texte */
+}
+
+/* Form content adjustments */
+.form-content {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 15px; /* Évite le clipping de contenu en ajoutant du padding à droite */
+}
+
+/* Scrollbar styling for form content */
+.form-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-content::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .p-card {
+        padding: 2em;
+        max-width: 90%;
+    }
+
+    .p-button {
+        width: 100%;
+        margin-top: 1em;
+    }
+
+    .p-d-flex.p-jc-between .p-button {
+        width: 100%;
+        margin-bottom: 0.5em;
+    }
+}
+
+.form-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping of cards to new rows if needed */
+    justify-content: space-around; /* Aligns the cards horizontally with space around them */
+    // padding: 20px; /* Adds padding around the form */
+}
+/* Styles généraux pour toutes les cartes */
+.card1, .card2, .card3, .card4, .card5 {
+    box-sizing: border-box; /* Inclut le padding et la marge dans la largeur totale */
+}
+
+/* Styles spécifiques à chaque carte */
+.card1 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 22rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card2 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 66.2rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card3 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 66.18rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card4 {
+    padding: 20px; /* Padding inside each card */
+    margin-left: 1px; /* Space around each card */
+    width: 33rem; /* Garder la largeur définie */
+    text-align: center;
+}
+
+.card5 {
+    padding: 0.3rem; /* Padding inside each card */
+    width: calc(100% - 2rem); /* Occupation de l'espace disponible */
+    max-width: 31.42rem; /* Garder la largeur maximale que tu souhaites */
+    text-align: center;
+    margin: 0 auto; /* Centrer la carte */
+}
+
+/* Media Queries pour les mobiles */
+@media (max-width: 768px) {
+    .card1, .card2, .card3, .card4, .card5 {
+        width: 100%; /* Toutes les cartes occupent 100% de la largeur */
+        margin: 1rem 0; /* Ajoute un espacement vertical */
+    }
+
+    .card2, .card3 {
+        max-width: none; /* Enlever les limites de largeur pour les appareils mobiles */
+    }
+}
+
+/* Grid Styles */
+.p-grid {
+    display: flex;
+    flex-wrap: wrap; /* Gère le débordement des colonnes */
+}
+
+.p-col-12 {
+    flex: 0 0 100%; /* Prend toute la largeur par défaut */
+}
+
+.p-md-6 {
+    flex: 0 0 50%; /* Prend 50% de la largeur sur les écrans moyens et plus grands */
+}
+
+/* Card Title Styles */
+.p-card h6 {
+    text-align: center; /* Centre le texte des titres */
+    margin: 0; /* Enlève les marges par défaut */
+}
+
+/* Title Styles for all cards */
+.card-title {
+    text-align: center; /* Centre le texte du titre */
+    margin: 0; /* Enlève les marges par défaut */
+    padding: 0.5rem 0; /* Ajoute du padding vertical */
+    font-weight: bold; /* Titre en gras */
+    font-size: 1.2em; /* Taille de la police du titre */
+    border-radius: 8px 8px 0 0; /* Coins arrondis en haut */
+}
+
+/* Field adjustments */
+.p-field {
+    margin-top: 1rem; /* Espacement supérieur pour les champs */
+}
+
+.p-ml-8{
+    padding-left: 50px;
+}
+
+/* Title border styling */
+.card-title {
+    border-bottom: 2px solid #b91abe; /* Couleur de la bordure du titre */
+    padding-bottom: 8px; /* Padding en dessous du titre */
+    margin-bottom: 12px; /* Marge en dessous du titre */
+}
+
+
+/* Skills section styling */
+.skills-section {
+    .p-tabview-panels {
+        padding: 1.5rem;
+    }
+
+    .p-chip {
+        margin: 0.25rem;
+    }
+}
+
+
+h5 {
+    position: sticky;    /* Rend le texte collant */
+    top: 0;              /* Positionne l'élément collant */
+    padding: 10px 0;    /* Espace autour du texte */
+    width: 100%;        /* Prend toute la largeur pour une meilleure apparence */
+    text-align: center;  /* Centre le texte */
+}
+
+
+
+.formation-entry {
+    border-radius: 8px;
+    padding-left : 1rem;
+    padding-right : 1rem;
+    padding-bottom: 1rem;
+    position: relative;
+
+    h6 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+    }
+
+    .p-button-danger {
+        position: absolute;
+        top: -25rem;
+        right: 0.5rem;
+    }
+}
+
+
+
+.p-field-formation {
+    margin-bottom: 1rem;
+}
+
+.p-button-secondary{
+    width: 30%;
+    top: 0.05rem;
+    right: 0.2rem;
+}
+.p-hide{
+    width: 80%;
+    margin-bottom: 1rem;
+    margin-top: 0rem;
+}
+
+.card-formation {
+    background: var(--surface-card);
+    width: 32rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+.card-formation1 {
+    background: var(--surface-card);
+    width: 25rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+
+.card-formation2 {
+    background: var(--surface-card);
+    width: 20rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+.card-langue {
+    background: var(--surface-card);
+    width: 25rem;
+    border: 1px solid var(--surface-border);
+    padding: 2rem;
+    margin: 1rem;
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
+}
+
+///////////////////RATING/////////
+
+///////////////////RATING/////////
+
+
+.animated-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.glow-text {
+    font-size: 1.7rem;
+    font-weight: bold;
+    color: #8e44ad; /* Violet un peu plus clair */
+    text-shadow: 0 0 8px rgba(142, 68, 173, 0.6),
+    0 0 16px rgba(142, 68, 173, 0.4),
+    0 0 24px rgba(142, 68, 173, 0.2); /* Effet lumineux atténué */
+    animation: glowPulse 2.5s infinite alternate ease-in-out;
+    letter-spacing: 0.05em;
+}
+
+@keyframes glowPulse {
+    0% {
+        text-shadow: 0 0 8px rgba(142, 68, 173, 0.6),
+        0 0 16px rgba(142, 68, 173, 0.4),
+        0 0 24px rgba(142, 68, 173, 0.2);
+        transform: scale(1);
+    }
+    100% {
+        text-shadow: 0 0 16px rgba(187, 143, 206, 0.7),
+        0 0 32px rgba(187, 143, 206, 0.5),
+        0 0 48px rgba(187, 143, 206, 0.3);
+        transform: scale(1.03);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Classe pour les petits boutons */
+.small-button {
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 50%;
+
+}
+
+
+
+
+
+.custom-dialog .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #007ad9;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.section h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid #007ad9;
+    display: inline-block;
+    padding-bottom: 0.2rem;
+}
+.qr-code-container {
+    text-align: center; /* Centre le contenu horizontalement */
+    margin-top: 10px; /* Ajoute un espace entre le titre et l'image */
+}
+
+.qr-image {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Ajoute une ombre légère */
+}
+
+.grid .col-6 {
+    padding: 1rem;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+p {
+    margin: 0.5rem 0;
+}
+
+p strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.center-content-besoin {
+    display: flex; /* Active flexbox */
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; /* Centre verticalement */
+    text-align: center; /* Centre le texte dans le conteneur */
+    margin: 0; /* Supprime les marges */
+    padding: 0; /* Supprime les espacements */
+}
+
+.title-besoin {
+    font-size: 2.5rem; /* Ajuste la taille du texte */
+    font-weight: bold; /* Rend le texte plus visible */
+    color: #333; /* Couleur personnalisée */
+}
+
+
+.max-level-message {
+    text-align: center; /* Centre le texte à l'intérieur */
+}
+
+
+
+
+
+
+
+//
+//.action-dialog {
+//    .p-dialog-header {
+//        padding: 1.25rem 1.5rem;
+//        border-bottom: 1px solid var(--surface-200);
+//    }
+//
+//    .p-dialog-content {
+//        padding: 1.5rem;
+//    }
+//
+//    .p-dialog-footer {
+//        padding: 1.25rem 1.5rem;
+//        border-top: 1px solid var(--surface-200);
+//    }
+//
+//    label {
+//        font-weight: 500;
+//        color: var(--text-700);
+//    }
+//
+//    .p-dropdown, .p-calendar {
+//        .p-component {
+//            border-radius: 6px;
+//        }
+//    }
+//
+//    .p-checkbox {
+//        .p-checkbox-box {
+//            border-radius: 4px;
+//        }
+//    }
+//
+//    .p-inputtextarea {
+//        border-radius: 6px;
+//    }
+//
+//    .p-button {
+//        border-radius: 6px;
+//        &.p-button-primary {
+//            background-color: var(--purple-500);
+//            &:hover {
+//                background-color: var(--purple-600);
+//            }
+//        }
+//    }
+//}
+
+
+
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+    margin: 0 auto;
+    max-width: 1200px; /* Limite la largeur pour un design centré */
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: var(--surface-card, #fff);
+    border-radius: 1rem;
+    border: 1px solid var(--surface-border);
+    box-shadow: var(--p-shadow-4);
+    transition: all 0.2s ease-in-out;
+    height: 100%;
+}
+
+.action-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--surface-border);
+    background: var(--surface-card);
+}
+
+/* Responsive pour tablettes */
+@media (max-width: 1024px) {
+    .cards-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Responsive pour mobiles */
+@media (max-width: 768px) {
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Hover effect */
+.action-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation subtile */
+.action-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.icon-spacing {
+    margin-right: 8px; /* Ajustez la valeur selon vos besoins */
+}
